@@ -8,4 +8,5 @@ message UpdateRoomMapData {
     repeated string grid = 2;
     RoomStructureDoorData door = 3;
     uint32 index = 4;
+    optional string membership = 5;
 }

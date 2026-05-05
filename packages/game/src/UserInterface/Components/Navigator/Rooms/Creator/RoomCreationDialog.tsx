@@ -12,6 +12,9 @@ import Selection from "../../../../Common/Form/Components/Selection";
 import { CreateRoomData, EnterRoomData, RoomCreatedData, RoomMapData, RoomStructureData } from "@pixel63/events";
 import DialogScrollArea from "../../../../Common/Dialog/Components/Scroll/DialogScrollArea";
 import { usePermissionAction } from "@UserInterface/Hooks/usePermissionAction";
+import MembershipIcon from "@UserInterface/Common/Memberships/MembershipIcon";
+import MembershipSmallIcon from "@UserInterface/Common/Memberships/MembershipSmallIcon";
+import RoomCreationMap from "@UserInterface/Components/Navigator/Rooms/RoomCreationMap";
 
 export type RoomCreationDialogProps = {
     hidden?: boolean;
@@ -148,45 +151,7 @@ export default function RoomCreationDialog({ hidden, onClose }: RoomCreationDial
                                 gap: 10
                             }}>
                                 {roomMaps.map((roomMap) => (
-                                    <div key={roomMap.id} style={{
-                                        width: 135,
-                                        height: 96,
-
-                                        border: "1px solid #5D5D5A",
-                                        background: (activeRoomMap?.id === roomMap.id)?("#6E8184"):("#CBCBCB"),
-
-                                        borderRadius: 6,
-                                        overflow: "hidden",
-
-                                        position: "relative",
-
-                                        cursor: "pointer"
-                                    }} onClick={() => setActiveRoomMap(roomMap)}>
-                                        <RoomMapImage width={180} height={120} structure={RoomStructureData.create({
-                                            grid: roomMap.grid,
-                                            door: roomMap.door,
-                                            floor: {
-                                                id: "preview",
-                                                thickness: 0
-                                            },
-                                            wall: {
-                                                id: "preview",
-                                                thickness: 0,
-                                                hidden: false
-                                            }
-                                        })} leftWallColor={["D48612"]}/>
-
-                                        {(editMode) && (
-                                            <div style={{
-                                                position: "absolute",
-                                                top: 4,
-                                                right: 3,
-                                                cursor: "pointer"
-                                            }} onClick={() => addUniqueDialog("edit-room-map", { map: roomMap })}>
-                                                <div className="sprite_room_user_motto_pen"/>
-                                            </div>
-                                        )}
-                                    </div>
+                                    <RoomCreationMap key={roomMap.id} roomMap={roomMap} activeRoomMap={activeRoomMap} editMode={editMode} onSelect={() => setActiveRoomMap(roomMap)}/>
                                 ))}
 
                                 {(editMode) && (

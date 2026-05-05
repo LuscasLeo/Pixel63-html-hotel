@@ -8,6 +8,7 @@ import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogB
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import Input from "@UserInterface/Common/Form/Components/Input";
 import { webSocketClient } from "@Game/index";
+import Selection from "@UserInterface/Common/Form/Components/Selection";
 
 export type EditRoomMapDialogProps = {
     data?: {
@@ -22,6 +23,7 @@ export default function EditRoomMapDialog({ data, hidden, onClose }: EditRoomMap
 
     const [confirmDelete, setConfirmDelete] = useState(false);
 
+    const [membership, setMembership] = useState(data?.map?.membership ?? undefined);
     const [index, setIndex] = useState(data?.map?.index ?? 0);
 
     const [structure, setStructure] = useState(RoomStructureData.create({
@@ -66,11 +68,13 @@ export default function EditRoomMapDialog({ data, hidden, onClose }: EditRoomMap
             grid: structure.grid,
             door: structure.door,
 
+            membership,
+
             index
         }));
 
         onClose?.();
-    }, [index, structure, data, onClose]);
+    }, [index, structure, membership, data, onClose]);
 
     const handleDelete = useCallback(() => {
         if(!confirmDelete) {
@@ -120,6 +124,19 @@ export default function EditRoomMapDialog({ data, hidden, onClose }: EditRoomMap
                 <p>This is used to sort the map in the room creation dialog.</p>
 
                 <Input type="number" value={index.toString()} onChange={(value) => setIndex(parseInt(value))}/>
+                
+                <b>Membership required</b>
+
+                <Selection value={membership} onChange={setMembership} items={[
+                    {
+                        value: undefined,
+                        label: "None"
+                    },
+                    {
+                        value: "habboclub",
+                        label: "Habbo Club"
+                    }
+                ]}/>
 
                 <div style={{
                     display: "flex",

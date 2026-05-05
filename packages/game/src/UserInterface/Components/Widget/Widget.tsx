@@ -11,7 +11,7 @@ export default function Widget() {
     const user = useUser();
     const dialogs = useDialogs();
 
-    const { openShopPage } = useShopPageLink("habbo_club");
+    const { openShopPage } = useShopPageLink("habboclub");
 
     return (
         <div style={{

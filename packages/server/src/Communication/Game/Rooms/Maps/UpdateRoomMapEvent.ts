@@ -19,7 +19,8 @@ export default class UpdateRoomMapEvent implements ProtobuffListener<UpdateRoomM
                 grid: payload.grid,
                 door: payload.door,
 
-                index: payload.index
+                index: payload.index,
+                membership: payload.membership ?? null
             }, {
                 where: {
                     id: payload.id
@@ -34,7 +35,8 @@ export default class UpdateRoomMapEvent implements ProtobuffListener<UpdateRoomM
                 door: payload.door,
 
                 index: payload.index,
-                indexable: true
+                indexable: true,
+                membership: payload.membership ?? null
             });
         }
 

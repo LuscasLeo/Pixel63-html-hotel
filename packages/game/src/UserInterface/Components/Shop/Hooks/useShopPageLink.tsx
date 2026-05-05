@@ -3,12 +3,16 @@ import { GetShopPageLinkData, ShopPageLinkData } from "@pixel63/events";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { useCallback, useEffect, useState } from "react";
 
-export default function useShopPageLink(type: string) {
+export default function useShopPageLink(type?: string) {
     const dialogs = useDialogs();
 
     const [data, setData] = useState<ShopPageLinkData>();
     
     useEffect(() => {
+        if(!type) {
+            return;
+        }
+        
         webSocketClient.addProtobuffListener(ShopPageLinkData, {
             async handle(payload: ShopPageLinkData) {
                 setData(payload);

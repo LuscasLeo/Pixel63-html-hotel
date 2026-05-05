@@ -27,7 +27,7 @@ export default function WardrobeSelection({ part, figureConfiguration, onFigureC
     const dialogs = useDialogs();
     const user = useUser();
 
-    const { openShopPage } = useShopPageLink("habbo_club");
+    const { openShopPage } = useShopPageLink("habboclub");
 
     const { data, sets, userSets, allSets, colors, mandatory } = useClothes(part, figureConfiguration.gender);
 

@@ -20,7 +20,7 @@ export type EditShopMembershipDialogProps = {
 export default function EditShopMembershipDialog({ hidden, data, onClose }: EditShopMembershipDialogProps) {
     const dialogs = useDialogs();
 
-    const [membership, setMembership] = useState(data.membership?.membership ?? "habbo_club");
+    const [membership, setMembership] = useState(data.membership?.membership ?? "habboclub");
     const [days, setDays] = useState(data.membership?.days ?? 0);
 
     const [credits, setCredits] = useState(data.membership?.credits ?? 0);

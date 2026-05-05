@@ -35,7 +35,7 @@ export default function ShopPage({ editMode, page, setActiveShopPage, requestedF
         case "features":
             return (<ShopFeaturesPage key={page.id} editMode={editMode} page={page} requestedFurnitureId={requestedFurnitureId} setActiveShopPage={setActiveShopPage}/>);
             
-        case "habbo_club":
+        case "habboclub":
             return (<ShopHabboClubPage key={page.id} editMode={editMode} page={page} requestedFurnitureId={requestedFurnitureId}/>);
         
         default:
