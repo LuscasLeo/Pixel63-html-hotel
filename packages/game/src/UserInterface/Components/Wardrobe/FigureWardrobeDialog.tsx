@@ -99,7 +99,7 @@ export default function FigureWardrobeDialog({ title, header, figureConfiguratio
     const [figuresExpanded, setFiguresExpanded] = useState(false);
     
     return (
-        <Dialog title={title} hidden={hidden} onClose={onClose} width={520 + ((figuresExpanded)?(166):(0))} height={530} onEditClick={(hasClothingEditPermissions) && (() => setEditMode(!editMode))}>
+        <Dialog title={title} hidden={hidden} onClose={onClose} width={520 + ((figuresExpanded)?(166):(0))} height={530} editMode={editMode} onEditClick={(hasClothingEditPermissions) && (() => setEditMode(!editMode))}>
             <FlexLayout flex={1} direction="row" gap={0}>
                 <DialogTabs initialActiveIndex={0} header={{ title: header }} tabs={[
                     {

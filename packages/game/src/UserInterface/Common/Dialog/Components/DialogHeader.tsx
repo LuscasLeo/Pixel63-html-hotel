@@ -7,15 +7,16 @@ export type MousePosition = {
 
 export type DialogHeaderProps = {
     title: ReactNode;
+    editMode?: boolean;
     onDialogMove: MouseEventHandler<HTMLDivElement>;
     onClose?: () => void;
     onEditClick?: (() => void) | false;
 };
 
-export default function DialogHeader({ title, onEditClick, onDialogMove, onClose }: DialogHeaderProps) {
+export default function DialogHeader({ title, editMode, onEditClick, onDialogMove, onClose }: DialogHeaderProps) {
     return (
         <div style={{
-            backgroundColor: "#367897",
+            backgroundColor: (!editMode)?("#367897"):("#D79A33"),
             
             width: "100%",
             height: 31,

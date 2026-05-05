@@ -74,7 +74,7 @@ export default function RoomCreationDialog({ hidden, onClose }: RoomCreationDial
     }, [activeRoomMap, name, description, category, maxUsers]);
 
     return (
-        <Dialog title="Room Creation" onEditClick={hasRoomMapsPermission && (() => setEditMode(!editMode))} hidden={hidden} onClose={onClose} width={600} height={360} style={{
+        <Dialog title="Room Creation" editMode={editMode} onEditClick={hasRoomMapsPermission && (() => setEditMode(!editMode))} hidden={hidden} onClose={onClose} width={600} height={360} style={{
             overflow: "visible"
         }}>
             <DialogContent>
