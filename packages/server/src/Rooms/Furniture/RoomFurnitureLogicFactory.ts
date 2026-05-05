@@ -140,6 +140,7 @@ export default class RoomFurnitureLogicFactory {
                 return new RoomFurnitureEnableBoxLogic(roomFurniture);
 
             case "trax":
+            case "jukebox":
                 return new RoomFurnitureTraxLogic(roomFurniture);
 
             // Skateboarding

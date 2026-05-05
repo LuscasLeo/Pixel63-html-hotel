@@ -65,6 +65,7 @@ export default class RoomFurniture {
                 return new RoomFurnitureStackHelperLogic(this.instance, this);
 
             case "trax":
+            case "jukebox":
                 return new RoomFurnitureTraxLogic(this.instance, this);
 
             case "gate":

@@ -208,26 +208,57 @@ export default function TraxPlaylistsDialog({ hidden, data, onClose }: TraxPlayl
                     </TraxDialogListPanel>
 
                     <FlexLayout direction="row">
-                        <TraxButton onClick={handleEditSong} disabled={!isFurnitureOwner || !activeSong || activeSong.userFurnitureId !== undefined} containerStyle={{ flex: 1}} tooltip={(!isFurnitureOwner)?("You must be the owner of this Trax."):((activeSong?.userFurnitureId)?("You can not modify a burnt song."):(undefined))}>
+                        <TraxButton
+                            onClick={handleEditSong}
+                            disabled={!isFurnitureOwner || !activeSong || activeSong.userFurnitureId !== undefined || data.roomFurniture.furnitureData.interactionType !== "trax"}
+                            containerStyle={{ flex: 1}}
+                            tooltip={
+                                (!isFurnitureOwner)?(
+                                    "You must be the owner of this Trax."
+                                ):(
+                                    (activeSong?.userFurnitureId)?(
+                                        "You can not modify a burnt song."
+                                    ):(
+                                        (data.roomFurniture.furnitureData.interactionType !== "trax")?(
+                                            "You need a Trax to create songs."
+                                        ):(
+                                            undefined
+                                        )
+                                    ))}>
                             Edit song
                         </TraxButton>
                         
-                        <TraxButton disabled={!isFurnitureOwner || !activeSong || activeSong.userFurnitureId !== undefined} onClick={handleDeleteSong} tooltip={(!isFurnitureOwner)?("You must be the owner of this Trax."):(undefined)}>
+                        <TraxButton disabled={!isFurnitureOwner || !activeSong || activeSong.userFurnitureId !== undefined || data.roomFurniture.furnitureData.interactionType !== "trax"} onClick={handleDeleteSong} tooltip={(!isFurnitureOwner)?("You must be the owner of this Trax."):(undefined)}>
                             <div className="sprite_dialog_trax_trash"/>
                         </TraxButton>
                     </FlexLayout>
                     
-                    <TraxButton disabled={!isFurnitureOwner} onClick={handleCreateSong} tooltip={(!isFurnitureOwner)?("You must be the owner of this Trax."):(undefined)}>
+                    <TraxButton
+                        disabled={!isFurnitureOwner || data.roomFurniture.furnitureData.interactionType !== "trax"}
+                        onClick={handleCreateSong}
+                        tooltip={
+                            (!isFurnitureOwner)?(
+                                "You must be the owner of this Trax."
+                            ):(
+                                (data.roomFurniture.furnitureData.interactionType !== "trax")?(
+                                    "You need a Trax to create songs."
+                                ):(
+                                    undefined
+                                )
+                            )}>
                         Create a new song
                     </TraxButton>
                 </FlexLayout>
 
                 <div>
-                    <TraxButton disabled={!activeSong} containerStyle={{
-                        alignSelf: "center",
+                    <TraxButton
+                        disabled={!activeSong}
+                        containerStyle={{
+                            alignSelf: "center",
 
-                        marginTop: 64
-                    }} onClick={handleAddSong}>
+                            marginTop: 64
+                        }}
+                        onClick={handleAddSong}>
                         {(activeSong && playlist.some((playlist) => playlist.id === activeSong.id))?(
                             <div className="sprite_dialog_trax_add" style={{
                                 transform: "rotateZ(180deg)"
