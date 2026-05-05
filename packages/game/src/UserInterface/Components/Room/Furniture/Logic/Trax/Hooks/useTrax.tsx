@@ -1,4 +1,5 @@
 import FurnitureAssets from "@Client/Assets/FurnitureAssets";
+import { clientInstance } from "@Game/index";
 import { FurnitureTraxSongData } from "@pixel63/events";
 import { useCallback, useRef, useState } from "react";
 
@@ -87,7 +88,7 @@ export default function useTrax(trax: FurnitureTraxSongData, setStep: (index: nu
                     source.connect(gainNode);
 
                     gainNode.connect(audioContext.destination);
-                    gainNode.gain.setValueAtTime(0.03, audioContext.currentTime);
+                    gainNode.gain.setValueAtTime((clientInstance.settings.value.traxAudioVolume ?? 50) / 100, audioContext.currentTime);
 
                     const relativeColumn = Math.max(0, slot.column - startIndex);
 

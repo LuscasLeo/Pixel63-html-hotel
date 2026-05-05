@@ -1,4 +1,5 @@
 import FurnitureAssets from "@Client/Assets/FurnitureAssets";
+import { clientInstance } from "@Game/index";
 import { FurnitureTraxSongMetaData } from "@pixel63/events";
 import { useCallback, useRef, useState } from "react";
 
@@ -16,13 +17,9 @@ export default function useTraxPlayer() {
     const [currentDuration, setCurrentDuration] = useState<number>();
 
     const handleStop = useCallback((executeFinish: boolean = true) => {
-        console.debug("Stopping playback!");
-
         setCurrentDuration(undefined);
 
         if(context.current) {
-            console.log("suspending");
-
             context.current.suspend();
 
             context.current.close();
@@ -97,15 +94,13 @@ export default function useTraxPlayer() {
                 }
 
                 FurnitureAssets.getFurnitureAudioBuffer(audioContext, furniture.index.type, furnitureSound.file).then((audioBuffer) => {
-                    console.log("Adding buffer");
-
                     const source = audioContext.createBufferSource();
                     source.buffer = audioBuffer;
 
                     source.connect(gainNode);
 
                     gainNode.connect(audioContext.destination);
-                    gainNode.gain.setValueAtTime(0.03, audioContext.currentTime);
+                    gainNode.gain.setValueAtTime((clientInstance.settings.value.traxAudioVolume ?? 50) / 100, audioContext.currentTime);
 
                     source.start(audioContext.currentTime + slot.column * 2);
 

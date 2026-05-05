@@ -6,8 +6,11 @@ import WidgetCurrency from "./WidgetCurrency";
 import WidgetItem from "./WidgetItem";
 import useShopPageLink from "@UserInterface/Components/Shop/Hooks/useShopPageLink";
 
+export type WidgetProps = {
+    onSettingsClick?: () => void;
+}
 
-export default function Widget() {
+export default function Widget({ onSettingsClick }: WidgetProps) {
     const user = useUser();
     const dialogs = useDialogs();
 
@@ -106,7 +109,7 @@ export default function Widget() {
                     </WidgetButton>
 
                     <WidgetButton tooltip="Settings" color="#716A85" onClick={() => {
-                        dialogs.addUniqueDialog("settings");
+                        onSettingsClick?.();
                     }}>
                         <div className="sprite_widget_settings"/>
                     </WidgetButton>

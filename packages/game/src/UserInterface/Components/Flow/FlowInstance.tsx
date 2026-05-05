@@ -4,9 +4,16 @@ import Widget from "@UserInterface/Components/Widget/Widget";
 import { useWidgetNotifications } from "@UserInterface/Hooks/useWidgetNotifications";
 import { clientInstance } from "@Game/index";
 import RoomClickConfigurationWidget from "@UserInterface/Components/Room/Widget/RoomClickConfigurationWidget";
+import { useState } from "react";
+import DialogPanel from "@UserInterface/Common/Dialog/Components/Panels/DialogPanel";
+import WidgetPanel from "@UserInterface/Common/Widgets/WidgetPanel";
+import DialogLink from "@UserInterface/Common/Dialog/Components/Link/DialogLink";
+import WidgetSettings from "@UserInterface/Components/Widget/WidgetSettings";
 
 export default function FlowInstance() {
     const widgetNotifications = useWidgetNotifications();
+
+    const [settingsExpanded, setSettingsExpanded] = useState(false);
 
     return (
         <div style={{
@@ -21,7 +28,9 @@ export default function FlowInstance() {
             gap: 10,
             justifyContent: "flex-end"
         }}>
-            <Widget/>
+            <Widget onSettingsClick={() => setSettingsExpanded(!settingsExpanded)}/>
+
+            <WidgetSettings settingsExpanded={settingsExpanded} onSettingsExpanded={setSettingsExpanded}/>
 
             <RoomTraxMachineWidget/>
 

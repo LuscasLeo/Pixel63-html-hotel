@@ -4,16 +4,16 @@ import Dialog from "../../Common/Dialog/Dialog";
 import DialogContent from "../../Common/Dialog/Components/DialogContent";
 import Checkbox from "../../Common/Form/Components/Checkbox";
 
-export type SettingsDialogProps = {
+export type GameSettingsDialogProps = {
     hidden?: boolean;
     onClose?: () => void;
 }
 
-export default function SettingsDialog({ hidden, onClose }: SettingsDialogProps) {
+export default function GameSettingsDialog({ hidden, onClose }: GameSettingsDialogProps) {
     const settings = useSettings();
 
     return (
-        <Dialog title="Settings" hidden={hidden} onClose={onClose} width={300} height={120} initialPosition="center">
+        <Dialog title="Game Settings" hidden={hidden} onClose={onClose} width={300} height={120} initialPosition="center">
             <DialogContent>
                 <div style={{
                     flex: 1,

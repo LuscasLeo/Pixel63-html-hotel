@@ -24,7 +24,7 @@ import BotWardrobeDialog from "../../Components/Bots/BotWardrobeDialog";
 import BotSpeechDialog from "../../Components/Bots/BotSpeechDialog";
 import FigureDialog from "../../Components/Figure/FigureDialog";
 import RoomChatCommandsDialog from "../../Components/Room/Chat/Commands/RoomChatCommandsDialog";
-import SettingsDialog from "../../Components/Settings/SettingsDialog";
+import GameSettingsDialog from "../../Components/Settings/GameSettingsDialog";
 import EditShopPetDialog from "../../Components/Shop/Development/EditShopPetDialog";
 import PetBrowserDialog from "../../Components/Browsers/PetBrowserDialog";
 import EditPetDialog from "../../Components/Pets/EditPetDialog";
@@ -57,6 +57,7 @@ import RoomCameraPreviewDialog from "@UserInterface/Components/Room/Camera/RoomC
 import EditShopMembershipDialog from "@UserInterface/Components/Shop/Development/EditShopMembershipDialog";
 import EditRoomMapDialog from "@UserInterface/Components/Room/Map/EditRoomMapDialog";
 import FloorPlanDialog from "@UserInterface/Components/Room/FloorPlan/FloorPlanDialog";
+import AudioSettingsDialog from "@UserInterface/Components/Settings/AudioSettingsDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -79,8 +80,11 @@ export default function DialogInstances() {
                     case "achievements":
                         return (<AchievementsDialog {...props} key={dialog.id}/>);
 
-                    case "settings":
-                        return (<SettingsDialog {...props} key={dialog.id}/>);
+                    case "game-settings":
+                        return (<GameSettingsDialog {...props} key={dialog.id}/>);
+
+                    case "audio-settings":
+                        return (<AudioSettingsDialog {...props} key={dialog.id}/>);
                         
                     case "alert":
                         return (<HotelAlertDialog {...props} key={dialog.id}/>);
