@@ -100,6 +100,9 @@ export default class RoomFloorPlanEditor {
         if(event.shiftKey) {
             this.offset.left += 16 * ((event.deltaY < 0)?(1):(-1));
         }
+        else if(event.deltaX !== 0) {
+            this.offset.left += 16 * ((event.deltaX < 0)?(1):(-1));
+        }
         else {
             this.offset.top += 16 * ((event.deltaY < 0)?(1):(-1));
         }
