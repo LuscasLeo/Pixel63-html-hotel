@@ -181,6 +181,9 @@ export default function DialogInstances() {
 
                     case "edit-shop-bot-figure":
                         return (<EditShopBotFigureDialog {...props} key={dialog.id}/>);
+                        
+                    case "edit-room-map":
+                        return (<RoomCreationDialog {...props} key={dialog.id}/>);
 
                     case "figure-catalog":
                         return (<FigureCatalogDialog {...props} key={dialog.id}/>);

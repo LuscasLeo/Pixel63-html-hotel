@@ -278,12 +278,12 @@ export default class RoomFloorPlanEditor {
         }
 
         context.fillStyle = "#000000";
-        context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        context.fillRect(0, 0, this.offscreenCanvas.width, this.offscreenCanvas.height);
 
         const tileSize = 16;
 
-        const canvasWidth = this.canvas.width;
-        const canvasHeight = this.canvas.height;
+        const canvasWidth = this.offscreenCanvas.width;
+        const canvasHeight = this.offscreenCanvas.height;
 
         if(this.tilesPrepended.row) {
             this.offset.top -= 8 * Math.abs(this.tilesPrepended.row);
@@ -304,7 +304,7 @@ export default class RoomFloorPlanEditor {
             top: this.offset.top
         };
 
-        context.setTransform(1, 0.5, -1, 0.5, Math.round(this.canvasOffset.left) + 0.5, Math.round(this.canvasOffset.top) + 0.5);
+        context.setTransform(1, 0.5, -1, 0.5, Math.round(this.canvasOffset.left), Math.round(this.canvasOffset.top));
 
         context.lineWidth = 1;
         context.fillStyle = "#FFF";
