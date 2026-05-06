@@ -343,7 +343,7 @@ export default class RoomRenderer extends EventTarget {
         let priority = item.priority;
 
         if(item.position) {
-            if(Math.round(item.position.row) === this.structure.door?.row && Math.round(item.position.column) === this.structure.door.column) {
+            if(Math.floor(item.position.row) === this.structure.door?.row && Math.floor(item.position.column) === this.structure.door.column) {
                 if(this.wallItem && this.wallItem.wallRenderer.hasDoorWall) {
                     priority = -2000;
                     priority += (item.position.depth * 100);
@@ -370,7 +370,7 @@ export default class RoomRenderer extends EventTarget {
     }
 
     public static getPositionPriority(position: RoomPositionData) {
-        return (Math.round(position.row * 2) / 2 * 1000) + (Math.round(position.column * 2) / 2 * 1000) + (position.depth * 10);
+        return (Math.floor(position.row) * 1000) + (Math.floor(position.column) * 1000) + (position.depth * 10);
     }
 
     public getItemScreenPosition(item: RoomItem): MousePosition {
