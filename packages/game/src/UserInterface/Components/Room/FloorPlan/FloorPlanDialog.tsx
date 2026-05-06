@@ -36,12 +36,12 @@ export default function FloorPlanDialog({ data, hidden, onClose }: FloorPlanDial
     const [wallHeight, setWallHeight] = useState(0);
 
     useEffect(() => {
-        if(!canvasRef.current) {
+        if(!canvasRef.current || floorPlanEditor) {
             return;
         }
 
         setFloorPlanEditor(new RoomFloorPlanEditor(canvasRef.current, setActiveDepth, setFloorplanEditData));
-    }, [canvasRef])
+    }, [canvasRef, floorPlanEditor])
 
     useEffect(() => {
         if(!floorPlanEditor) {
@@ -54,7 +54,7 @@ export default function FloorPlanDialog({ data, hidden, onClose }: FloorPlanDial
     }, [floorPlanEditor]);
 
     useEffect(() => {
-        if(!floorPlanEditor) {
+        if(!floorPlanEditor || floorPlanEditor.data) {
             return;
         }
 

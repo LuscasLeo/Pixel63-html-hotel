@@ -9,7 +9,7 @@ import { RoomLogger } from "@pixel63/shared/Logger/Logger";
 export type RoomFloorPlanTool = "add_tile" | "remove_tile" | "raise_tile" | "sink_tile" | "enter_tile" | "tile_picker";
 
 export default class RoomFloorPlanEditor {
-    private data?: RoomFloorplanEditData;
+    public data?: RoomFloorplanEditData;
 
     private readonly offscreenCanvas: OffscreenCanvas;
 
