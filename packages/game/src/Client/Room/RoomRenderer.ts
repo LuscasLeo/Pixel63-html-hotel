@@ -363,6 +363,11 @@ export default class RoomRenderer extends EventTarget {
             }
             else {
                 priority += RoomRenderer.getPositionPriority(item.position);
+
+                
+                if(item.type === "figure" && item.positionPathData) {
+                    priority += 1000;
+                }
             }
         }
 
