@@ -3,7 +3,7 @@ import { MousePosition } from "@Client/Interfaces/MousePosition";
 import { RoomFloorplanEditData } from "@pixel63/shared/Interfaces/Room/Floorplan/RoomFloorplanEditData";
 import RoomFloorplanHelper from "@pixel63/shared/Helpers/RoomFloorplanHelper";
 import { clientInstance } from "../../../..";
-import { RoomPositionData, RoomStructureData, RoomStructureDoorData } from "@pixel63/events";
+import { RoomPositionData, RoomPositionOffsetData, RoomStructureData, RoomStructureDoorData } from "@pixel63/events";
 import { RoomLogger } from "@pixel63/shared/Logger/Logger";
 
 export type RoomFloorPlanTool = "add_tile" | "remove_tile" | "raise_tile" | "sink_tile" | "enter_tile" | "tile_picker";
@@ -15,7 +15,10 @@ export default class RoomFloorPlanEditor {
 
     private terminated = false;
     private moving = false;
+    private fillingRectangle = false;
     private middleButton = false;
+
+    private mouseStartPosition?: Omit<RoomPositionData, "depth">;
 
     public tool: RoomFloorPlanTool | null = null;
     public activeDepth: number = 0;
@@ -68,7 +71,7 @@ export default class RoomFloorPlanEditor {
 
             const anyFurnitureOnTile = coordinate && clientInstance.roomInstance.value?.furnitures.some((furniture) => furniture.isPositionInside(coordinate, RoomPositionData.create({ row: 1, column: 1, depth: 1 })));
 
-            if(coordinate && !anyFurnitureOnTile) {
+            if(coordinate && !anyFurnitureOnTile && !this.fillingRectangle) {
                 if(this.tool === "add_tile") {
                     this.updateStructure(coordinate.row, coordinate.column, RoomFloorplanHelper.getDepthCharacter(this.activeDepth));
                 }
@@ -111,6 +114,15 @@ export default class RoomFloorPlanEditor {
     private mousedown(event: MouseEvent) {
         this.moving = true;
         this.middleButton = event.button === 1;
+
+        if(event.shiftKey && this.tool === "add_tile") {
+            this.fillingRectangle = true;
+            const coordinate = this.getMousePosition();
+
+            if(coordinate) {
+                this.mouseStartPosition = coordinate;
+            }
+        }
     }
 
     private mouseleave() {
@@ -126,6 +138,8 @@ export default class RoomFloorPlanEditor {
         if(!this.moving) {
             return;
         }
+
+        this.fillingRectangle = event.shiftKey;
 
         if(this.tool === null || this.middleButton) {
             this.offset.left += event.movementX;
@@ -152,6 +166,22 @@ export default class RoomFloorPlanEditor {
 
         if(!coordinate) {
             return;
+        }
+
+        if(this.tool === "add_tile" && this.fillingRectangle && this.mouseStartPosition) {
+            this.fillingRectangle = false;
+
+            const minimumRow = Math.min(this.mouseStartPosition.row, coordinate.row);
+            const maximumRow = Math.max(this.mouseStartPosition.row, coordinate.row);
+
+            const minimumColumn = Math.min(this.mouseStartPosition.column, coordinate.column);
+            const maximumColumn = Math.max(this.mouseStartPosition.column, coordinate.column);
+
+            for (let row = minimumRow; row <= maximumRow; row++) {
+                for (let column = minimumColumn; column <= maximumColumn; column++) {
+                    this.updateStructure(row, column, RoomFloorplanHelper.getDepthCharacter(this.activeDepth));
+                }
+            }
         }
 
         if(this.tool === "tile_picker") {
@@ -319,10 +349,19 @@ export default class RoomFloorPlanEditor {
         const extraTilesY = (this.data?.structure.grid.length ?? 0) * 2;
         const extraTilesX = (this.data?.structure.grid[0].length ?? 0) * 2;
 
+        const mousePosition = this.getMousePosition();
+
         for (let row = -tilesY; row < (tilesY + extraTilesY); row++) {
             for (let column = -tilesX; column < (tilesX + extraTilesX); column++) {
                 const left = column * tileSize;
                 const top = row * tileSize;
+
+                if(this.fillingRectangle && this.mouseStartPosition && mousePosition && this.isTileInsideOfRectangle(this.mouseStartPosition, mousePosition, row, column)) {
+                    const depth = 1 + this.activeDepth;
+
+                    context.fillStyle = "hsl(" + (360 - ((360 / 100) * (34 + (depth * 3)))) + ", 100%, 50%)";
+                    context.fillRect(left + 1, top + 1, tileSize - 2, tileSize - 2);
+                }
 
                 const level = this.data?.structure.grid[row]?.[column];
 
@@ -366,6 +405,16 @@ export default class RoomFloorPlanEditor {
         this.canvas.height = this.offscreenCanvas.height;
 
         outputContext.drawImage(this.offscreenCanvas, 0, 0);
+    }
+
+    private isTileInsideOfRectangle(startPosition: Omit<RoomPositionData, "depth">, mousePosition: Omit<RoomPositionData, "depth">, row: number, column: number) {
+        const minimumRow = Math.min(startPosition.row, mousePosition.row);
+        const maximumRow = Math.max(startPosition.row, mousePosition.row);
+
+        const minimumColumn = Math.min(startPosition.column, mousePosition.column);
+        const maximumColumn = Math.max(startPosition.column, mousePosition.column);
+
+        return (row >= minimumRow) && (row <= maximumRow) && (column >= minimumColumn) && (column <= maximumColumn);
     }
 
     updateStructure(row: number, column: number, value: string) {
