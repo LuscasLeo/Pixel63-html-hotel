@@ -6,7 +6,7 @@ i18n
   .use(HttpBackend)
   .use(initReactI18next)
   .init({
-    lng: "en",
+    lng: new URLSearchParams(window.location.search).get("locale") ?? "en",
     fallbackLng: "en",
     backend: {
       loadPath: "/game/locales/{{lng}}/{{ns}}.json",
