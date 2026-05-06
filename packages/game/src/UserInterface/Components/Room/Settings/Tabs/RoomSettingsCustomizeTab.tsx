@@ -4,9 +4,12 @@ import { useRoomInstance } from "../../../../Hooks/useRoomInstance";
 import { webSocketClient } from "../../../../..";
 import Checkbox from "../../../../Common/Form/Components/Checkbox";
 import { UpdateRoomStructureData } from "@pixel63/events";
+import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
+import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 
 export default function RoomSettingsCustomizeTab() {
     const room = useRoomInstance();
+    const dialogs = useDialogs();
 
     if(!room) {
         return;
@@ -103,6 +106,8 @@ export default function RoomSettingsCustomizeTab() {
 
                 <Checkbox label="Hide room walls" value={room.roomRenderer.structure.wall?.hidden ?? false} onChange={handleWallHidden}/>
             </div>
+            
+            <DialogButton onClick={() => dialogs.addUniqueDialog("room-floorplan")}>Edit room floorplan</DialogButton>
         </div>
     );
 }
