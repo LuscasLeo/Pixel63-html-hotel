@@ -209,13 +209,16 @@ export default class RoomItem implements RoomItemInterface {
             return;
         }
 
+        let position: RoomPositionData;
+
         if(Array.isArray(this.positionPathData.toPosition)) {
-            this.setPosition(this.positionPathData.toPosition[this.positionPathData.toPosition.length - 1]);
+            position = this.positionPathData.toPosition[this.positionPathData.toPosition.length - 1];
         }
         else {
-            this.setPosition(this.positionPathData.toPosition);
+            position = this.positionPathData.toPosition;
         }
 
         this.positionPathData = undefined;
+        this.setPosition(position);
     }
 }
