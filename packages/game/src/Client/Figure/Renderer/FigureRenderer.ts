@@ -10,6 +10,8 @@ import FigureSpriteRenderer from "@Client/Figure/Renderer/Sprites/FigureSpriteRe
 import FigureEffectRenderer from "@Client/Figure/Renderer/Effects/FigureEffectRenderer";
 import FigureCanvasRenderer from "@Client/Figure/Renderer/FigureCanvasRenderer";
 import { FigureRendererOptions } from "@Client/Figure/Renderer/Interfaces/FigureRendererOptions";
+import FigureEffectData from "@Client/Figure/Renderer/Interfaces/FigureEffectData";
+import { AvatarActionData } from "@Client/Interfaces/Figure/Avataractions";
 
 export type FigureRendererResult = {
     figure: FigureRendererSpriteResult;
@@ -145,7 +147,6 @@ export default class FigureRenderer {
     }
 
     public async render(options: FigureRendererOptions, useConfigurationEffect: boolean = false, ignoreBodyparts: string[] = [], headOnly?: boolean) {
-        this.previousFrames = this.getFramesKey(options);
         this.previousOptions = options;
         
         const mutatedActions = [...options.actions];
@@ -210,19 +211,7 @@ export default class FigureRenderer {
         return this.configuration.parts.map((section) => [section.type, section.setId, ...section.colors].filter(Boolean).join('-')).join('.');
     }
 
-    private getFramesKey(options: FigureRendererOptions) {
-        const mutatedActions = [...options.actions];
-
-        const shouldAddConfigurationEffect = this.configuration.effect && !mutatedActions.some((actionId) => actionId.startsWith("AvatarEffect"));
-
-        if(shouldAddConfigurationEffect) {
-            mutatedActions.push(`AvatarEffect.${this.configuration.effect}`);
-        }
-
-        const actions = this.figureActions.getAvatarActions(mutatedActions);
-
-        const effects = this.figureEffects.getEffects(mutatedActions, actions);
-
+    private getFramesKey(options: FigureRendererOptions, actions: AvatarActionData[], effects: FigureEffectData[]) {
         const actionsForBodyParts = this.figureActions.getActionsForBodyParts(options.frame, actions, effects, []);
 
         const spritesFromConfiguration = this.figureSpriteBuilder.getSpritesFromConfiguration();
@@ -257,18 +246,6 @@ export default class FigureRenderer {
             frameSections.push(`${spriteConfiguration.type}-${spriteFrame}`);
         }
 
-        for(const effect of effects) {
-            if(!effect.data.animation) {
-                continue;
-            }
-
-            const animationFrameIndex = this.figureAnimations.getCurrentAnimationFrame(options.frame, effect.data.animation.frames);
-
-            const animationFrame = effect.data.animation.frames?.[animationFrameIndex];
-
-            frameSections.push(`${effect.id}-${animationFrame}`);
-        }
-
         return frameSections.join('_');
     }
 
@@ -277,7 +254,27 @@ export default class FigureRenderer {
             return true;
         }
 
-        if(this.previousFrames !== this.getFramesKey(options)) {
+        const mutatedActions = [...options.actions];
+
+        const shouldAddConfigurationEffect = this.configuration.effect && !mutatedActions.some((actionId) => actionId.startsWith("AvatarEffect"));
+
+        if(shouldAddConfigurationEffect) {
+            mutatedActions.push(`AvatarEffect.${this.configuration.effect}`);
+        }
+
+        if(mutatedActions.some((action) => action.startsWith("Dance") || action.startsWith("AvatarEffect") || action.startsWith("CarryItem"))) {
+            return true;
+        }
+
+        const actions = this.figureActions.getAvatarActions(mutatedActions);
+
+        const effects = this.figureEffects.getEffects(mutatedActions, actions);
+
+        const framesKey = this.getFramesKey(options, actions, effects);
+
+        if(this.previousFrames !== framesKey) {
+            this.previousFrames = framesKey;
+
             return true;
         }
 
