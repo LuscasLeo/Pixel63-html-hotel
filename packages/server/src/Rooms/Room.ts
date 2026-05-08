@@ -20,6 +20,7 @@ import RoomGame from "./Games/RoomGame.js";
 import WiredTriggerGameEndsLogic from "./Furniture/Logic/Wired/Trigger/WiredTriggerGameEndsLogic.js";
 import WiredTriggerGameStartsLogic from "./Furniture/Logic/Wired/Trigger/WiredTriggerGameStartsLogic.js";
 import WiredTriggerScoreAchievedLogic from "./Furniture/Logic/Wired/Trigger/WiredTriggerScoreAchievedLogic.js";
+import RoomWired from "./Wired/RoomWired.js";
 
 export default class Room {
     public readonly users: RoomUser[] = [];
@@ -30,6 +31,7 @@ export default class Room {
     public clickConfiguration: RoomClickConfigurationData | undefined = undefined;
 
     public games: RoomGames = new RoomGames(this);
+    public wired: RoomWired = new RoomWired(this);
 
     public readonly floorplan: RoomFloorplan;
 
