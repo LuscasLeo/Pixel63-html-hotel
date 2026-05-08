@@ -1,6 +1,6 @@
 import FurnitureIcon from "../../Furniture/FurnitureIcon";
 import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
-import { Fragment, ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import { Fragment, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { clientInstance, webSocketClient } from "../../../..";
 import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
 import InventoryEmptyTab from "./InventoryEmptyTab";
@@ -11,6 +11,9 @@ import { GetUserInventoryFurnitureData, PlaceRoomContentFurnitureData, PlaceRoom
 import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScrollArea";
 import RoomRenderer from "@UserInterface/Common/Room/RoomRenderer";
 import { useTranslation } from "react-i18next";
+import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
+import Input from "@UserInterface/Common/Form/Components/Input";
+import Selection from "@UserInterface/Common/Form/Components/Selection";
 
 export type InventoryFurnitureTabProps = {
     allowPlacingInRoom: boolean;
@@ -31,6 +34,26 @@ export default function InventoryFurnitureTab({ trading, allowPlacingInRoom, but
 
     const [roomFurniturePlacer, setRoomFurniturePlacer] = useState<RoomFurniturePlacer>();
     const roomFurniturePlacerId = useRef<string>(undefined);
+
+    const [search, setSearch] = useState("");
+    const [type, setType] = useState<string | null>(null);
+    const [location, setLocation] = useState("inventory");
+
+    const filteredUserFurniture = useMemo(() => {
+        let filteredUserFurniture = userFurniture;
+
+        if(search) {
+            const lowerCasedSearch = search.toLowerCase();
+
+            filteredUserFurniture = filteredUserFurniture.filter((userFurniture) => userFurniture.furniture?.name?.toLowerCase().includes(lowerCasedSearch) || userFurniture.furniture?.description?.toLowerCase().includes(lowerCasedSearch));
+        }
+
+        if(type) {
+            filteredUserFurniture = filteredUserFurniture.filter((userFurniture) => userFurniture.furniture?.placement === type);
+        }
+
+        return filteredUserFurniture;
+    }, [userFurniture, search, type]);
 
     useEffect(() => {
         if(userFurnitureRequested.current) {
@@ -199,109 +222,148 @@ export default function InventoryFurnitureTab({ trading, allowPlacingInRoom, but
     }
 
     return (
-        <div style={{
-            flex: "1 1 0",
-
-            overflow: "hidden",
-
-            display: "flex",
-            flexDirection: "row",
-
-            gap: 10
+        <FlexLayout style={{
+            flex: "1 1 0"
         }}>
-            <DialogScrollArea style={{ gap: 1 }} hideInactive>
-                <div style={{
-                    flex: 1,
+            <FlexLayout direction="row" style={{
+                background: "#C9C9C9",
+                borderRadius: 3,
+                padding: "2px 3px",
+                width: "100%"
+            }}>
+                <Input style={{ flex: 1, width: "100%" }} value={search} onChange={setSearch}/>
 
-                    display: "flex",
-                    flexDirection: "row",
-                    flexWrap: "wrap",
-                    alignContent: "start",
-                    gap: 4
-                }}>
-                    {userFurniture?.map((userFurniture) => (
-                        <DialogItem
-                            key={(userFurniture.furniture?.flags?.inventoryStackable)?(userFurniture.furniture?.id):(userFurniture.id)}
-                            active={activeFurniture?.id === userFurniture.id}
-                            onClick={() => setActiveFurniture(userFurniture)}
-                            onMouseDown={() => room && room.hasRights && handleMouseDown(userFurniture)}>
-                                <FurnitureIcon furnitureData={userFurniture.furniture}/>
+                <Selection style={{ flex: 1 }} value={type} items={[
+                    {
+                        value: null,
+                        label: "Any type"
+                    },
+                    {
+                        value: "floor",
+                        label: "Floor items"
+                    },
+                    {
+                        value: "wall",
+                        label: "Wall items"
+                    }
+                ]} onChange={setType}/>
 
-                                {(userFurniture.quantity > 1) && (
-                                    <div style={{
-                                        position: "absolute",
-
-                                        right: 2,
-                                        top: 2,
-
-                                        border: "1px solid #2F6982",
-                                        background: "#FFF",
-                                        color: "#306A83",
-
-                                        fontSize: 10,
-
-                                        padding: "0px 2px"
-                                    }}>
-                                        {userFurniture.quantity}
-                                    </div>
-                                )}
-                        </DialogItem>
-                    ))}
-                </div>
-            </DialogScrollArea>
+                <Selection disabled style={{ flex: 1 }} value={location} items={[
+                    {
+                        value: "inventory",
+                        label: "In inventory"
+                    },
+                    {
+                        value: "rooms",
+                        label: "In rooms"
+                    }
+                ]} onChange={setLocation}/>
+            </FlexLayout>
 
             <div style={{
-                width: 170,
+                flex: "1 1 0",
+
+                overflow: "hidden",
 
                 display: "flex",
-                flexDirection: "column",
+                flexDirection: "row",
+
                 gap: 10
             }}>
-                {(activeFurniture) && (
-                    <Fragment>
-                        <div style={{
-                            height: 130
-                        }}>
-                            <RoomRenderer
-                                structure={RoomStructureData.create({
-                                    grid: new Array(7).fill(null).map((_) => new Array(7).fill(null).map(() => '0').join('')),
-                                    floor: {
-                                        id: clientInstance.roomInstance.value?.roomRenderer.structure.floor?.id ?? "111",
-                                        thickness: 8
-                                    },
-                                    wall: {
-                                        id: clientInstance.roomInstance.value?.roomRenderer.structure.wall?.id ?? "201",
-                                        thickness: 8,
-                                        hidden: false
-                                    }
-                                })}
-                                furniture={
-                                    (activeFurniture?.furniture)?([
-                                        {
-                                            id: activeFurniture.id,
-                                            furniture: activeFurniture.furniture,
-                                            externalImage: activeFurniture.userFurniture?.data?.externalImage?.externalImage,
-                                            figureConfiguration: activeFurniture.userFurniture?.data?.mannequin?.figureConfiguration,
-                                            panToItem: true
+                <DialogScrollArea style={{ gap: 1 }} hideInactive>
+                    <div style={{
+                        flex: 1,
+
+                        display: "flex",
+                        flexDirection: "row",
+                        flexWrap: "wrap",
+                        alignContent: "start",
+                        gap: 4
+                    }}>
+                        {filteredUserFurniture.map((userFurniture) => (
+                            <DialogItem
+                                key={(userFurniture.furniture?.flags?.inventoryStackable)?(userFurniture.furniture?.id):(userFurniture.id)}
+                                active={activeFurniture?.id === userFurniture.id}
+                                onClick={() => setActiveFurniture(userFurniture)}
+                                onMouseDown={() => room && room.hasRights && handleMouseDown(userFurniture)}>
+                                    <FurnitureIcon furnitureData={userFurniture.furniture}/>
+
+                                    {(userFurniture.quantity > 1) && (
+                                        <div style={{
+                                            position: "absolute",
+
+                                            right: 2,
+                                            top: 2,
+
+                                            border: "1px solid #2F6982",
+                                            background: "#FFF",
+                                            color: "#306A83",
+
+                                            fontSize: 10,
+
+                                            padding: "0px 2px"
+                                        }}>
+                                            {userFurniture.quantity}
+                                        </div>
+                                    )}
+                            </DialogItem>
+                        ))}
+                    </div>
+                </DialogScrollArea>
+                    
+                <div style={{
+                    width: 170,
+
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 10
+                }}>
+                    {(activeFurniture) && (
+                        <Fragment>
+                            <div style={{
+                                height: 130
+                            }}>
+                                <RoomRenderer
+                                    structure={RoomStructureData.create({
+                                        grid: new Array(7).fill(null).map((_) => new Array(7).fill(null).map(() => '0').join('')),
+                                        floor: {
+                                            id: clientInstance.roomInstance.value?.roomRenderer.structure.floor?.id ?? "111",
+                                            thickness: 8
+                                        },
+                                        wall: {
+                                            id: clientInstance.roomInstance.value?.roomRenderer.structure.wall?.id ?? "201",
+                                            thickness: 8,
+                                            hidden: false
                                         }
-                                    ]):([])
-                                }
-                                />
-                        </div>
+                                    })}
+                                    furniture={
+                                        (activeFurniture?.furniture)?([
+                                            {
+                                                id: activeFurniture.id,
+                                                furniture: activeFurniture.furniture,
+                                                externalImage: activeFurniture.userFurniture?.data?.externalImage?.externalImage,
+                                                figureConfiguration: activeFurniture.userFurniture?.data?.mannequin?.figureConfiguration,
+                                                panToItem: true
+                                            }
+                                        ]):([])
+                                    }
+                                    />
+                            </div>
 
-                        <div style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis" }}>
-                            <b>{activeFurniture.name ?? activeFurniture?.furniture?.name}</b>
-                            <p style={{ textOverflow: "ellipsis", maxHeight: 40, overflow: "hidden" }}>{activeFurniture.description ?? activeFurniture?.furniture?.description}</p>
-                        </div>
+                            <div style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis" }}>
+                                <b>{activeFurniture.name ?? activeFurniture?.furniture?.name}</b>
+                                <p style={{ textOverflow: "ellipsis", maxHeight: 40, overflow: "hidden" }}>{activeFurniture.description ?? activeFurniture?.furniture?.description}</p>
+                            </div>
 
-                        {(allowPlacingInRoom)?(
-                            <DialogButton disabled={!room || !room.hasRights} onClick={() => activeFurniture && onPlaceInRoomClick(activeFurniture)}>{getTranslation("place_in_room")}</DialogButton>
-                        ):(
-                            button?.(activeFurniture)
-                        )}
-                    </Fragment>
-                )}
+                            {(allowPlacingInRoom)?(
+                                <DialogButton disabled={!room || !room.hasRights} onClick={() => activeFurniture && onPlaceInRoomClick(activeFurniture)}>{getTranslation("place_in_room")}</DialogButton>
+                            ):(
+                                button?.(activeFurniture)
+                            )}
+                        </Fragment>
+                    )}
+                </div>
             </div>
-        </div>
+        </FlexLayout>
     );
 }

@@ -18,7 +18,7 @@ export default function InventoryDialog({ data, hidden, onClose }: InventoryDial
     const [getTranslation] = useTranslation("inventory");
 
     return (
-        <Dialog title={getTranslation("title")} width={500} height={340} hidden={hidden} onClose={onClose}>
+        <Dialog title={getTranslation("title")} width={500} height={350} hidden={hidden} onClose={onClose}>
             <DialogTabs initialActiveIndex={["furniture", "pets", "badges", "bots"].indexOf(data?.tab ?? "furniture")} withoutHeader tabs={[
                 {
                     icon: getTranslation("tabs.furniture"),

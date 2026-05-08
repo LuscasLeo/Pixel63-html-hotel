@@ -1,7 +1,9 @@
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { CSSProperties, ReactNode, useEffect, useRef, useState } from "react";
 
 export type SelectionProps = {
     value: any;
+    style?: CSSProperties;
+    disabled?: boolean;
     
     items: {
         value: any;
@@ -11,7 +13,7 @@ export type SelectionProps = {
     onChange: (value: any) => void;
 }
 
-export default function Selection({ value, items, onChange }: SelectionProps) {
+export default function Selection({ disabled, style, value, items, onChange }: SelectionProps) {
     const elementRef = useRef<HTMLDivElement>(null);
 
     const [expanded, setExpanded] = useState(false);
@@ -45,7 +47,11 @@ export default function Selection({ value, items, onChange }: SelectionProps) {
             borderBottom: "1px solid #FFFFFF",
             borderRadius: 6,
 
-            color: "#000000"
+            color: "#000000",
+
+            opacity: (disabled)?(0.6):(1),
+
+            ...style
         }}>
             <div style={{
 
@@ -70,7 +76,7 @@ export default function Selection({ value, items, onChange }: SelectionProps) {
                     alignItems: "center",
 
                     cursor: "pointer"
-                }} onClick={() => setExpanded(true)}>
+                }} onClick={() => !disabled && setExpanded(true)}>
                     <div style={{
                         flex: 1,
                         paddingLeft: 6,
