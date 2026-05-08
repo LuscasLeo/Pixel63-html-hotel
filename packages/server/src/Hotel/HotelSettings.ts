@@ -13,6 +13,8 @@ export default class HotelSettings {
 
         this.roomUserIdlingTimeout = this.findSetting(settings, "room.user.idling_timeout") ?? this.roomUserIdlingTimeout;
         this.roomUserTradeCompletionSeconds = this.findSetting(settings, "room.user.trade.completion_duration") ?? this.roomUserTradeCompletionSeconds;
+
+        return settings;
     }
 
     private findSetting(settings: HotelSettingModel[], id: string) {
