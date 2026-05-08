@@ -1,13 +1,20 @@
+import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 import DialogTable from "@UserInterface/Common/Dialog/Components/Table/DialogTable";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
+import { RoomWiredTabProps } from "@UserInterface/Components/Room/Wired/RoomWiredDialog";
 import useRoomWiredMonitor from "@UserInterface/Components/Room/Wired/Tabs/Monitor/Hooks/useRoomWiredMonitor";
+import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 
-export default function RoomWiredMonitorTab() {
+export default function RoomWiredMonitorTab({ onTabChange }: RoomWiredTabProps) {
     const [getCommonTranslation] = useTranslation("common");
     const [getWiredTranslation] = useTranslation("wired");
 
     const {monitor, handleRefresh} = useRoomWiredMonitor();
+
+    const handleShowAllLogs = useCallback(() => {
+        onTabChange?.(1);
+    }, [onTabChange]);
 
     return (
         <FlexLayout flex={1} direction="column">
@@ -31,7 +38,9 @@ export default function RoomWiredMonitorTab() {
                         fontSize: "0.9em"
                     }}>
                         <FlexLayout direction="column" gap={6}>
-                            <div>{getWiredTranslation("monitor.variables.is_heavy")}: <span style={{ color: "#2B8B2A" }}>{(monitor?.statistics?.heavy)?(getCommonTranslation("yes")):(getCommonTranslation("no"))}</span></div>
+                            {(monitor) && (
+                                <div>{getWiredTranslation("monitor.variables.is_heavy")}: <span style={{ color: "#2B8B2A" }}>{(monitor.statistics?.heavy)?(getCommonTranslation("yes")):(getCommonTranslation("no"))}</span></div>
+                            )}
 
                             {monitor?.statistics?.variables.map((variable) => (
                                 <div>{getWiredTranslation(`monitor.variables.${variable.type}`)}: <span style={{ color: "#2B8B2A" }}>{variable.value}/{variable.maxValue}</span></div>
@@ -50,7 +59,7 @@ export default function RoomWiredMonitorTab() {
 
                 <DialogTable
                     flex={[2, 1, 1, 2]}
-                    columns={[getWiredTranslation("monitor.type"), getWiredTranslation("monitor.category"), getWiredTranslation("monitor.amount"), getWiredTranslation("monitor.latest_occurrence")]}
+                    columns={[getWiredTranslation("monitor.category"), getWiredTranslation("monitor.level"), getWiredTranslation("monitor.amount"), getWiredTranslation("monitor.latest_occurrence")]}
                     items={monitor?.logs.map((log) => ({
                         id: log.category,
                         values: [
@@ -62,6 +71,10 @@ export default function RoomWiredMonitorTab() {
                     }))}
                     empty={getWiredTranslation("monitor.no_logs")}
                     />
+            </FlexLayout>
+
+            <FlexLayout direction="row" justify="flex-end">
+                <DialogButton onClick={handleShowAllLogs}>Show all logs</DialogButton>
             </FlexLayout>
         </FlexLayout>
     );

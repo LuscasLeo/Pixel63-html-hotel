@@ -1,6 +1,8 @@
 import DialogTabs from "@UserInterface/Common/Dialog/Components/Tabs/DialogTabs";
 import Dialog from "@UserInterface/Common/Dialog/Dialog";
+import RoomWiredLogsTab from "@UserInterface/Components/Room/Wired/Tabs/Monitor/RoomWiredLogsTab";
 import RoomWiredMonitorTab from "@UserInterface/Components/Room/Wired/Tabs/Monitor/RoomWiredMonitorTab";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export type RoomWiredDialogProps = {
@@ -8,12 +10,19 @@ export type RoomWiredDialogProps = {
     onClose?: () => void;
 }
 
+export type RoomWiredTabProps = {
+    onTabChange?: (tab: number) => void;
+};
+
 export default function RoomWiredDialog({ hidden, onClose }: RoomWiredDialogProps) {
     const [getWiredTranslation] = useTranslation("wired");
+    const [tab, setTab] = useState(0);
 
     return (
         <Dialog title={getWiredTranslation("creator_tools")} hidden={hidden} onClose={onClose} width={500} height={500}>
             <DialogTabs
+                index={tab}
+                onChange={setTab}
                 height={74}
                 header={{
                     backgroundImage: "/assets/dialogs/headers/wired-header.png",
@@ -22,7 +31,12 @@ export default function RoomWiredDialog({ hidden, onClose }: RoomWiredDialogProp
                 tabs={[
                     {
                         icon: getWiredTranslation("monitor.monitor"),
-                        element: (<RoomWiredMonitorTab/>)
+                        element: (<RoomWiredMonitorTab onTabChange={setTab}/>)
+                    },
+                    
+                    {
+                        icon: getWiredTranslation("monitor.logs"),
+                        element: (<RoomWiredLogsTab/>)
                     }
                 ]}/>
         </Dialog>

@@ -5,11 +5,13 @@
         "monitor": "Övervakning",
         "statistics": "Statistik",
         "logs": "Loggar",
-        "type": "Typ",
         "category": "Kategori",
+        "level": "Nivå",
         "amount": "Antal",
         "latest_occurrence": "Senasta händelsen",
         "no_logs": "Det finns inga loggar att visa ännu.",
+        "timestamp": "Tidspunkt",
+        "message": "Meddelande",
 
         "variables": {
             "is_heavy": "Rummet klassas som tungt",

@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+message GetRoomWiredLogsData {
+    optional string search = 1;
+    optional string level = 2;
+
+    uint32 page = 3;
+}

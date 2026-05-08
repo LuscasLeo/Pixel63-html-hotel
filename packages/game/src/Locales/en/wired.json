@@ -5,11 +5,13 @@
         "monitor": "Monitor",
         "statistics": "Statistics",
         "logs": "Logs",
-        "type": "Type",
         "category": "Category",
+        "level": "Level",
         "amount": "Amount",
         "latest_occurrence": "Latest occurrence",
         "no_logs": "There is no logs to show yet.",
+        "timestamp": "Timestamp",
+        "message": "Message",
 
         "variables": {
             "is_heavy": "Is heavy",

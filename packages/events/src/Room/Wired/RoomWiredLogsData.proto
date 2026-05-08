@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+message RoomWiredLogsData {
+    string room_id = 1;
+
+    uint32 page = 2;
+    uint32 max_pages = 3;
+
+    message RoomWiredMonitorLogData {
+        string category = 1;
+        string level = 2;
+        string message = 3;
+        string timestamp = 4;
+    }
+
+    repeated RoomWiredMonitorLogData logs = 4;
+}
