@@ -7,13 +7,20 @@ export default function RoomWiredMonitorTab() {
     const [getCommonTranslation] = useTranslation("common");
     const [getWiredTranslation] = useTranslation("wired");
 
-    const monitor = useRoomWiredMonitor();
+    const {monitor, handleRefresh} = useRoomWiredMonitor();
 
     return (
         <FlexLayout flex={1} direction="column">
             <FlexLayout direction="row" align="center">
                 <FlexLayout flex={1} direction="column" gap={5}>
-                    <div><b>{getWiredTranslation("monitor.statistics")}</b></div>
+                    <FlexLayout direction="row" align="center" justify="space-between">
+                        <div><b>{getWiredTranslation("monitor.statistics")}</b></div>
+
+                        <div className="sprite_refresh" onClick={handleRefresh} style={{
+                            filter: "invert(1)",
+                            cursor: "pointer"
+                        }}/>
+                    </FlexLayout>
 
                     <div style={{
                         borderRadius: 6,
@@ -50,7 +57,7 @@ export default function RoomWiredMonitorTab() {
                             log.type,
                             log.category,
                             log.amount,
-                            (log.latestOccurrence)?(new Date(log.latestOccurrence).toString()):('-')
+                            (log.latestOccurrence)?(new Date(log.latestOccurrence).toLocaleTimeString()):('-')
                         ]
                     }))}
                     empty={getWiredTranslation("monitor.no_logs")}

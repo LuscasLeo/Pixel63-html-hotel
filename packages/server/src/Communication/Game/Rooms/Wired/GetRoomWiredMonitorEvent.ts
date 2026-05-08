@@ -16,6 +16,20 @@ export default class GetRoomWiredMonitorEvent implements ProtobuffListener<GetRo
             return;
         }
 
+        const room = user.room;
+
+        let floorFurnitureCount = 0;
+        let wallFurnitureCount = 0;
+
+        for(const furniture of room.furnitures) {
+            if(furniture.model.furniture.placement === "floor") {
+                floorFurnitureCount++;
+            }
+            else {
+                wallFurnitureCount++;
+            }
+        }
+
         user.sendProtobuff(RoomWiredMonitorData, RoomWiredMonitorData.create({
             roomId: user.room.model.id,
 
@@ -25,17 +39,17 @@ export default class GetRoomWiredMonitorEvent implements ProtobuffListener<GetRo
                 variables: [
                     {
                         type: "wired_usage",
-                        value: 0,
+                        value: room.wired.executions.length,
                         maxValue: 3125
                     },
                     {
                         type: "floor_furni",
-                        value: 0,
+                        value: floorFurnitureCount,
                         maxValue: 4000
                     },
                     {
                         type: "wall_furni",
-                        value: 0,
+                        value: wallFurnitureCount,
                         maxValue: 4000
                     },
                     {

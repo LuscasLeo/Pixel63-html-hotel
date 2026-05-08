@@ -2,6 +2,8 @@ import RoomFurnitureLogic, { RoomFurnitureHandleUserChatResult } from "../Interf
 import RoomFurniture from "../../RoomFurniture";
 import RoomUser from "../../../Users/RoomUser";
 import WiredActionLogic from "./WiredActionLogic";
+import RoomWired from "../../../Wired/RoomWired";
+import Room from "../../../Room";
 
 export type WiredTriggerOptions = {
     roomUser?: RoomUser;
@@ -11,8 +13,13 @@ export type WiredTriggerOptions = {
 
 export default class WiredLogic implements RoomFurnitureLogic {
     public lastTriggered: number = 0;
+    public room: Room;
+    public roomWired: RoomWired;
 
     constructor(public readonly roomFurniture: RoomFurniture) {
+        this.room = this.roomFurniture.room;
+        this.roomWired = this.roomFurniture.room.wired;
+
         this.roomFurniture.setAnimation(0).catch(console.error);
     }
 

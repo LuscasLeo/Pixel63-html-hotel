@@ -1,6 +1,6 @@
 import { webSocketClient } from "@Game/index";
 import { GetRoomWiredMonitorData, RoomWiredMonitorData } from "@pixel63/events";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export default function useRoomWiredMonitor() {
     const [monitor, setMonitor] = useState<RoomWiredMonitorData>();
@@ -25,5 +25,12 @@ export default function useRoomWiredMonitor() {
         };
     }, []);
 
-    return monitor;
+    const handleRefresh = useCallback(() => {
+        webSocketClient.sendProtobuff(GetRoomWiredMonitorData, GetRoomWiredMonitorData.create({}));
+    }, []);
+
+    return {
+        monitor,
+        handleRefresh
+    };
 }

@@ -10,9 +10,16 @@ export default class WiredTriggerPeriodicallyLogic extends WiredTriggerLogic {
         const elapsed = performance.now() - this.lastTriggered;
         
         if(elapsed >= (this.roomFurniture.model.data?.wiredTriggerPeriodically?.seconds ?? 5) * 1000) {
-            await this.setActive();
-            
-            this.handleTrigger().catch(console.error);
+            await this.roomWired.startExecution(
+                new Promise((resolve, reject) => {
+                    Promise.allSettled([
+                        this.setActive(),
+                        this.handleTrigger()
+                    ])
+                    .then(resolve)
+                    .catch(reject);
+                })
+            );
         }
 
         return await super.handleActionsInterval();
