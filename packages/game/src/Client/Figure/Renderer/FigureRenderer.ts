@@ -64,8 +64,11 @@ export default class FigureRenderer {
 
     public readonly figureCanvasRenderer = new FigureCanvasRenderer(this);
 
-    private previousFrames?: string;
+    public previousFrames?: string;
+    public previousEffects?: string;
     private previousOptions?: FigureRendererOptions;
+
+    private rendering: boolean = false;
 
     constructor(public configuration: FigureConfigurationData) {
         
@@ -147,15 +150,11 @@ export default class FigureRenderer {
     }
 
     public async render(options: FigureRendererOptions, useConfigurationEffect: boolean = false, ignoreBodyparts: string[] = [], headOnly?: boolean) {
-        this.previousOptions = options;
+        this.previousOptions = {...options};
         
-        const mutatedActions = [...options.actions];
+        this.rendering = true;
 
-        const shouldAddConfigurationEffect = useConfigurationEffect && this.configuration.effect && !mutatedActions.some((actionId) => actionId.startsWith("AvatarEffect"));
-
-        if(shouldAddConfigurationEffect) {
-            mutatedActions.push(`AvatarEffect.${this.configuration.effect}`);
-        }
+        const mutatedActions = this.getMutatedActions(options, useConfigurationEffect);
 
         const actions = this.figureActions.getAvatarActions(mutatedActions);
 
@@ -168,7 +167,7 @@ export default class FigureRenderer {
         const actionsForBodyParts = this.figureActions.getActionsForBodyParts(options.frame, actions, effects, ignoreBodyparts);
 
         // TODO: already here filter out parts that will not be rendered to minimize the overhead
-        const spritesFromConfiguration = this.figureSpriteBuilder.getSpritesFromConfiguration();
+        const spritesFromConfiguration = this.figureSpriteBuilder.getSpritesFromConfiguration(options);
 
         const carryItemAction = actionsForBodyParts.find((action) => action.actionId === "CarryItem");
 
@@ -195,7 +194,9 @@ export default class FigureRenderer {
 
         const sprites = await this.figureSpriteRenderer.getFigureSprites(mutatedActions, options.frame, spritesFromConfiguration, actionsForBodyParts, direction, grayscaled, headOnly);
 
-        const effectSprites = await this.figureEffectRenderer.getEffectSprites(options.frame, actions, actionsForBodyParts, effects, direction);
+        const effectSprites = await this.figureEffectRenderer.getEffectSprites(options.frame, actions, effects, direction);
+
+        this.rendering = false;
 
         return {
             sprites,
@@ -207,14 +208,20 @@ export default class FigureRenderer {
         return this.figureCanvasRenderer.renderToCanvas(options, cropped, drawEffects, useConfigurationEffect, ignoreBodyparts, headOnly);
     }
 
-    public getConfigurationAsString(): string {
-        return this.configuration.parts.map((section) => [section.type, section.setId, ...section.colors].filter(Boolean).join('-')).join('.');
+    private configurationAsString?: string;
+
+    public getConfigurationAsString(options?:FigureRendererOptions): string {
+        if(options?.figureConfigurationChanged || !this.configurationAsString) {
+            this.configurationAsString = this.configuration.parts.map((section) => [section.type, section.setId, ...section.colors].filter(Boolean).join('-')).join('.');
+        }
+
+        return this.configurationAsString;
     }
 
     private getFramesKey(options: FigureRendererOptions, actions: AvatarActionData[], effects: FigureEffectData[]) {
         const actionsForBodyParts = this.figureActions.getActionsForBodyParts(options.frame, actions, effects, []);
 
-        const spritesFromConfiguration = this.figureSpriteBuilder.getSpritesFromConfiguration();
+        const spritesFromConfiguration = this.figureSpriteBuilder.getSpritesFromConfiguration(options);
 
         const frameSections: string[] = [];
 
@@ -249,38 +256,112 @@ export default class FigureRenderer {
         return frameSections.join('_');
     }
 
-    public shouldRender(options: FigureRendererOptions) {
-        return true;
-
-        /*if(!this.previousOptions) {
-            return true;
-        }
-
+    private getMutatedActions(options: FigureRendererOptions, useConfigurationEffect?: boolean) {
         const mutatedActions = [...options.actions];
 
-        const shouldAddConfigurationEffect = this.configuration.effect && !mutatedActions.some((actionId) => actionId.startsWith("AvatarEffect"));
+        const shouldAddConfigurationEffect = useConfigurationEffect && this.configuration.effect && !mutatedActions.some((actionId) => actionId.startsWith("AvatarEffect"));
 
         if(shouldAddConfigurationEffect) {
             mutatedActions.push(`AvatarEffect.${this.configuration.effect}`);
         }
 
-        if(mutatedActions.some((action) => action.startsWith("Dance") || action.startsWith("AvatarEffect") || action.startsWith("CarryItem"))) {
-            return true;
+        return mutatedActions;
+    }
+
+    private getEffectsFramesKey(options: FigureRendererOptions, useConfigurationEffect?: boolean) {
+        const mutatedActions = this.getMutatedActions(options, useConfigurationEffect);
+
+        const actions = this.figureActions.getAvatarActions(mutatedActions);
+
+        const effects = this.figureEffects.getEffects(mutatedActions, actions);
+
+        const direction = this.figureEffects.getDirectionFromEffect(options.direction, effects);
+
+        const result: string[] = [];
+
+        for(const effect of effects) {
+            if(!effect.data.animation) {
+                continue;
+            }
+
+            const animationSprites = this.figureEffects.getFigureEffectAnimationSprites(actions, effect, direction, options.frame);
+
+            const animationFrameIndex = this.figureAnimations.getCurrentAnimationFrame(options.frame, effect.data.animation.frames);
+
+            const animationFrame = effect.data.animation.frames?.[animationFrameIndex];
+
+            for(const animationSprite of animationSprites) {
+                let spriteEffect = effect;
+
+                const effectLibrary = animationSprite.member?.split('_').find((part) => part.startsWith("fx"));
+
+                if(effectLibrary && effectLibrary !== `fx${effect.id}`) {
+                    const libraryId = parseInt(effectLibrary.substring(2));
+
+                    const library = this.figureEffects.getEffectLibrary(libraryId);
+
+                    if(!library) {
+                        continue;
+                    }
+
+                    spriteEffect = this.figureEffects.effects[library.id];
+
+                    if(!spriteEffect) {
+                        continue;
+                    }
+                }
+
+                const effectFrame = animationFrame?.effects.find((effect) => effect.id === animationSprite.id);
+
+                let spriteDirection = direction;
+
+                if(animationSprite.directionOffset !== undefined) {
+                    spriteDirection += animationSprite.directionOffset;
+                }
+
+                if(effectFrame?.directionOffset !== undefined) {
+                    spriteDirection += effectFrame.directionOffset;
+                }
+
+                while(spriteDirection < 0) {
+                    spriteDirection += 8;
+                }
+
+                spriteDirection %= 8;
+            
+                result.push(`${animationSprite.id}-${animationSprite?.frame ?? effectFrame?.frame ?? 0}-${animationSprite.member}-${(animationSprite.useDirections)?(spriteDirection):(0)}-${animationSprite.destinationY}`);
+            }
         }
+
+        return result.join('_');
+    }
+
+    public shouldRender(options: FigureRendererOptions) {
+        if(this.rendering) {
+            return false;
+        }
+
+        if(!FigureAssets.loaded) {
+            return false;
+        }
+
+        const mutatedActions = this.getMutatedActions(options);
 
         const actions = this.figureActions.getAvatarActions(mutatedActions);
 
         const effects = this.figureEffects.getEffects(mutatedActions, actions);
 
         const framesKey = this.getFramesKey(options, actions, effects);
+        const effectsFramesKey = this.getEffectsFramesKey(options);
 
-        if(this.previousFrames !== framesKey) {
+        if(this.previousFrames !== framesKey || this.previousEffects !== effectsFramesKey) {
             this.previousFrames = framesKey;
+            this.previousEffects = effectsFramesKey;
 
             return true;
         }
 
-        if(options.direction !== this.previousOptions.direction) {
+        if(!this.previousOptions) {
             return true;
         }
 
@@ -288,6 +369,10 @@ export default class FigureRenderer {
             return true;
         }
 
-        return false;*/
+        if(options.direction !== this.previousOptions.direction) {
+            return true;
+        }
+
+        return false;
     }
 }

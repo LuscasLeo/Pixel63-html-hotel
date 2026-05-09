@@ -1,5 +1,4 @@
 import FigureRenderer, { FigureRendererSprite } from "@Client/Figure/Renderer/FigureRenderer";
-import FigureBodyPartAction from "@Client/Figure/Renderer/Interfaces/FigureBodyPartAction";
 import FigureEffectData from "@Client/Figure/Renderer/Interfaces/FigureEffectData";
 import { AvatarActionData } from "@Client/Interfaces/Figure/Avataractions";
 import { FurnitureAsset } from "@Client/Interfaces/Furniture/FurnitureAssets";
@@ -13,7 +12,7 @@ export default class FigureEffectRenderer {
 
     }
     
-    public async getEffectSprites(frame: number, actions: AvatarActionData[], actionsForBodyParts: FigureBodyPartAction[], effects: FigureEffectData[], direction: number): Promise<FigureRendererSprite[]> {
+    public async getEffectSprites(frame: number, actions: AvatarActionData[], effects: FigureEffectData[], direction: number): Promise<FigureRendererSprite[]> {
         const sprites: FigureRendererSprite[] = [];
 
         this.figureRenderer.avatarEffect = undefined;
@@ -36,136 +35,7 @@ export default class FigureEffectRenderer {
                 this.figureRenderer.avatarEffect = avatarBodypart;
             }
 
-            function getIndexForAlignment(alignment: string) {
-                switch(alignment) {
-                    case "top":
-                        return 1;
-
-                    case "bottom":
-                        return -1;
-
-                    case "behind": {
-                        if(direction > 1 && direction < 5) {
-                            return -1;
-                        }
-
-                        return 0;
-                    }
-                }
-
-                return 0;
-            }
-
-            let animationSprites =
-                effect.data.animation.sprites
-                .concat(
-                    effect.data.animation.add.map((add) => {
-                        const id = add.base ?? add.id;
-
-                        return {
-                            id,
-                            member: `std_${id}_1`, // TODO: what's the 1 for?
-                            useDirections: true,
-                            directions: Array(8).fill(null).map((_, index) => {
-                                return {
-                                    id: index,
-                                    destinationX: undefined,
-                                    destinationY: undefined,
-                                    destinationZ: getIndexForAlignment(add.align)
-                                };
-                            }),
-                            destinationY: (this.figureRenderer.avatarEffect?.destinationY ?? 0)
-                        }
-                    })
-                )
-                .concat(
-                    animationFrame?.bodyParts?.filter((bodypart) => bodypart.items && bodypart.items.length > 0).flatMap((bodypart) => {
-                        return bodypart.items.map((item) => {
-                            const id = item.base ?? item.id;
-
-                            return {
-                                id,
-                                member: `std_${id}_1`, // TODO: what's the 1 for?
-                                useDirections: true,
-                                directions: Array(8).fill(null).map((_, index) => {
-                                    return {
-                                        id: index,
-                                        destinationX: undefined,
-                                        destinationY: undefined,
-                                        destinationZ: getIndexForAlignment(item.align)
-                                    };
-                                }),
-                                frame: bodypart.frame,
-                                destinationY: (this.figureRenderer.avatarEffect?.destinationY ?? 0)
-                            }
-                        });
-                    }) ?? []
-                );
-
-            if(effect.data.animation?.overrides) {
-                const filteredOverrides = effect.data.animation.overrides.filter((override) => actions.some((action) => action.state === override.type));
-                
-                const sortedOverrides = filteredOverrides.sort((a, b) => {
-                    const actionA = actions.find((action) => action.state === a.type);
-                    const actionB = actions.find((action) => action.state === b.type);
-
-                    return (actionA?.precedence ?? 0) - (actionB?.precedence ?? 0);
-                });
-
-                for(const override of sortedOverrides) {
-                    const action = actions.find((action) => action.state === override.type);
-
-                    if(!action) {
-                        continue;
-                    }
-
-                    const animationFrameIndex = this.figureRenderer.figureAnimations.getCurrentAnimationFrame(frame, override.frames);
-
-                    const overrideFrame = override.frames[animationFrameIndex];
-
-                    if(overrideFrame) {
-                        const results = overrideFrame?.bodyParts?.filter((bodypart) => bodypart.items && bodypart.items.length > 0).flatMap((bodypart) => {
-                                return bodypart.items.map((item) => {
-                                    const id = item.base ?? item.id;
-
-                                    return {
-                                        id,
-                                        part: item.id,
-                                        frame: bodypart.frame,
-                                        member: `${action.assetPartDefinition}_${item.id}_${item.base}`, // TODO: what's the 1 for?
-                                        useDirections: true,
-                                        destinationY: bodypart.destinationY ?? (this.figureRenderer.avatarEffect?.destinationY ?? 0),
-                                        directionOffset: bodypart.directionOffset
-                                    }
-                                });
-                            }) ?? [];
-
-                        animationSprites = animationSprites.filter((animationSprite) => !results.some((result) => result.part === animationSprite.part)).concat(results);
-
-                        for(const overrideEffect of overrideFrame.effects) {
-                            const overrideAnimationSprites = animationSprites.filter((animationSprite) => animationSprite.id === overrideEffect.id);
-
-                            for(const overrideAnimationSprite of overrideAnimationSprites) {
-                                overrideAnimationSprite.frame = overrideEffect.frame;
-                                overrideAnimationSprite.destinationY = overrideEffect.destinationY;
-                                overrideAnimationSprite.directionOffset = overrideEffect.directionOffset;
-                            }
-                        }
-                    }
-
-                    break;
-                }
-            }
-
-            if(effect.data.animation.shadow) {
-                // TODO: there's no shadow sprite provided?
-
-                /*animationSprites.push({
-                    id: effect.data.animation.shadow.id,
-                    member: effect.data.animation.shadow.id,
-                    useDirections: false
-                });*/
-            }
+            const animationSprites = this.figureRenderer.figureEffects.getFigureEffectAnimationSprites(actions, effect, direction, frame);
 
             this.figureRenderer.avatarEffect = animationFrame?.effects.find((effect) => effect.id === "avatar") ?? this.figureRenderer.avatarEffect;
 

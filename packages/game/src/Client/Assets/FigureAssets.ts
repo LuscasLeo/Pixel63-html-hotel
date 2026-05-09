@@ -13,7 +13,7 @@ export default class FigureAssets {
     public static avatarAnimations: FigureAvatarAnimationData;
     public static effectmap: { id: number; library: string; }[];
 
-    private static loaded = false;
+    public static loaded = false;
 
     public static async loadAssets() {
         if(FigureAssets.loaded) {
@@ -68,4 +68,7 @@ export default class FigureAssets {
     public static readonly assetSprites: Map<string, FigureRendererSprite | null> = new Map();
     public static readonly figureCollection: Map<string, Promise<FigureRendererSprite[]>> = new Map();
     public static readonly figureImage: Map<string, Promise<FigureRendererResult>> = new Map();
+
+    public static readonly figureCanvasCache: Map<string, any> = new Map();
+    public static readonly figureCache: Map<string, FigureRendererSprite[]> = new Map();
 }

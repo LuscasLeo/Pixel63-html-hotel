@@ -29,10 +29,12 @@ export default class Figure {
     }
 
     public async renderToCanvas(frame: number, cropped: boolean = false, drawEffects: boolean = false, useConfigurationEffect: boolean = false, ignoreBodyparts: string[] = []): Promise<FigureRendererResult> {
+        const options = this.getOptions(frame);
+        
         this.renderer.configuration = this.configuration!;
         this.configurationChanged = false;
 
-        return await this.renderer.renderToCanvas(this.getOptions(frame), cropped, drawEffects, useConfigurationEffect, ignoreBodyparts, this.headOnly);
+        return await this.renderer.renderToCanvas(options, cropped, drawEffects, useConfigurationEffect, ignoreBodyparts, this.headOnly);
     }
 
     public getConfigurationAsString(): string {
@@ -75,8 +77,9 @@ export default class Figure {
         return {
             frame,
 
-            actions: this.actions,
-            direction: this.direction
+            actions: [...this.actions],
+            direction: this.direction,
+            figureConfigurationChanged: this.configurationChanged
         };
     }
 

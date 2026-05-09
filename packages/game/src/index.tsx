@@ -42,6 +42,9 @@ async function start(text?: string) {
     if (!loaderElement) {
         throw new Error("Loader root element is not created.");
     }
+    
+    await FigureAssets.loadAssets();
+    await FurnitureAssets.preloadAssets();
 
     loaderInstance = new LoaderInstance(loaderElement);
 
@@ -63,9 +66,6 @@ async function start(text?: string) {
     userInterface = new UserInterfaceInstance(interfaceElement);
 
     webSocketClient.addEventListener("open", async () => {
-        await FigureAssets.loadAssets();
-        await FurnitureAssets.preloadAssets();
-
         userInterface.render();
 
         loaderInstance.hide();

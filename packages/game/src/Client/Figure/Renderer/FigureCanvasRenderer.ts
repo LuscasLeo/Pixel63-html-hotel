@@ -1,14 +1,34 @@
-import ContextNotAvailableError from "@Client/Exceptions/ContextNotAvailableError";
 import FigureRenderer from "@Client/Figure/Renderer/FigureRenderer";
 import { FigureRendererOptions } from "@Client/Figure/Renderer/Interfaces/FigureRendererOptions";
+import { FigureAssets } from "@Game/library";
 import { FigureLogger } from "@pixel63/shared/Logger/Logger";
 
 export default class FigureCanvasRenderer {
-    constructor(private readonly figureRenderer: FigureRenderer) {
+    private canvas: OffscreenCanvas;
+    private context: OffscreenCanvasRenderingContext2D;
 
+    constructor(private readonly figureRenderer: FigureRenderer) {
+        this.canvas = new OffscreenCanvas(256, 256);
+        this.context = this.canvas.getContext("2d")!;
+    }
+
+    private getCanvasKey(options: FigureRendererOptions) {
+        const figureCacheKey = `figure-${options.direction}-${options.actions.join('-')}-${this.figureRenderer.previousFrames}-${this.figureRenderer.getConfigurationAsString()}`;
+        const effectsCacheKey = `effects-${options.direction}-${options.actions.join('-')}-${this.figureRenderer.previousEffects}`;
+
+        return [
+            figureCacheKey,
+            effectsCacheKey
+        ].join('-');
     }
 
     public async renderToCanvas(options: FigureRendererOptions, cropped: boolean = false, drawEffects: boolean = false, useConfigurationEffect: boolean = false, ignoreBodyparts: string[] = [], headOnly?: boolean) {
+        const canvasKey = this.getCanvasKey(options);
+
+        if(FigureAssets.figureCanvasCache.has(canvasKey)) {
+            return FigureAssets.figureCanvasCache.get(canvasKey)!;
+        }
+
         return await (async () => {
             const { sprites, effectSprites } = await this.figureRenderer.render(options, useConfigurationEffect || drawEffects, ignoreBodyparts, headOnly);
 
@@ -41,14 +61,9 @@ export default class FigureCanvasRenderer {
                         maximumHeight = sprite.y + sprite.image.height;
                     }
                 }
-            }
 
-            const canvas = new OffscreenCanvas(maximumWidth - minimumX, maximumHeight - minimumY);
-
-            const context = canvas.getContext("2d");
-
-            if(!context) {
-                throw new ContextNotAvailableError();
+                this.canvas.width = maximumWidth - minimumX;
+                this.canvas.height = maximumHeight - minimumY;
             }
 
             const mutatedSprites = [...sprites];
@@ -62,20 +77,22 @@ export default class FigureCanvasRenderer {
                 }));
             }
 
+            this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
             for(const sprite of mutatedSprites.toSorted((a, b) => a.index - b.index)) {
-                context.save();
+                this.context.save();
 
                 if(sprite.alpha) {
-                    context.globalAlpha = sprite.alpha;
+                    this.context.globalAlpha = sprite.alpha;
                 }
 
                 if(sprite.ink) {
-                    context.globalCompositeOperation = sprite.ink;
+                    this.context.globalCompositeOperation = sprite.ink;
                 }
 
-                context.drawImage(sprite.image, sprite.x - minimumX, sprite.y - minimumY);
+                this.context.drawImage(sprite.image, sprite.x - minimumX, sprite.y - minimumY);
 
-                context.restore();
+                this.context.restore();
             }
 
             if(this.figureRenderer.avatarEffect?.destinationY) {
@@ -108,9 +125,9 @@ export default class FigureCanvasRenderer {
                 }
             }
 
-            return {
+            const result = {
                 figure: {
-                    image: canvas.transferToImageBitmap(),
+                    image: await createImageBitmap(this.canvas),
                     imageData: imageDataArray,
 
                     x: 0,
@@ -120,6 +137,10 @@ export default class FigureCanvasRenderer {
                 },
                 effects: effectSprites
             };
+
+            FigureAssets.figureCanvasCache.set(canvasKey, result);
+
+            return result;
         })();
     }
 }

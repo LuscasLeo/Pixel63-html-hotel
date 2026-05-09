@@ -1,4 +1,5 @@
 import FigureRenderer, { SpriteConfiguration } from "@Client/Figure/Renderer/FigureRenderer";
+import { FigureRendererOptions } from "@Client/Figure/Renderer/Interfaces/FigureRendererOptions";
 import { FiguredataData } from "@Client/Interfaces/Figure/FiguredataData";
 import { FigureAssets } from "@Game/library";
 
@@ -29,7 +30,13 @@ export default class FigureSpriteBuilder {
         return settype.sets.find((set) => set.id === setId);
     }
 
-    public getSpritesFromConfiguration() {
+    private spritesFromConfiguration?: SpriteConfiguration[];
+
+    public getSpritesFromConfiguration(options: FigureRendererOptions) {
+        if(!options.figureConfigurationChanged && this.spritesFromConfiguration) {
+            return this.spritesFromConfiguration;
+        }
+
         const result: SpriteConfiguration[] = [];
         const hiddenPartTypes: string[] = [];
 
@@ -102,6 +109,8 @@ export default class FigureSpriteBuilder {
         }
 
         const filteredResult = result.filter((result) => !hiddenPartTypes.includes(result.type));
+
+        this.spritesFromConfiguration = filteredResult;
 
         return filteredResult;
     }
