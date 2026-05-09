@@ -27,7 +27,7 @@ export default function useRoomWiredLogs(page: number, search: string, level: st
             
             webSocketClient.removeProtobuffListener(RoomWiredLogsData, listener);
         };
-    }, [page]);
+    }, [page, search, level]);
 
     const handleRefresh = useCallback(() => {
         webSocketClient.sendProtobuff(GetRoomWiredLogsData, GetRoomWiredLogsData.create({}));

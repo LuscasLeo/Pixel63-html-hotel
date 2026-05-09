@@ -32,18 +32,9 @@ export default class GetRoomWiredLogsEvent implements ProtobuffListener<GetRoomW
 
         filteredLogs.reverse();
 
-        let page = 0;
         const logsPerPage = 20;
 
-        if(payload.page * logsPerPage > filteredLogs.length) {
-            page = Math.floor(filteredLogs.length / logsPerPage);
-        }
-        else {
-            page = payload.page;
-        }
-
-
-        filteredLogs = filteredLogs.slice(page * logsPerPage, logsPerPage);
+        filteredLogs = filteredLogs.slice(payload.page * logsPerPage, logsPerPage);
 
         user.sendProtobuff(RoomWiredLogsData, RoomWiredLogsData.create({
             roomId: user.room.model.id,
@@ -53,7 +44,9 @@ export default class GetRoomWiredLogsEvent implements ProtobuffListener<GetRoomW
                 level: log.level,
                 message: log.message,
                 timestamp: log.timestamp
-            }))
+            })),
+
+            maxPages: Math.ceil(filteredLogs.length / logsPerPage)
         }));
     }
 }
