@@ -34,12 +34,10 @@ export default class GetRoomWiredLogsEvent implements ProtobuffListener<GetRoomW
 
         const logsPerPage = 20;
 
-        filteredLogs = filteredLogs.slice(payload.page * logsPerPage, Math.min((payload.page * logsPerPage) + logsPerPage, filteredLogs.length));
-
         user.sendProtobuff(RoomWiredLogsData, RoomWiredLogsData.create({
             roomId: user.room.model.id,
 
-            logs: filteredLogs.map((log) => ({
+            logs: filteredLogs.slice(payload.page * logsPerPage, Math.min((payload.page * logsPerPage) + logsPerPage, filteredLogs.length)).map((log) => ({
                 category: log.category,
                 level: log.level,
                 message: log.message,
