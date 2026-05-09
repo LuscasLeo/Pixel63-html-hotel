@@ -30,8 +30,12 @@ export default function useRoomWiredLogs(page: number, search: string, level: st
     }, [page, search, level]);
 
     const handleRefresh = useCallback(() => {
-        webSocketClient.sendProtobuff(GetRoomWiredLogsData, GetRoomWiredLogsData.create({}));
-    }, []);
+        webSocketClient.sendProtobuff(GetRoomWiredLogsData, GetRoomWiredLogsData.create({
+            level,
+            search,
+            page
+        }));
+    }, [level, search, page]);
 
     return {
         logs,
