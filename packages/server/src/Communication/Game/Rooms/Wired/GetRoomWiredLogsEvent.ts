@@ -46,7 +46,7 @@ export default class GetRoomWiredLogsEvent implements ProtobuffListener<GetRoomW
                 timestamp: log.timestamp
             })),
 
-            maxPages: Math.ceil(filteredLogs.length / logsPerPage)
+            maxPages: Math.floor(filteredLogs.length / logsPerPage)
         }));
     }
 }
