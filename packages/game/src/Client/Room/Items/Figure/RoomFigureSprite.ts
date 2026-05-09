@@ -36,7 +36,7 @@ export default class RoomFigureSprite extends RoomSprite {
             return null;
         }
 
-        if(relativePosition.left > this.sprite.image.width || relativePosition.top > this.sprite.image.height) {
+        if(relativePosition.left >= this.sprite.image.width || relativePosition.top >= this.sprite.image.height) {
             return null;
         }
 
