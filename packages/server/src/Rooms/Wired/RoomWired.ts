@@ -30,8 +30,8 @@ export default class RoomWired {
     public startExecution<T>(promise: Promise<T>) {
         if(this.executions.length >= game.hotelSettings.roomWiredMaxUsage) {
             this.addLog("ERROR", "EXECUTION_CAP", `Execution cap of ${game.hotelSettings.roomWiredMaxUsage} has exceeded.`);
-            
-            return;
+
+            return null;
         }
 
         const abortController = new AbortController();

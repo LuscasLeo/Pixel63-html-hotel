@@ -3,6 +3,7 @@ import RoomFurniture from "../../RoomFurniture";
 import WiredActionLogic from "./WiredActionLogic";
 import WiredConditionLogic from "./WiredConditionLogic";
 import WiredLogic, { WiredTriggerOptions } from "./WiredLogic";
+import WiredNegativeActionLogic from "./WiredNegativeActionLogic";
 
 export default class WiredTriggerLogic extends WiredLogic {
     handleBeforeUserWalksOnFurniture?(roomUser: RoomUser, roomFurniture: RoomFurniture): Promise<void>;
@@ -25,19 +26,27 @@ export default class WiredTriggerLogic extends WiredLogic {
 
         const wiredStackConditionFurniture = wiredStackFurniture.filter((furniture) => furniture.logic instanceof WiredConditionLogic);
 
+        let conditionsMet: boolean = true;
+
         for(const conditionFurniture of wiredStackConditionFurniture) {
             const logic = conditionFurniture.logic as WiredConditionLogic;
 
             const result = await logic.handleCondition?.(options);
 
             if(!result) {
-                return;
+                conditionsMet = false;
+
+                break;
             }
 
             await logic.setActive();
         }
 
-        const wiredStackActionFurniture = wiredStackFurniture.filter((furniture) => furniture.logic instanceof WiredActionLogic);
+        const wiredStackActionFurniture = (conditionsMet)?(
+            wiredStackFurniture.filter((furniture) => furniture.logic instanceof WiredActionLogic)
+        ):(
+            wiredStackFurniture.filter((furniture) => furniture.logic instanceof WiredNegativeActionLogic)
+        );
 
         await Promise.all(wiredStackActionFurniture.map(async (furniture) => {
             const logic = furniture.logic as WiredActionLogic;
@@ -57,7 +66,6 @@ export default class WiredTriggerLogic extends WiredLogic {
                     .then(resolve)
                     .catch(reject);
             })
-        )
-            .catch(console.error);
+        )?.catch(console.error);
     }
 }

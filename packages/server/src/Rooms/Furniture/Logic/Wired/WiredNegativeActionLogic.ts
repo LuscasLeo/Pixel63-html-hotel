@@ -5,7 +5,7 @@ export type ScheduledTrigger = {
     executeAt: number;
 }
 
-export default class WiredActionLogic extends WiredLogic {
+export default class WiredNegativeActionLogic extends WiredLogic {
     private scheduledTriggers: ScheduledTrigger[] = [];
     
     public async handleTrigger(options: WiredTriggerOptions | undefined): Promise<void> {

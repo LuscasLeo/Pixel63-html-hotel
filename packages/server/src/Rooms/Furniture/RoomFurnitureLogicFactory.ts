@@ -94,6 +94,7 @@ import WiredConditionUserOnFurnitureLogic from "./Logic/Wired/Conditions/WiredCo
 import WiredConditionFurniHasUserLogic from "./Logic/Wired/Conditions/WiredConditionFurniHasUserLogic";
 import RoomFurnitureWaterLogic from "./Logic/RoomFurnitureWaterLogic";
 import WiredActionLogLogic from "./Logic/Wired/Action/WiredActionLogLogic";
+import WiredNegativeActionLogLogic from "./Logic/Wired/Action/Negative/WiredNegativeActionLogLogic";
 
 export default class RoomFurnitureLogicFactory {
     public static getLogic(roomFurniture: RoomFurniture): RoomFurnitureLogic | null {
@@ -422,6 +423,10 @@ export default class RoomFurnitureLogicFactory {
 
             case "wf_act_log":
                 return new WiredActionLogLogic(roomFurniture);
+
+            // Wired negative actions
+            case "wf_act_neg_log":
+                return new WiredNegativeActionLogLogic(roomFurniture);
 
             // Wired conditions
             case "wf_cnd_match_snapshot":
