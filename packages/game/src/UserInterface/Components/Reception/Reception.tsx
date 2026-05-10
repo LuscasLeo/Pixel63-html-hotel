@@ -89,8 +89,8 @@ export default function Reception() {
                 {(user.figureConfiguration) && (
                     <div style={{
                         position: "absolute",
-                        left: 145,
-                        bottom: 38
+                        left: 32,
+                        bottom: -32
                     }}>
                         <FigureImage figureConfiguration={user.figureConfiguration} direction={2}/>
                     </div>
