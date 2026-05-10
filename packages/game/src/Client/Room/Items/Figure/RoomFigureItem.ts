@@ -7,6 +7,7 @@ import RoomFigureTypingSprite from "@Client/Room/Items/Figure/Sprites/RoomFigure
 import RoomFigureIdlingSprite from "@Client/Room/Items/Figure/Sprites/RoomFigureIdlingSprite";
 import { RoomPositionData } from "@pixel63/events";
 import RoomFigureHealthSprite from "@Client/Room/Items/Figure/Sprites/RoomFigureHealthSprite";
+import { FigureRendererSpriteResult } from "@Client/Figure/Renderer/FigureRenderer";
 
 export default class RoomFigureItem extends RoomItem {
     private typingSprite: RoomFigureTypingSprite | null = null;
@@ -19,6 +20,8 @@ export default class RoomFigureItem extends RoomItem {
     public typing: boolean = false;
     public idling: boolean = false;
     public health: number | null = null;
+
+    private figureSprite?: FigureRendererSpriteResult;
 
     constructor(public roomRenderer: RoomRenderer, public readonly figureRenderer: Figure, position: RoomPositionData | undefined) {
         super(roomRenderer, "figure");
@@ -39,63 +42,76 @@ export default class RoomFigureItem extends RoomItem {
 
         if(this.figureRenderer.shouldRender(this.frame)) {
             this.figureRenderer.renderToCanvas(this.frame, false, false, true).then((result) => {
+                this.figureSprite = result.figure;
+
                 this.sprites = [
                     new RoomFigureSprite(this, result.figure),
                     ...result.effects.map((effect) => new RoomFigureEffectSprite(this, effect))
                 ];
 
-                if(this.health !== null) {
-                    if(!this.healthSprite || this.healthSprite.health !== this.health) {
-                        this.healthSprite = new RoomFigureHealthSprite(this, {
-                            left: result.figure.x,
-                            top: result.figure.y,
-                        }, this.health);
-                    }
-                    else {
-                        this.healthSprite.figureOffsets = {
-                            left: result.figure.x,
-                            top: result.figure.y,
-                        };
-                    }
-
-                    this.sprites.push(this.healthSprite);
-                }
-
-                if(this.typing) {
-                    if(!this.typingSprite) {
-                        this.typingSprite = new RoomFigureTypingSprite(this, {
-                            left: result.figure.x,
-                            top: result.figure.y,
-                        });
-                    }
-                    else {
-                        this.typingSprite.figureOffsets = {
-                            left: result.figure.x,
-                            top: result.figure.y,
-                        };
-                    }
-
-                    this.sprites.push(this.typingSprite);
-                }
-                else if(this.idling) {
-                    if(!this.idlingSprite) {
-                        this.idlingSprite = new RoomFigureIdlingSprite(this, {
-                            left: result.figure.x,
-                            top: result.figure.y,
-                        });
-                    }
-                    else {
-                        this.idlingSprite.figureOffsets = {
-                            left: result.figure.x,
-                            top: result.figure.y,
-                        };
-
-                        this.idlingSprite.process();
-                    }
-
-                    this.sprites.push(this.idlingSprite);
-                }
+                this.updateSprites();
             });
+        }
+        else {
+            this.updateSprites();
+        }
+    }
+
+    private updateSprites() {
+        if(!this.figureSprite) {
+            return;
+        }
+
+        if(this.health !== null) {
+            if(!this.healthSprite || this.healthSprite.health !== this.health) {
+                this.healthSprite = new RoomFigureHealthSprite(this, {
+                    left: this.figureSprite.x,
+                    top: this.figureSprite.y,
+                }, this.health);
+            }
+            else {
+                this.healthSprite.figureOffsets = {
+                    left: this.figureSprite.x,
+                    top: this.figureSprite.y,
+                };
+            }
+
+            this.sprites.push(this.healthSprite);
+        }
+
+        if(this.typing) {
+            if(!this.typingSprite) {
+                this.typingSprite = new RoomFigureTypingSprite(this, {
+                    left: this.figureSprite.x,
+                    top: this.figureSprite.y,
+                });
+            }
+            else {
+                this.typingSprite.figureOffsets = {
+                    left: this.figureSprite.x,
+                    top: this.figureSprite.y,
+                };
+            }
+
+            this.sprites.push(this.typingSprite);
+        }
+        else if(this.idling) {
+            if(!this.idlingSprite) {
+                this.idlingSprite = new RoomFigureIdlingSprite(this, {
+                    left: this.figureSprite.x,
+                    top: this.figureSprite.y,
+                });
+            }
+            else {
+                this.idlingSprite.figureOffsets = {
+                    left: this.figureSprite.x,
+                    top: this.figureSprite.y,
+                };
+
+                this.idlingSprite.process();
+            }
+
+            this.sprites.push(this.idlingSprite);
         }
     }
 
