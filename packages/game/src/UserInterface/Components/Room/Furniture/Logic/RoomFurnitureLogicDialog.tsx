@@ -219,9 +219,14 @@ export default function RoomFurnitureLogicDialog(props: RoomFurnitureLogicDialog
             return (<WiredActionLogDialog {...props}/>);
 
         // Wired negative actions
-
         case "wf_act_neg_log":
             return (<WiredActionLogDialog {...props}/>);
+
+        case "wf_act_neg_call_stacks":
+            return (<WiredActionCallStacksDialog {...props}/>);
+        
+        case "wf_act_neg_send_signal":
+            return (<WiredSignalDialog {...props}/>);
 
         // Wired triggers
 
