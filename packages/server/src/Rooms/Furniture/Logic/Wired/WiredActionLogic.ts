@@ -20,7 +20,7 @@ export default class WiredActionLogic extends WiredLogic {
             return;
         }
 
-        return this.handleAction?.(options);
+        this.handleExecution?.(options);
     }
 
     public async handleActionsInterval(): Promise<void> {
@@ -31,9 +31,20 @@ export default class WiredActionLogic extends WiredLogic {
 
             this.scheduledTriggers.splice(this.scheduledTriggers.indexOf(scheduledTrigger), 1);
 
-            await this.handleAction?.(scheduledTrigger.options);
+            this.handleExecution?.(scheduledTrigger.options);
         }
     }
 
     public async handleAction?(options: WiredTriggerOptions | undefined): Promise<void>;
+    
+    public handleExecution(options?: WiredTriggerOptions) {
+        this.roomWired.startExecution(
+            new Promise<void>((resolve, reject) => {
+                this.handleAction?.(options)
+                    .then(resolve)
+                    .catch(reject);
+            })
+        )
+            .catch(console.error);
+    }
 }
