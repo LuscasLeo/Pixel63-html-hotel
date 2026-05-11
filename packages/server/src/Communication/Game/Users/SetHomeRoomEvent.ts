@@ -6,9 +6,9 @@ export default class SetHomeRoomEvent implements ProtobuffListener<SetUserHomeRo
     minimumDurationBetweenEvents?: number = 100;
 
     async handle(user: User, payload: SetUserHomeRoomData) {
-        user.model.homeRoomId = payload.roomId;
-
-        await user.model.save();
+        await user.model.update({
+            homeRoomId: payload.roomId ?? null
+        });
 
         user.sendUserData();
     }
