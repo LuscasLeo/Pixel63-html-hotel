@@ -52,8 +52,6 @@ export default class FurnitureParticleSystemEmitter {
         if(this.fused) {
             rocketSprite.alpha = 0;
             
-            FurnitureParticleSystemLogger.log("Fused", this.emittedParticles, this.data.maxNumberParticles);
-            
             if((this.data.burstPulse === null || this.burstFrame % this.data.burstPulse === 0) && this.emittedParticles < this.data.maxNumberParticles) {
                 this.createParticles();
             }
@@ -75,8 +73,6 @@ export default class FurnitureParticleSystemEmitter {
         this.burst++;
 
         for(let index = 0; index < this.data.particlesPerFrame; index++) {
-            FurnitureParticleSystemLogger.log("Creating particle");
-
             this.particles.push(new FurnitureParticleSystemParticle(this));
             
             this.emittedParticles++;

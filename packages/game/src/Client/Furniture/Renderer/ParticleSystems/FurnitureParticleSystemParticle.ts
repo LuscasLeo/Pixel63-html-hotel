@@ -53,8 +53,6 @@ export default class FurnitureParticleSystemParticle {
             return;
         }
 
-        FurnitureParticleSystemLogger.log("Log");
-
         this.velocityX *= (1 - this.emitter.data.simulation.airFriction);
 
         this.velocityY -= this.emitter.data.simulation.gravity / 10;
