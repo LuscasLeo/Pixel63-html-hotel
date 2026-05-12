@@ -25,9 +25,9 @@ export default class FigureCanvasRenderer {
     public async renderToCanvas(options: FigureRendererOptions, cropped: boolean = false, drawEffects: boolean = false, useConfigurationEffect: boolean = false, ignoreBodyparts: string[] = [], headOnly?: boolean) {
         const canvasKey = this.getCanvasKey(options);
 
-        if(!headOnly && FigureAssets.figureCanvasCache.has(canvasKey)) {
-            return FigureAssets.figureCanvasCache.get(canvasKey)!;
-        }
+        //if(!headOnly && FigureAssets.figureCanvasCache.has(canvasKey)) {
+        //    return FigureAssets.figureCanvasCache.get(canvasKey)!;
+        //}
 
         return await (async () => {
             const { sprites, effectSprites } = await this.figureRenderer.render(options, useConfigurationEffect || drawEffects, ignoreBodyparts, headOnly);
@@ -104,23 +104,36 @@ export default class FigureCanvasRenderer {
             //Performance.endPerformanceCheck("getImageData");
 
             //const imageDataArray = new Uint8Array(imageData);
-            const imageDataArray = new Uint8Array(256 * 256 * 4).fill(0);
+            const imageDataArray = new Uint8Array(256 * 256 * 4);
 
             for(const sprite of sprites) {
-                if(sprite.imageData) {
-                    for(let x = 0; x < sprite.image.width; x++) {
-                        for(let y = 0; y < sprite.image.height; y++) {
-                            const alpha = sprite.imageData.data[((x + y * sprite.imageData.width) * 4) + 3];
+                const imageData = sprite.imageData;
 
-                            if(alpha > 0) {
-                                for(let index = 0; index < 4; index++) {
-                                    imageDataArray[(((x + 128 + sprite.x) + (y + 128 + sprite.y) * 256) * 4) + 0] = sprite.imageData.data[((x + y * sprite.imageData.width) * 4) + 0];
-                                    imageDataArray[(((x + 128 + sprite.x) + (y + 128 + sprite.y) * 256) * 4) + 1] = sprite.imageData.data[((x + y * sprite.imageData.width) * 4) + 1];
-                                    imageDataArray[(((x + 128 + sprite.x) + (y + 128 + sprite.y) * 256) * 4) + 2] = sprite.imageData.data[((x + y * sprite.imageData.width) * 4) + 2];
-                                    imageDataArray[(((x + 128 + sprite.x) + (y + 128 + sprite.y) * 256) * 4) + 3] = sprite.imageData.data[((x + y * sprite.imageData.width) * 4) + 3];
-                                }
-                            }
+                if(!imageData) {
+                    continue;
+                }
+
+                const sourceData = imageData.data;
+                const sourceWidth = imageData.width;
+                const sourceHeight = imageData.height;
+
+                const offsetX = sprite.x + 128;
+                const offsetY = sprite.y + 128;
+
+                for(let y = 0; y < sourceHeight; y++) {
+                    for(let x = 0; x < sourceWidth; x++) {
+                        const sourceIndex = (x + y * sourceWidth) * 4;
+
+                        if(sourceData[sourceIndex + 3] === 0) {
+                            continue;
                         }
+
+                        const destinationIndex = ((x + offsetX) + (y + offsetY) * 256) * 4;
+
+                        imageDataArray[destinationIndex]     = sourceData[sourceIndex];
+                        imageDataArray[destinationIndex + 1] = sourceData[sourceIndex + 1];
+                        imageDataArray[destinationIndex + 2] = sourceData[sourceIndex + 2];
+                        imageDataArray[destinationIndex + 3] = sourceData[sourceIndex + 3];
                     }
                 }
             }

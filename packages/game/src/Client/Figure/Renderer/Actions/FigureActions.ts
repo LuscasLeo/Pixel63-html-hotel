@@ -16,15 +16,29 @@ export default class FigureActions {
     }
 
     public getAvatarActions(actions: string[]) {
-        let avatarActionsData = FigureAssets.avataractions.filter((action) => actions.some((id) => id.split('.')[0] === action.id)).sort((a, b) => a.precedence - b.precedence);
-        
-        avatarActionsData = avatarActionsData.filter((action) => {
-            return !avatarActionsData.some((secondAction) => {
-                return secondAction.precedence < action.precedence && (secondAction.prevents?.includes(action.id.toLowerCase()))
-            })
-        });
+        const actionIds = new Set(actions.map((action) => action.split('.')[0]));
 
-        return avatarActionsData;
+        const avatarActionsData = FigureAssets.avataractions
+            .filter((action) => actionIds.has(action.id))
+            .sort((a, b) => a.precedence - b.precedence);
+
+        const prevented = new Set<string>();
+
+        return avatarActionsData.filter((action) => {
+            const id = action.id.toLowerCase();
+
+            if(prevented.has(id)) {
+                return false;
+            }
+
+            if(action.prevents) {
+                for(const preventedId of action.prevents) {
+                    prevented.add(preventedId.toLowerCase());
+                }
+            }
+
+            return true;
+        });
     }
     
     public getActionsForBodyParts(frame: number, actions: AvatarActionData[], effects: FigureEffectData[], ignoreBodyparts: string[]) {
@@ -78,6 +92,8 @@ export default class FigureActions {
             }
         }
 
+        const removedParts = new Set(bodyPartsRemoved);
+
         for(const action of actions) {
             if(action.id === "AvatarEffect" || action.id === "Dance") {
                 continue;
@@ -95,11 +111,12 @@ export default class FigureActions {
                 throw new Error("Action does not have a figure part set in geometry.");
             }
 
+
             result.push({
                 actionId: action.id,
                 geometry,
                 assetPartDefinition: action.assetPartDefinition,
-                bodyParts: figurePartSet.parts.filter((part) => !bodyPartsRemoved.includes(part)),
+                bodyParts: figurePartSet.parts.filter((part) => !removedParts.has(part)),
                 destinationY: 0,//(action.assetPartDefinition === "sit")?(16):(0),
             });
 
