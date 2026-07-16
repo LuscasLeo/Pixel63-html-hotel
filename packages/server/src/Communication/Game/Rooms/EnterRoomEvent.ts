@@ -22,44 +22,27 @@ export default class EnterRoomEvent implements ProtobuffListener<EnterRoomData> 
             return;
         }
 
-        switch(roomInstance.model.lock) {
-            case "invisible": {
-                if(!roomInstance.hasUserVisibility(user.model)) {
-                    console.error("User tried to enter a room that is invisible and does not have permission to enter.");
+        if(!user.permissions.hasPermission("room:rights")) {
+            switch(roomInstance.model.lock) {
+                case "invisible": {
+                    if(!roomInstance.hasUserVisibility(user.model)) {
+                        console.error("User tried to enter a room that is invisible and does not have permission to enter.");
 
-                    return;
-                }
+                        return;
+                    }
 
-                break;
-            }
-
-            case "bell": {
-                if(roomInstance.model.owner.id === user.model.id) {
                     break;
                 }
 
-                if(roomInstance.model.rights.some((rights) => rights.user.id === user.model.id)) {
-                    break;
-                }
+                case "bell": {
+                    if(roomInstance.model.owner.id === user.model.id) {
+                        break;
+                    }
 
-                user.sendProtobuff(RoomLockData, RoomLockData.create({
-                    room: roomInstance.getInformationData()
-                }));
+                    if(roomInstance.model.rights.some((rights) => rights.user.id === user.model.id)) {
+                        break;
+                    }
 
-                return;
-            }
-
-            case "password": {
-                if(roomInstance.model.owner.id === user.model.id) {
-                    break;
-                }
-
-                if(roomInstance.model.rights.some((rights) => rights.user.id === user.model.id)) {
-                    break;
-                }
-
-                // TODO: verify password
-                if(!payload.password) {
                     user.sendProtobuff(RoomLockData, RoomLockData.create({
                         room: roomInstance.getInformationData()
                     }));
@@ -67,17 +50,36 @@ export default class EnterRoomEvent implements ProtobuffListener<EnterRoomData> 
                     return;
                 }
 
-                if(!roomInstance.model.password) {
-                    return;
-                }
+                case "password": {
+                    if(roomInstance.model.owner.id === user.model.id) {
+                        break;
+                    }
 
-                if (!(await bcrypt.compare(payload.password, roomInstance.model.password))) {
-                    user.sendProtobuff(HotelAlertData, HotelAlertData.create({
-                        message: "That password is not correct!",
-                        dialogType: "room-password-error"
-                    }));
-                    
-                    return;
+                    if(roomInstance.model.rights.some((rights) => rights.user.id === user.model.id)) {
+                        break;
+                    }
+
+                    // TODO: verify password
+                    if(!payload.password) {
+                        user.sendProtobuff(RoomLockData, RoomLockData.create({
+                            room: roomInstance.getInformationData()
+                        }));
+
+                        return;
+                    }
+
+                    if(!roomInstance.model.password) {
+                        return;
+                    }
+
+                    if (!(await bcrypt.compare(payload.password, roomInstance.model.password))) {
+                        user.sendProtobuff(HotelAlertData, HotelAlertData.create({
+                            message: "That password is not correct!",
+                            dialogType: "room-password-error"
+                        }));
+                        
+                        return;
+                    }
                 }
             }
         }
