@@ -151,7 +151,7 @@ export default class RoomRenderer extends EventTarget {
     }
 
     public terminate() {
-        this.application.destroy();
+        this.application.destroy(true, true);
     }
 
     private processTick() {
