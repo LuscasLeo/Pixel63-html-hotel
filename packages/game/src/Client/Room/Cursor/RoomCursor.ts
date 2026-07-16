@@ -107,12 +107,12 @@ export default class RoomCursor extends EventTarget {
         }
 
         if(!entity) {
-            //this.roomRenderer.element.style.cursor = "default";
+            this.roomRenderer.application.canvas.style.cursor = "default";
 
             return;
         }
 
-        //this.roomRenderer.element.style.cursor = "pointer";
+        this.roomRenderer.application.canvas.style.cursor = "pointer";
     }
 
     private click(event: MouseEvent) {
