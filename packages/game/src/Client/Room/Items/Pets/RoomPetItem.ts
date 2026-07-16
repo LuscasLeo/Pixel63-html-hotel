@@ -29,19 +29,19 @@ export default class RoomPetItem extends RoomItem {
         if(this.pet.size !== this.roomRenderer.size) {
             this.pet.size = this.roomRenderer.size;
 
-            this.sprites = [];
+            this.setSprites([]);
         }
 
         this.pet.frame++;
 
         if(this.pet.shouldRender()) {
             if(clientInstance.settings.value?.debugRoomRendering) {
-                this.sprites.push(new RoomTextSprite(this, "Rendering"));
+                //this.sprites.push(new RoomTextSprite(this, "Rendering"));
             }
 
             this.pet.render().then((sprites) => {
                 if(sprites.length) {
-                    this.sprites = sprites.map((sprite) => new RoomPetSprite(this, sprite));
+                    this.setSprites(sprites.map((sprite) => new RoomPetSprite(this, sprite)));
                 }
             });
         }

@@ -5,33 +5,23 @@ import { RoomPositionWithDirectionData } from "@pixel63/events";
 import RoomPetItem from "@Client/Room/Items/Pets/RoomPetItem";
 
 export default class RoomPetSprite extends RoomSprite {
-    private readonly offset: MousePosition = {
-        left: 0,
-        top: 0
-    };
-
     constructor(public readonly item: RoomPetItem, public readonly furnitureSprite: FurnitureRendererSprite) {
-        super(item);
+        super(
+            item,
+            {
+                left: 64 + furnitureSprite.x,
+                top: 16 + furnitureSprite.y
+            },
+            furnitureSprite.zIndex,
+            (furnitureSprite.alpha)?(furnitureSprite.alpha / 255):(undefined),
+            furnitureSprite.ink,
+            furnitureSprite.image
+        );
 
-        this.priority = this.furnitureSprite.zIndex;
         this.tag = furnitureSprite.tag;
-
-        this.offset.left += 64;
-        this.offset.top += 16;
-
-        this.offset.left += this.furnitureSprite.x;
-        this.offset.top += this.furnitureSprite.y;
     }
 
     render(context: OffscreenCanvasRenderingContext2D, left: number, top: number) {
-        if(this.furnitureSprite.ink) {
-            context.globalCompositeOperation = this.furnitureSprite.ink;
-        }
-
-        if(this.furnitureSprite.alpha) {
-            context.globalAlpha = this.furnitureSprite.alpha / 255;
-        }
-
         context.drawImage(this.furnitureSprite.image, left + this.offset.left, top + this.offset.top);
     }
 
