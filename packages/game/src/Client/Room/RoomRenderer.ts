@@ -119,12 +119,16 @@ export default class RoomRenderer extends EventTarget {
         background.height = this.application.screen.height;
 
         background.tint = 0x00;
+
+        background.visible = false;
     
         background.interactive = true;
 
         background.addListener("click", () => {
             this.focusedItem.value = null;
         });
+
+        this.lighting.init();
 
         this.application.stage.addChild(background);
 
@@ -141,6 +145,10 @@ export default class RoomRenderer extends EventTarget {
         }
         
         this.items.push(item);
+    }
+
+    public getFilteredItems(filter: (item: RoomItem) => boolean) {
+        return this.items.filter(filter);
     }
 
     public removeItem(item: RoomItem) {

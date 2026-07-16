@@ -2,6 +2,7 @@ import RoomFloorItem from "@Client/Room/Items/Map/RoomFloorItem";
 import RoomWallItem from "@Client/Room/Items/Map/RoomWallItem";
 import RoomRenderer from "@Client/Room/RoomRenderer";
 import { UserFurnitureMoodlightData, UserFurnitureTonerData } from "@pixel63/events";
+import { Sprite, Texture } from "pixi.js";
 
 export default class RoomLighting {
     private readonly MAX_DARKNESS = 0.75;
@@ -9,8 +10,40 @@ export default class RoomLighting {
     public moodlight?: UserFurnitureMoodlightData;
     public backgroundToner?: UserFurnitureTonerData;
 
+    private darknessSprite: Sprite = new Sprite();
+    private lightSprite: Sprite = new Sprite();
+
     constructor(private roomRenderer: RoomRenderer) {
 
+    }
+
+    public init() {
+        this.darknessSprite.visible = false;
+
+        this.darknessSprite.texture = Texture.WHITE;
+
+        this.darknessSprite.width = this.roomRenderer.application.screen.width;
+        this.darknessSprite.height = this.roomRenderer.application.screen.height;
+
+        this.darknessSprite.tint = 0x00;
+
+        this.darknessSprite.zIndex = 1_000_000_000;
+
+        this.roomRenderer.application.stage.addChild(this.darknessSprite);
+        
+
+        this.lightSprite.visible = false;
+
+        this.lightSprite.texture = Texture.WHITE;
+
+        this.lightSprite.width = this.roomRenderer.application.screen.width;
+        this.lightSprite.height = this.roomRenderer.application.screen.height;
+
+        this.lightSprite.tint = 0x00;
+
+        this.lightSprite.zIndex = 1_000_000_001;
+
+        this.roomRenderer.application.stage.addChild(this.lightSprite);
     }
 
     public setBackgroundTonerData(backgroundToner: UserFurnitureTonerData) {
@@ -32,13 +65,36 @@ export default class RoomLighting {
         this.moodlight = moodlight;
 
         if(shouldRerender) {
-            const backgroundItems = this.roomRenderer.items.filter((item) => item.type === "wall" || item.type === "floor");
+            const backgroundItems = this.roomRenderer.getFilteredItems((item) => item.type === "wall" || item.type === "floor");
 
             for(const item of backgroundItems) {
                 if(item instanceof RoomWallItem || item instanceof RoomFloorItem) {
                     item.render();
                 }
             }
+        }
+        
+        if(this.moodlight?.enabled && !this.moodlight.backgroundOnly) {
+            const raw = this.moodlight.alpha;
+
+            const darkness = (1 - raw / 255) * this.MAX_DARKNESS;
+
+            this.darknessSprite.blendMode = "multiply";
+            this.darknessSprite.alpha = darkness;
+            this.darknessSprite.tint = "#000000";
+
+            this.darknessSprite.visible = true;
+
+            this.lightSprite.blendMode = "multiply";
+            this.lightSprite.alpha = 1;
+            this.lightSprite.tint = this.moodlight.color;
+
+            this.lightSprite.visible = true;
+        }
+        else {
+            this.darknessSprite.visible = false;
+
+            this.lightSprite.visible = false;
         }
     }
 
