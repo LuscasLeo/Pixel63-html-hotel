@@ -10,6 +10,7 @@ export default class RoomLighting {
     public moodlight?: UserFurnitureMoodlightData;
     public backgroundToner?: UserFurnitureTonerData;
 
+    private backgroundSprite: Sprite = new Sprite();
     private darknessSprite: Sprite = new Sprite();
     private lightSprite: Sprite = new Sprite();
 
@@ -18,6 +19,21 @@ export default class RoomLighting {
     }
 
     public init() {
+        this.backgroundSprite.texture = Texture.WHITE;
+
+        this.backgroundSprite.width = this.roomRenderer.application.screen.width;
+        this.backgroundSprite.height = this.roomRenderer.application.screen.height;
+
+        this.backgroundSprite.tint = 0x00;
+
+        this.backgroundSprite.interactive = true;
+
+        this.backgroundSprite.addListener("click", () => {
+            this.roomRenderer.focusedItem.value = null;
+        });
+
+        this.roomRenderer.application.stage.addChild(this.backgroundSprite);
+
         this.darknessSprite.visible = false;
 
         this.darknessSprite.texture = Texture.WHITE;
@@ -49,9 +65,13 @@ export default class RoomLighting {
     public setBackgroundTonerData(backgroundToner: UserFurnitureTonerData) {
         if(backgroundToner.enabled) {
             this.backgroundToner = backgroundToner;
+
+            this.backgroundSprite.tint = backgroundToner.color;
         }
         else {
             this.backgroundToner = undefined;
+
+            this.backgroundSprite.tint = 0x00;
         }
     }
 

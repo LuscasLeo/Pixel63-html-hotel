@@ -122,24 +122,7 @@ export default class RoomRenderer extends EventTarget {
         this.camera.cameraPosition.top = Math.round(this.application.screen.height / 2);
         //this.camera.cameraPosition.top -= (this.structure.grid.length + this.structure.grid[0]?.length) * 6;
 
-        const background = new Sprite(Texture.WHITE);
-
-        background.width = this.application.screen.width;
-        background.height = this.application.screen.height;
-
-        background.tint = 0x00;
-
-        background.visible = false;
-    
-        background.interactive = true;
-
-        background.addListener("click", () => {
-            this.focusedItem.value = null;
-        });
-
         this.lighting.init();
-
-        this.application.stage.addChild(background);
 
         this.application.stage.addChild(this.container);
 
