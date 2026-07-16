@@ -5,16 +5,18 @@ import { useDialogs } from "../../../Hooks/useDialogs";
 import { useRoomInstance } from "../../../Hooks/useRoomInstance";
 import ToolbarRoomChat from "./ToolbarRoomChat";
 import { useTranslation } from "react-i18next";
+import { useRoomScale } from "@UserInterface/Hooks/useRoomScale";
 
 export default function ToolbarRoomInfo() {
     const [getTranslation] = useTranslation("room");
+    
     const room = useRoomInstance();
+    const roomScale = useRoomScale();
+
     const { addUniqueDialog } = useDialogs();
 
     const [minimized, setMinimized] = useState(false);
     const [chatMinimized, setChatMinimized] = useState(true);
-
-    const [zoomed, setZoomed] = useState(room?.roomRenderer.size === 32);
    
     if(!room) {
         return null;
@@ -78,18 +80,28 @@ export default function ToolbarRoomInfo() {
                                 disabled: room.hasRights === false
                             },
                             {
-                                sprite: (!zoomed)?("sprite_toolbar_room_zoom-out"):("sprite_toolbar_room_zoom-in"),
+                                sprite: (roomScale !== 1)?("sprite_toolbar_room_zoom-out"):("sprite_toolbar_room_zoom-in"),
                                 label: getTranslation("toolbar.zoom"),
                                 onClick: () => {
-                                    if(!zoomed) {
-                                        setZoomed(true);
-                                        
-                                        room.roomRenderer.setCanvasScale(2);
-                                    }
-                                    else {
-                                        setZoomed(false);
-                                        
-                                        room.roomRenderer.setCanvasScale(1);
+                                    switch(roomScale) {
+                                        case 0.5: {
+                                            room.roomRenderer.setCanvasScale(1);
+
+                                            break;
+                                        }
+
+                                        case 1: 
+                                        default: {
+                                            room.roomRenderer.setCanvasScale(2);
+
+                                            break;
+                                        }
+
+                                        case 2: {
+                                            room.roomRenderer.setCanvasScale(0.5);
+
+                                            break;
+                                        }
                                     }
                                 }
                             },

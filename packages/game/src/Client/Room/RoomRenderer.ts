@@ -25,6 +25,7 @@ import RoomRendererFrameCounter from "@Client/Room/Renderer/RoomRendererFrameCou
 import { Application, Container, Rectangle, Sprite, Texture } from "pixi.js";
 import RoomRenderEvent from "@Client/Events/RoomRenderEvent";
 import RoomFurnitureOffsets from "@Client/Room/Items/Furniture/RoomFurnitureOffsets";
+import ObservableRequiredProperty from "@Client/Utilities/ObservableRequiredProperty";
 
 export default class RoomRenderer extends EventTarget {
     public readonly application: Application;
@@ -43,7 +44,7 @@ export default class RoomRenderer extends EventTarget {
 
     //public itemSpritesChanged: boolean = true;
 
-    public scale: number = 1;
+    public scale = new ObservableRequiredProperty<number>(1);
 
     private _previewScale: number = 1;
     public set previewScale(scale: number) {
@@ -72,19 +73,22 @@ export default class RoomRenderer extends EventTarget {
             throw new Error();
         }
 
-        this.application = new Application({
-            antialias: false
-        });
+        this.application = new Application();
         this.container = new Container();
 
         this.structure = structure;
 
         this.camera = new RoomCamera(this);
         this.lighting = new RoomLighting(this);
+
+        this.scale.subscribe((value) => {
+            this.container.scale = value;
+        });
     }
 
     public async init() {
         await this.application.init({
+            antialias: false,
             background: "#000000",
             resizeTo: this.parent
         });
@@ -152,6 +156,7 @@ export default class RoomRenderer extends EventTarget {
     }
 
     public setCanvasScale(scale: number) {
+        this.scale.value = scale;
         /*this.scale = scale;
 
         if(this.scale === 1) {
@@ -286,8 +291,8 @@ export default class RoomRenderer extends EventTarget {
         }
 
         const result = {
-            left: Math.round((this.camera.mousePosition.left / this.scale) - this.camera.cameraPosition.left),
-            top: Math.round((this.camera.mousePosition.top / this.scale) - this.camera.cameraPosition.top)
+            left: Math.round((this.camera.mousePosition.left - this.camera.cameraPosition.left)/ this.scale.value),
+            top: Math.round((this.camera.mousePosition.top - this.camera.cameraPosition.top)/ this.scale.value)
         };
 
         return result;
@@ -407,8 +412,8 @@ export default class RoomRenderer extends EventTarget {
     public getItemScreenPosition(item: RoomItem): MousePosition {
         if(!item.position) {
             return {
-                left: (this.camera.cameraPosition.left * this.scale),
-                top: (this.camera.cameraPosition.top * this.scale)
+                left: (this.camera.cameraPosition.left * this.scale.value),
+                top: (this.camera.cameraPosition.top * this.scale.value)
             };
         }
 
@@ -440,8 +445,8 @@ export default class RoomRenderer extends EventTarget {
         }
 
         return {
-            left: (this.camera.cameraPosition.left + translatePosition.left) * this.scale,
-            top: (this.camera.cameraPosition.top + translatePosition.top) * this.scale
+            left: (this.camera.cameraPosition.left + translatePosition.left) * this.scale.value,
+            top: (this.camera.cameraPosition.top + translatePosition.top) * this.scale.value
         };
     }
 
