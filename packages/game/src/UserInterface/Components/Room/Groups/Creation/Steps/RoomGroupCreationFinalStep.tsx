@@ -3,6 +3,7 @@ import { GroupBadgeData, GroupColorsData, PurchaseShopMembershipData, ShopPageDa
 import CurrencyPanel from "@UserInterface/Common/Currencies/CurrencyPanel";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 import DialogItem from "@UserInterface/Common/Dialog/Components/Item/DialogItem";
+import DialogLink from "@UserInterface/Common/Dialog/Components/Link/DialogLink";
 import DialogPanel from "@UserInterface/Common/Dialog/Components/Panels/DialogPanel";
 import DialogScrollArea from "@UserInterface/Common/Dialog/Components/Scroll/DialogScrollArea";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
@@ -19,9 +20,10 @@ export type RoomGroupCreationFinalStepProps = {
     colorsData?: GroupColorsData;
     page: ShopPageData;
     editMode: boolean;
+    goBack: () => void;
 }
 
-export default function RoomGroupCreationFinalStep({ page, editMode, identityData, badgeData, colorsData }: RoomGroupCreationFinalStepProps) {
+export default function RoomGroupCreationFinalStep({ page, editMode, identityData, badgeData, colorsData, goBack }: RoomGroupCreationFinalStepProps) {
     const user = useUser();
     const dialogs = useDialogs();
     const memberships = useShopPageMemberships(page.id);
@@ -54,6 +56,10 @@ export default function RoomGroupCreationFinalStep({ page, editMode, identityDat
                         }}/>
                     </FlexLayout>
                 </DialogPanel>
+
+                <div style={{ flex: 1 }}/>
+
+                <DialogLink onClick={goBack}>Go back</DialogLink>
             </FlexLayout>
 
             <FlexLayout flex={1} direction="column">
@@ -63,81 +69,75 @@ export default function RoomGroupCreationFinalStep({ page, editMode, identityDat
 
                 <div style={{ flex: 1 }}/>
 
-                <DialogScrollArea hideInactive contentStyle={{
-                    gap: 10,
-                    display: "flex",
-                    flexDirection: "column"
-                }}>
-                    {memberships.sort((a, b) => a.days - b.days).map((membership) => (
-                        <DialogPanel contentStyle={{
-                            display: "flex",
-                            flexDirection: "column",
-                            padding: 4,
-                            gap: 5
+                {memberships.sort((a, b) => a.days - b.days).map((membership) => (
+                    <DialogPanel contentStyle={{
+                        display: "flex",
+                        flexDirection: "column",
+                        padding: 4,
+                        gap: 5
+                    }}>
+                        <FlexLayout direction="row" align="center" style={{
+                            background: "#a2a2a2",
+                            borderRadius: 6,
+
+                            padding: "4px 6px",
+
+                            color: "#FFFFFF"
                         }}>
-                            <FlexLayout direction="row" align="center" style={{
-                                background: "#a2a2a2",
-                                borderRadius: 6,
-    
-                                padding: "4px 6px",
-    
-                                color: "#FFFFFF"
+                            <MembershipIcon membership={membership.membership}/>
+                            
+                            <b style={{ paddingBottom: 1, flex: 1 }}>Habbo Group</b>
+
+                            {(editMode) && (
+                                <div style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+
+                                    cursor: "pointer"
+                                }} onClick={() => dialogs.addUniqueDialog("edit-shop-membership", { page, membership })}>
+                                    <div className="sprite_room_user_motto_pen" style={{
+                                        marginTop: -2
+                                    }}/>
+                                </div>
+                            )}
+                        </FlexLayout>
+
+                        <FlexLayout direction="row" align="center" justify="space-between">
+                            <CurrencyPanel credits={membership.credits} duckets={membership.duckets} diamonds={membership.diamonds}/>
+
+                            <div style={{ flex: 1 }}/>
+
+                            <DialogButton color="green" disabled={(
+                                (membership.credits ?? 0) > user.credits
+                                || (membership.duckets ?? 0) > user.duckets
+                                || (membership.diamonds ?? 0) > user.diamonds
+                            )} style={{ flex: 1 }} onClick={() => {
+                                webSocketClient.sendProtobuff(PurchaseShopMembershipData, PurchaseShopMembershipData.create({
+                                    id: membership.id
+                                }));
                             }}>
-                                <MembershipIcon membership={membership.membership}/>
-                                
-                                <b style={{ paddingBottom: 1, flex: 1 }}>Habbo Group</b>
-    
-                                {(editMode) && (
-                                    <div style={{
-                                        display: "flex",
-                                        justifyContent: "center",
-                                        alignItems: "center",
-    
-                                        cursor: "pointer"
-                                    }} onClick={() => dialogs.addUniqueDialog("edit-shop-membership", { page, membership })}>
-                                        <div className="sprite_room_user_motto_pen" style={{
-                                            marginTop: -2
-                                        }}/>
-                                    </div>
-                                )}
-                            </FlexLayout>
-    
-                            <FlexLayout direction="row" align="center" justify="space-between">
-                                <CurrencyPanel credits={membership.credits} duckets={membership.duckets} diamonds={membership.diamonds}/>
-    
-                                <div style={{ flex: 1 }}/>
-    
-                                <DialogButton color="green" disabled={(
-                                    (membership.credits ?? 0) > user.credits
-                                    || (membership.duckets ?? 0) > user.duckets
-                                    || (membership.diamonds ?? 0) > user.diamonds
-                                )} style={{ flex: 1 }} onClick={() => {
-                                    webSocketClient.sendProtobuff(PurchaseShopMembershipData, PurchaseShopMembershipData.create({
-                                        id: membership.id
-                                    }));
-                                }}>
-                                    Purchase
-                                </DialogButton>
-                            </FlexLayout>
-                        </DialogPanel>
-                    ))}
-    
-                    {(editMode) && (
-                        <div style={{
-                            width: "100%",
-    
-                            display: "flex",
-                            justifyContent: "flex-end",
-                            alignItems: "center",
-    
-                            cursor: "pointer"
-                        }} onClick={() => dialogs.addUniqueDialog("edit-shop-membership", { page })}>
-                            <div className="sprite_add" style={{
-                                marginRight: 10
-                            }}/>
-                        </div>
-                    )}
-                </DialogScrollArea>
+                                Purchase
+                            </DialogButton>
+                        </FlexLayout>
+                    </DialogPanel>
+                ))}
+
+                {(editMode) && (
+                    <div style={{
+                        width: "100%",
+
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        alignItems: "center",
+
+                        cursor: "pointer"
+                    }} onClick={() => dialogs.addUniqueDialog("edit-shop-membership", { page })}>
+                        <div className="sprite_add" style={{
+                            marginRight: 10
+                        }}/>
+                    </div>
+                )}
             </FlexLayout>
         </FlexLayout>
     );

@@ -108,21 +108,19 @@ export default function RoomGroupCreationDialog({ data, hidden, onClose }: RoomG
                             }
                             
                             case 3: {
-                                return (<RoomGroupCreationFinalStep editMode={editMode} page={data.page} badgeData={badgeData} colorsData={colorsData}/>);
+                                return (<RoomGroupCreationFinalStep editMode={editMode} page={data.page} badgeData={badgeData} colorsData={colorsData} goBack={() => setCurrentStep(currentStep - 1)}/>);
                             }
                         }
                     })()
                 }
 
-                <FlexLayout direction="row" align="center" justify="space-between">
-                    <DialogLink onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}>Go back</DialogLink>
+                {(currentStep !== 3) && (
+                    <FlexLayout direction="row" align="center" justify="space-between">
+                        <DialogLink onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}>Go back</DialogLink>
 
-                    {(currentStep === 3)?(
-                        <div style={{ flex: 1 }}/>
-                    ):(
                         <DialogButton onClick={() => setCurrentStep(Math.min(currentStep + 1, 3))}>Next step</DialogButton>
-                    )}
-                </FlexLayout>
+                    </FlexLayout>
+                )}
             </DialogContent>
         </Dialog>
     );
