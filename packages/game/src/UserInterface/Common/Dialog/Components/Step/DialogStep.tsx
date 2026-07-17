@@ -10,7 +10,7 @@ export type DialogStepProps = {
 export default function DialogStep({ position, active, children }: DialogStepProps) {
     if(position === "final") {
         return (
-            <div className={`sprite_dialog_steps_${position}`} style={{
+            <div className={`sprite_dialog_steps_${position}-${(active)?("focused"):("inactive")}`} style={{
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
@@ -19,7 +19,7 @@ export default function DialogStep({ position, active, children }: DialogStepPro
                 fontSize: 13
             }}>
                 <FlexLayout gap={10} direction="row" style={{
-                    paddingBottom: 1,
+                    paddingBottom: (active)?(4):(1),
                     paddingLeft: 12
                 }}>
                     {children}
