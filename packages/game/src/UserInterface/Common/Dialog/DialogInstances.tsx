@@ -59,6 +59,7 @@ import AudioSettingsDialog from "@UserInterface/Components/Settings/AudioSetting
 import RoomUserTradingDialog from "@UserInterface/Components/Room/Users/Trading/RoomUserTradingDialog";
 import AdministrationDialog from "@UserInterface/Components/Administration/AdministrationDialog";
 import RoomWiredDialog from "@UserInterface/Components/Room/Wired/RoomWiredDialog";
+import RoomGroupCreationDialog from "@UserInterface/Components/Room/Groups/Creation/RoomGroupCreationDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -167,6 +168,9 @@ export default function DialogInstances() {
 
                     case "room-wired":
                         return (<RoomWiredDialog {...props} key={dialog.id}/>);
+
+                    case "room-group-creation":
+                        return (<RoomGroupCreationDialog {...props} key={dialog.id}/>);
 
                     case "report-issue":
                         return (<ReportIssueDialog {...props} key={dialog.id}/>);

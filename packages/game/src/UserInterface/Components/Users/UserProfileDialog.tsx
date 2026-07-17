@@ -27,7 +27,9 @@ export default function UserProfileDialog({ data, hidden, onClose }: UserProfile
 
     return (
         <Dialog title={profile.name} hidden={hidden} initialPosition="center" onClose={onClose} width={520} height={535}>
-            <DialogContent>
+            <DialogContent style={{
+                gap: 6
+            }}>
                 <FlexLayout direction="row">
                     <FlexLayout flex={1} direction="column">
                         <FlexLayout flex={1} direction="row">
@@ -124,6 +126,16 @@ export default function UserProfileDialog({ data, hidden, onClose }: UserProfile
                             </FlexLayout>
                         </FlexLayout>
                     </div>
+                </FlexLayout>
+
+                <FlexLayout direction="row" gap={5}>
+                    <FlexLayout flex={1} gap={5}>
+                        <div><b>Groups:</b> {profile.friendsCount}</div>
+                    </FlexLayout>
+
+                    <FlexLayout flex={5}>
+
+                    </FlexLayout>
                 </FlexLayout>
             </DialogContent>
         </Dialog>

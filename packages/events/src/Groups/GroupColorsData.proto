@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message GroupColorsData {
+    string primary_color = 1;
+    string secondary_color = 2;
+}

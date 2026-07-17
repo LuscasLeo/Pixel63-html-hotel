@@ -8,9 +8,10 @@ export type DialogItemProps = PropsWithChildren & {
     onClick?: () => void;
     onMouseDown?: () => void;
     style?: CSSProperties;
+    containerStyle?: CSSProperties;
 };
 
-export default function DialogItem({ width = 40, height = width, active, onClick, onMouseDown, children, style }: DialogItemProps) {
+export default function DialogItem({ width = 40, height = width, active, onClick, onMouseDown, children, containerStyle, style }: DialogItemProps) {
     return (
         <div style={{
             display: "flex",
@@ -23,7 +24,9 @@ export default function DialogItem({ width = 40, height = width, active, onClick
 
             cursor: "pointer",
 
-            position: "relative"
+            position: "relative",
+
+            ...containerStyle
         }} onClick={onClick} onMouseDown={onMouseDown}>
             <div style={{
                 flex: 1,

@@ -6,6 +6,7 @@ import { ShopPageData } from "@pixel63/events";
 import ShopPetsPage from "./ShopPetsPage";
 import ShopBundlePage from "@UserInterface/Components/Shop/Pages/ShopBundlePage";
 import ShopHabboClubPage from "@UserInterface/Components/Shop/Pages/ShopHabboClubPage";
+import ShopHabboGroupsPage from "@UserInterface/Components/Shop/Pages/ShopHabboGroupsPage";
 
 export type ShopPageProps = {
     editMode?: boolean;
@@ -38,6 +39,9 @@ export default function ShopPage({ search, editMode, page, setActiveShopPage, re
             
         case "habboclub":
             return (<ShopHabboClubPage key={page.id} search={search} editMode={editMode} page={page} requestedFurnitureId={requestedFurnitureId}/>);
+            
+        case "habbogroups":
+            return (<ShopHabboGroupsPage key={page.id} search={search} editMode={editMode} page={page} requestedFurnitureId={requestedFurnitureId}/>);
         
         default:
             return <div/>;

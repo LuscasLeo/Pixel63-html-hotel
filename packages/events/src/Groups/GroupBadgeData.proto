@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+message GroupBadgeBaseData {
+    string image = 1;
+    string color = 2;
+}
+
+message GroupBadgeSymbolData {
+    string image = 1;
+    string color = 2;
+    uint32 position = 3;
+}
+
+message GroupBadgeData {
+    GroupBadgeBaseData base = 1;
+
+    GroupBadgeSymbolData symbol_1 = 2;
+    GroupBadgeSymbolData symbol_2 = 3;
+    GroupBadgeSymbolData symbol_3 = 4;
+    GroupBadgeSymbolData symbol_4 = 5;
+}

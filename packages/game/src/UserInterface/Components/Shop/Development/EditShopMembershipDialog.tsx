@@ -80,6 +80,10 @@ export default function EditShopMembershipDialog({ hidden, data, onClose }: Edit
                     {
                         value: "habboclub",
                         label: "Habbo Club"
+                    },
+                    {
+                        value: "habbogroup",
+                        label: "Habbo Group"
                     }
                 ]}/>
 
