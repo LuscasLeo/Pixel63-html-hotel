@@ -278,7 +278,7 @@ export default class RoomRenderer extends EventTarget {
                     priority += (item.position.depth * 100);
                 }
                 else {
-                    priority += RoomRenderer.getPositionPriority(item.position);
+                    priority += RoomRenderer.getPositionPriority(item.position, false);
                 }
             }
             else {
@@ -293,8 +293,11 @@ export default class RoomRenderer extends EventTarget {
         return priority;
     }
 
-    public static getPositionPriority(position: RoomPositionData) {
-        return (Math.floor(position.row) * 1000) + (Math.floor(position.column) * 1000) + (position.depth * 10);
+    public static getPositionPriority(position: RoomPositionData, floored: boolean = true) {
+        const row = (floored)?(Math.floor(position.row)):(position.row);
+        const column = (floored)?(Math.floor(position.column)):(position.column);
+
+        return (row * 1000) + (column * 1000) + (position.depth * 10);
     }
 
     public getItemScreenPosition(item: RoomItem): MousePosition {
