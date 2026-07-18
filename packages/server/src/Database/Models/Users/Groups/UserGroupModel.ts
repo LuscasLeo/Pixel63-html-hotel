@@ -9,7 +9,7 @@ export class UserGroupModel extends Model {
     declare owner: boolean;
     declare admin: boolean;
 
-    declare createdAt: string;
+    declare createdAt: NonAttribute<Date>;
 
     declare user: NonAttribute<UserModel>;
 }
@@ -41,6 +41,11 @@ export function initializeUserGroupModel(sequelize: Sequelize) {
             sequelize,
         },
     );
+    
+    UserGroupModel.belongsTo(UserModel, {
+        as: "user",
+        foreignKey: "userId"
+    });
 
     UserModel.belongsToMany(GroupModel, {
         through: UserGroupModel,

@@ -61,6 +61,7 @@ import AdministrationDialog from "@UserInterface/Components/Administration/Admin
 import RoomWiredDialog from "@UserInterface/Components/Room/Wired/RoomWiredDialog";
 import RoomGroupCreationDialog from "@UserInterface/Components/Room/Groups/Creation/RoomGroupCreationDialog";
 import GroupDialog from "@UserInterface/Components/Groups/GroupDialog";
+import GroupMembersDialog from "@UserInterface/Components/Groups/GroupMembersDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -175,6 +176,9 @@ export default function DialogInstances() {
 
                     case "group":
                         return (<GroupDialog {...props} key={dialog.id}/>);
+
+                    case "group-members":
+                        return (<GroupMembersDialog {...props} key={dialog.id}/>);
 
                     case "report-issue":
                         return (<ReportIssueDialog {...props} key={dialog.id}/>);

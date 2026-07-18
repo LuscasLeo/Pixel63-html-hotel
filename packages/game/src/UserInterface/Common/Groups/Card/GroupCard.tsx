@@ -5,6 +5,7 @@ import DialogLink from "@UserInterface/Common/Dialog/Components/Link/DialogLink"
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import UserLink from "@UserInterface/Common/Users/UserLink";
 import GroupBadgeImage from "@UserInterface/Components/Groups/GroupBadgeImage";
+import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 
 export type GroupCardProps = {
     data?: GroupData;
@@ -12,6 +13,8 @@ export type GroupCardProps = {
 }
 
 export default function GroupCard({ data, userData }: GroupCardProps) {
+    const dialogs = useDialogs();
+
     if(!data) {
         return null;
     }
@@ -48,7 +51,7 @@ export default function GroupCard({ data, userData }: GroupCardProps) {
             
             <FlexLayout direction="row" flex={1}>
                 <FlexLayout flex={1} direction="column" align="center">
-                    <DialogLink>Members: {data.membersCount}</DialogLink>
+                    <DialogLink onClick={() => dialogs.openUniqueDialog("group-members", data.id)}>Members: {data.membersCount}</DialogLink>
                 </FlexLayout>
                 
                 <FlexLayout flex={2} gap={2} direction="column">

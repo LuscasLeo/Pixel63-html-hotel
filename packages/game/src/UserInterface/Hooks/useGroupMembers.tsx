@@ -2,7 +2,7 @@ import { GetGroupMembersData, GroupMemberData, GroupMembersData } from "@pixel63
 import { useEffect, useState } from "react";
 import { webSocketClient } from "@Game/index";
 
-export default function useGroupMembers(groupId?: string) {
+export default function useGroupMembers(groupId?: string, name?: string, filter?: string) {
     const [groupMembers, setGroupMembers] = useState<GroupMemberData[]>();
 
     useEffect(() => {
@@ -15,13 +15,15 @@ export default function useGroupMembers(groupId?: string) {
         });
 
         webSocketClient.sendProtobuff(GetGroupMembersData, GetGroupMembersData.create({
-            id: groupId
+            id: groupId,
+            name,
+            filter
         }));
 
         return () => {
             webSocketClient.removeProtobuffListener(GroupMembersData, listener);
         };
-    }, [groupId]);
+    }, [groupId, name, filter]);
 
     return groupMembers;
 }
