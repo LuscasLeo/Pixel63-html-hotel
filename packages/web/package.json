@@ -30,7 +30,7 @@
     "mysql2": "^3.20.0",
     "parcel": "^2.16.4",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3",
+    "typescript": "catalog:",
     "vite": "^7.3.1"
   }
 }
