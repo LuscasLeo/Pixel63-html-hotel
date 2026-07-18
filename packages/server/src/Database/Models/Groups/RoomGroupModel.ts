@@ -4,7 +4,8 @@ import { UserModel } from "../Users/UserModel";
 
 export enum GroupType {
     PUBLIC = "public",
-    PRIVATE = "private"
+    PRIVATE = "private",
+    EXCLUSIVE = "exclusive"
 };
 
 export enum GroupRights {
@@ -21,6 +22,9 @@ export class GroupModel extends Model {
 
     declare primaryColor: string;
     declare secondaryColor: string;
+
+    declare type: GroupType;
+    declare rights: GroupType;
 
     declare badge: GroupBadgeData;
 }

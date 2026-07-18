@@ -9,6 +9,8 @@ export class UserGroupModel extends Model {
     declare owner: boolean;
     declare admin: boolean;
 
+    declare pending: boolean;
+
     declare createdAt: NonAttribute<Date>;
 
     declare user: NonAttribute<UserModel>;
@@ -24,6 +26,10 @@ export function initializeUserGroupModel(sequelize: Sequelize) {
             groupId: {
                 type: DataTypes.STRING,
                 primaryKey: true
+            },
+            pending: {
+                type: DataTypes.BOOLEAN,
+                defaultValue: false
             },
             owner: {
                 type: DataTypes.BOOLEAN,

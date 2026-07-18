@@ -12,4 +12,6 @@ message GroupMemberData {
 
     string name = 5;
     FigureConfigurationData figure_configuration = 6;
+
+    bool pending = 7;
 }

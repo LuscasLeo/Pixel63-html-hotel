@@ -18,7 +18,8 @@ export default class GetGroupEvent implements ProtobuffListener<GetGroupData> {
 
         const membersCount = await UserGroupModel.count({
             where: {
-                groupId: group.id
+                groupId: group.id,
+                pending: false
             }
         });
 

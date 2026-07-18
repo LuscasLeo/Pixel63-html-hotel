@@ -40,6 +40,8 @@ export default class GetGroupMembersEvent implements ProtobuffListener<GetGroupM
                     admin: userGroup.admin,
                     owner: userGroup.owner,
 
+                    pending: userGroup.pending,
+
                     createdAt: userGroup.createdAt.toISOString(),
 
                     name: userGroup.user.name,

@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message LeaveGroupData {
+    string group_id = 1;
+}

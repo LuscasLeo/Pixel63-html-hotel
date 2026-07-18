@@ -9,6 +9,7 @@ import UserLink from "@UserInterface/Common/Users/UserLink";
 import GroupBadgeImage from "@UserInterface/Components/Groups/GroupBadgeImage";
 import useGroup from "@UserInterface/Hooks/useGroup";
 import useGroupMembers from "@UserInterface/Hooks/useGroupMembers";
+import useUserGroup from "@UserInterface/Hooks/useUserGroup";
 import { useMemo, useState } from "react";
 
 export type GroupMembersDialogProps = {
@@ -19,6 +20,7 @@ export type GroupMembersDialogProps = {
 
 export default function GroupMembersDialog({ data, hidden, onClose }: GroupMembersDialogProps) {
     const group = useGroup(data);
+    const userGroup = useUserGroup(data);
 
     const [name, setName] = useState<string>();
     const [filter, setFilter] = useState<string>();
@@ -28,8 +30,18 @@ export default function GroupMembersDialog({ data, hidden, onClose }: GroupMembe
     const [page, setPage] = useState(0);
 
     const filteredMembers = useMemo(() => {
-        return members?.slice(page * 12, (page * 12) + 12);
-    }, [members, page]);
+        return members?.filter((member) => {
+            if(userGroup?.admin) {
+                return true;
+            }
+
+            if(member.pending) {
+                return false;
+            }
+
+            return true;
+        }).slice(page * 12, (page * 12) + 12);
+    }, [userGroup, members, page]);
 
     if(!group) {
         return null;

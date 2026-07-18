@@ -1,8 +1,9 @@
 syntax = "proto3";
 
+import "Groups/Members/GroupMemberData.proto";
+
 message UserGroupData {
     string group_id = 1;
 
-    bool admin = 2;
-    bool owner = 3;
+    optional GroupMemberData member = 2;
 }

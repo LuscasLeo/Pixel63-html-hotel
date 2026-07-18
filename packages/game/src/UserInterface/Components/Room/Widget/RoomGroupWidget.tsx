@@ -1,12 +1,23 @@
+import { webSocketClient } from "@Game/index";
+import { JoinGroupData } from "@pixel63/events";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import GroupBadgeImage from "@UserInterface/Components/Groups/GroupBadgeImage";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { useRoomGroup } from "@UserInterface/Hooks/useRoomGroup";
+import useUserGroup from "@UserInterface/Hooks/useUserGroup";
+import { useCallback } from "react";
 
 export default function RoomGroupWidget() {
-    const roomGroup = useRoomGroup();
     const dialogs = useDialogs();
+    const roomGroup = useRoomGroup();
+    const userGroup = useUserGroup(roomGroup?.group?.id);
+
+    const handleJoin = useCallback(() => {
+        webSocketClient.sendProtobuff(JoinGroupData, JoinGroupData.create({
+            groupId: roomGroup?.group?.id
+        }));
+    }, [roomGroup]);
 
     if(!roomGroup?.group) {
         return null;
@@ -74,11 +85,19 @@ export default function RoomGroupWidget() {
                 </FlexLayout>
             </FlexLayout>
 
-            {(roomGroup.group.type === "public" && !roomGroup.user) && (
+            {(roomGroup.group.type === "public" && !userGroup) && (
                 <FlexLayout flex={1} direction="row" style={{
                     padding: 8,
                 }}>
-                    <DialogButton style={{ flex: 1 }}>Join group</DialogButton>
+                    <DialogButton style={{ flex: 1 }} onClick={handleJoin}>Join group</DialogButton>
+                </FlexLayout>
+            )}
+
+            {(roomGroup.group.type === "exclusive" && !userGroup) && (
+                <FlexLayout flex={1} direction="row" style={{
+                    padding: 8,
+                }}>
+                    <DialogButton style={{ flex: 1 }} onClick={handleJoin}>Request to join</DialogButton>
                 </FlexLayout>
             )}
         </div>

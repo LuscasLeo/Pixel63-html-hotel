@@ -1,4 +1,5 @@
-import { GroupData, UserGroupData } from "@pixel63/events";
+import { webSocketClient } from "@Game/index";
+import { GroupData, GroupMemberData, JoinGroupData, LeaveGroupData, UserGroupData } from "@pixel63/events";
 import TimeSinceDate from "@UserInterface/Common/Date/TimeSinceDate";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 import DialogLink from "@UserInterface/Common/Dialog/Components/Link/DialogLink";
@@ -6,14 +7,27 @@ import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import UserLink from "@UserInterface/Common/Users/UserLink";
 import GroupBadgeImage from "@UserInterface/Components/Groups/GroupBadgeImage";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
+import { useCallback } from "react";
 
 export type GroupCardProps = {
     data?: GroupData;
-    userData?: UserGroupData;
+    userData?: GroupMemberData;
 }
 
 export default function GroupCard({ data, userData }: GroupCardProps) {
     const dialogs = useDialogs();
+
+    const handleJoin = useCallback(() => {
+        webSocketClient.sendProtobuff(JoinGroupData, JoinGroupData.create({
+            groupId: data?.id
+        }));
+    }, [data]);
+
+    const handleLeaveGroup = useCallback(() => {
+        webSocketClient.sendProtobuff(LeaveGroupData, LeaveGroupData.create({
+            groupId: data?.id
+        }));
+    }, [data]);
 
     if(!data) {
         return null;
@@ -65,8 +79,12 @@ export default function GroupCard({ data, userData }: GroupCardProps) {
             </FlexLayout>
 
             <div>
-                {(!userData) && (
-                    <DialogButton>Join Group</DialogButton>
+                {(!userData)?(
+                    <DialogButton onClick={handleJoin}>Join Group</DialogButton>
+                ):(
+                    (!userData.owner) && (
+                        <DialogButton onClick={handleLeaveGroup}>Leave Group</DialogButton>
+                    )
                 )}
 
                 {(userData?.owner) && (

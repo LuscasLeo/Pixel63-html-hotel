@@ -1,15 +1,15 @@
-import { GetUserGroupData, UserGroupData } from "@pixel63/events";
+import { GetUserGroupData, GroupMemberData, UserGroupData } from "@pixel63/events";
 import { useEffect, useState } from "react";
 import { webSocketClient } from "@Game/index";
 
 export default function useUserGroup(groupId?: string) {
-    const [userGroup, setUserGroup] = useState<UserGroupData>();
+    const [userGroup, setUserGroup] = useState<GroupMemberData>();
 
     useEffect(() => {
         const listener = webSocketClient.addProtobuffListener(UserGroupData, {
             async handle(payload: UserGroupData) {
                 if(payload.groupId === groupId) {
-                    setUserGroup(payload);
+                    setUserGroup(payload.member);
                 }
             },
         });
