@@ -4,6 +4,7 @@ export type SelectionProps = {
     value: any;
     style?: CSSProperties;
     disabled?: boolean;
+    placeholder?: string;
     
     items: {
         value: any;
@@ -14,7 +15,7 @@ export type SelectionProps = {
     onChange: (value: any) => void;
 }
 
-export default function Selection({ disabled, style, value, items, onChange }: SelectionProps) {
+export default function Selection({ placeholder, disabled, style, value, items, onChange }: SelectionProps) {
     const elementRef = useRef<HTMLDivElement>(null);
 
     const [expanded, setExpanded] = useState(false);
@@ -82,7 +83,7 @@ export default function Selection({ disabled, style, value, items, onChange }: S
                         flex: 1,
                         paddingLeft: 6,
                     }}>
-                        {items.find((item) => item.value === value)?.label}
+                        {items.find((item) => item.value === value)?.label ?? placeholder}
                     </div>
 
                     <div style={{

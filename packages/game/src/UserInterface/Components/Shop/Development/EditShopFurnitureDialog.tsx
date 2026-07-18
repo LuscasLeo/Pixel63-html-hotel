@@ -166,6 +166,10 @@ export default function EditShopFurnitureDialog({ hidden, data, onClose }: EditS
                         {
                             value: "habboclub",
                             label: "Habbo Club"
+                        },
+                        {
+                            value: "habbogroup",
+                            label: "Habbo Group"
                         }
                     ]}/>
 

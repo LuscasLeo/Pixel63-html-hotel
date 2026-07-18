@@ -9,7 +9,7 @@ import RoomFurniturePlacer from "@Client/Room/RoomFurniturePlacer";
 import { useDialogs } from "../../../Hooks/useDialogs";
 import { useUser } from "../../../Hooks/useUser";
 import { useRoomInstance } from "../../../Hooks/useRoomInstance";
-import { PurchaseShopFurnitureData, RoomPositionData, RoomStructureData, ShopFurnitureData, ShopFurniturePurchaseData } from "@pixel63/events";
+import { GroupData, PurchaseShopFurnitureData, RoomPositionData, RoomStructureData, ShopFurnitureData, ShopFurniturePurchaseData, UserFurnitureColorTag, UserFurnitureData } from "@pixel63/events";
 import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScrollArea";
 import usePurchasableItem from "@UserInterface/Components/Shop/Pages/Hooks/usePurchasableItem";
 import DialogCurrencyPanel from "@UserInterface/Common/Dialog/Components/Panels/DialogCurrencyPanel";
@@ -17,6 +17,7 @@ import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import Input from "@UserInterface/Common/Form/Components/Input";
 import RoomRenderer from "@UserInterface/Common/Room/RoomRenderer";
 import MembershipSmallIcon from "@UserInterface/Common/Memberships/MembershipSmallIcon";
+import ShopGroupSelector from "@UserInterface/Components/Shop/Pages/Groups/ShopGroupSelector";
 
 export default function ShopDefaultPage({ search, editMode, page, requestedFurnitureId }: ShopPageProps) {
     const dialogs = useDialogs();
@@ -30,6 +31,7 @@ export default function ShopDefaultPage({ search, editMode, page, requestedFurni
     const [activeFurniture, setActiveFurniture] = useState<ShopFurnitureData>();
 
     const [quantity, setQuantity] = useState(1);
+    const [group, setGroup] = useState<GroupData>();
 
     const handlePurchaseFurniture = useCallback((stopPlacing?: () => void, position?: RoomPositionData, direction?: number) => {
         if(!activeFurniture) {
@@ -78,9 +80,11 @@ export default function ShopDefaultPage({ search, editMode, page, requestedFurni
             position,
             direction,
 
+            groupId: group?.id,
+
             quantity: (purchasableItem.placing)?(1):(quantity)
         }));
-    }, [activeFurniture, activeFurnitureRef, quantity]);
+    }, [activeFurniture, activeFurnitureRef, quantity, group]);
 
     const purchasableItem = usePurchasableItem(handlePurchaseFurniture);
 
@@ -119,7 +123,18 @@ export default function ShopDefaultPage({ search, editMode, page, requestedFurni
                     return;
                 }
 
-                purchasableItem.startPlacing(RoomFurniturePlacer.fromFurnitureData(room, furniture.furniture));                
+                purchasableItem.startPlacing(RoomFurniturePlacer.fromFurnitureData(room, furniture.furniture, UserFurnitureData.create({
+                    colorTags: (group) && [
+                        UserFurnitureColorTag.create({
+                            tag: "COLOR1",
+                            color: group.primaryColor
+                        }),
+                        UserFurnitureColorTag.create({
+                            tag: "COLOR2",
+                            color: group.secondaryColor
+                        })
+                    ]
+                })));                
             }
         };
 
@@ -172,7 +187,17 @@ export default function ShopDefaultPage({ search, editMode, page, requestedFurni
                             {
                                 id: activeFurniture.id,
                                 furniture: activeFurniture.furniture,
-                                panToItem: true
+                                panToItem: true,
+                                colorTags: (group) && [
+                                    UserFurnitureColorTag.create({
+                                        tag: "COLOR1",
+                                        color: group.primaryColor
+                                    }),
+                                    UserFurnitureColorTag.create({
+                                        tag: "COLOR2",
+                                        color: group.secondaryColor
+                                    })
+                                ]
                             }
                         ]):([])
                     }
@@ -262,7 +287,16 @@ export default function ShopDefaultPage({ search, editMode, page, requestedFurni
                                     position: "relative"
                                 }}>
                                     <div style={{ height: 30, display: "flex", justifyContent: "center", alignItems: "center" }} onMouseDown={() => onMouseDown(furniture)}>
-                                        <FurnitureIcon ref={(activeFurniture?.id === furniture.id)?(activeFurnitureRef):(undefined)} furnitureData={furniture.furniture}/>
+                                        <FurnitureIcon ref={(activeFurniture?.id === furniture.id)?(activeFurnitureRef):(undefined)} furnitureData={furniture.furniture} colorTags={(group) && [
+                                            UserFurnitureColorTag.create({
+                                                tag: "COLOR1",
+                                                color: group.primaryColor
+                                            }),
+                                            UserFurnitureColorTag.create({
+                                                tag: "COLOR2",
+                                                color: group.secondaryColor
+                                            })
+                                        ]}/>
                                     </div>
 
                                     {(furniture.credits) && (
@@ -354,6 +388,10 @@ export default function ShopDefaultPage({ search, editMode, page, requestedFurni
                 </DialogScrollArea>
             </DialogPanel>
 
+            {(activeFurniture?.membership === "habbogroup") && (
+                <ShopGroupSelector value={group} onChange={setGroup}/>
+            )}
+
             <div style={{
                 //height: 52,
 
@@ -376,6 +414,7 @@ export default function ShopDefaultPage({ search, editMode, page, requestedFurni
                         (activeFurniture.credits ?? 0) > user.credits
                         || (activeFurniture.duckets ?? 0) > user.duckets
                         || (activeFurniture.diamonds ?? 0) > user.diamonds
+                        || (activeFurniture.membership === "habbogroup" && !group)
                     )} style={{ flex: 1 }} onClick={() => handlePurchaseFurniture()}>Purchase</DialogButton>
                 </div>
             </div>

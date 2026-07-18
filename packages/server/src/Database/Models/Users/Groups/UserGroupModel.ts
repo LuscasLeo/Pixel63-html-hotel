@@ -14,6 +14,7 @@ export class UserGroupModel extends Model {
     declare createdAt: NonAttribute<Date>;
 
     declare user: NonAttribute<UserModel>;
+    declare group: NonAttribute<GroupModel>;
 }
 
 export function initializeUserGroupModel(sequelize: Sequelize) {
@@ -51,6 +52,11 @@ export function initializeUserGroupModel(sequelize: Sequelize) {
     UserGroupModel.belongsTo(UserModel, {
         as: "user",
         foreignKey: "userId"
+    });
+    
+    UserGroupModel.belongsTo(GroupModel, {
+        as: "group",
+        foreignKey: "groupId"
     });
 
     UserModel.belongsToMany(GroupModel, {

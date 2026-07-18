@@ -6,8 +6,10 @@ import { FurnitureModel } from "../../../Database/Models/Furniture/FurnitureMode
 import RoomFurniture from "../../../Rooms/Furniture/RoomFurniture.js";
 import { UserFurnitureModel } from "../../../Database/Models/Users/Furniture/UserFurnitureModel.js";
 import { randomUUID } from "node:crypto";
-import { HotelAlertData, PurchaseShopFurnitureData, ShopFurniturePurchaseData, UserFurnitureCustomData, UserFurnitureData } from "@pixel63/events";
+import { HotelAlertData, PurchaseShopFurnitureData, ShopFurniturePurchaseData, UserFurnitureColorTag, UserFurnitureCustomData, UserFurnitureData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
+import { GroupModel } from "../../../Database/Models/Groups/RoomGroupModel.js";
+import { UserGroupModel } from "../../../Database/Models/Users/Groups/UserGroupModel.js";
 
 export default class PurchaseShopFurnitureEvent implements ProtobuffListener<PurchaseShopFurnitureData> {
     minimumDurationBetweenEvents?: number = 100;
@@ -61,8 +63,32 @@ export default class PurchaseShopFurnitureEvent implements ProtobuffListener<Pur
             return;
         }
 
+        let group: GroupModel | undefined = undefined;
+
         if(shopFurniture.membership) {
-            if(!user.hasMembership(shopFurniture.membership)) {
+            if(shopFurniture.membership === "habbogroup") {
+                const userGroup = await UserGroupModel.findOne({
+                    where: {
+                        userId: user.model.id,
+                        groupId: payload.groupId
+                    },
+                    include: {
+                        model: GroupModel,
+                        as: "group"
+                    }
+                });
+
+                if(!userGroup) {
+                    user.sendProtobuff(HotelAlertData, HotelAlertData.create({
+                        message: "You must be a Habbo Group member to buy this furniture!"
+                    }));
+
+                    return;
+                }
+
+                group = userGroup.group;
+            }
+            else if(!user.hasMembership(shopFurniture.membership)) {
                 user.sendProtobuff(HotelAlertData, HotelAlertData.create({
                     message: "You must be a Habbo Club member to buy this furniture!"
                 }));
@@ -87,6 +113,19 @@ export default class PurchaseShopFurnitureEvent implements ProtobuffListener<Pur
                 animation: 0,
                 color: null,
                 data: null,
+
+                ...(group && {
+                    colorTags: [
+                        UserFurnitureColorTag.create({
+                            tag: "COLOR1",
+                            color: group.primaryColor
+                        }),
+                        UserFurnitureColorTag.create({
+                            tag: "COLOR2",
+                            color: group.secondaryColor
+                        })
+                    ]
+                }),
                 
                 roomId: null,
                 userId: user.model.id,

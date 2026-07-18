@@ -5,6 +5,7 @@ import "Room/RoomPositionData.proto";
 import "User/UserNameData.proto";
 
 import "User/Furniture/UserFurnitureAnimationTag.proto";
+import "User/Furniture/UserFurnitureColorTag.proto";
 import "User/Furniture/UserFurnitureCustomData.proto";
 
 message UserFurnitureData {
@@ -18,6 +19,8 @@ message UserFurnitureData {
 
     int32 animation = 6;
     repeated UserFurnitureAnimationTag animation_tags = 9;
+
+    repeated UserFurnitureColorTag color_tags = 13;
 
     optional uint32 color = 7;
 

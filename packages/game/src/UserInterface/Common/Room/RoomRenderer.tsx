@@ -37,6 +37,8 @@ export default function RoomRenderer({ hidden, structure, furniture }: RoomRende
         });
 
         renderer.init().then(() => {
+            renderer.application.ticker.maxFPS = 24;
+            
             setRoomRenderer(renderer);
         });
 
@@ -70,7 +72,6 @@ export default function RoomRenderer({ hidden, structure, furniture }: RoomRende
             let item: RoomFurnitureItem = roomChildrenItems.current.get(furnitureItem.id) as RoomFurnitureItem;
 
             if(!item) {
-                console.log({ furnitureItem });
                 if(furnitureItem.furniture.type === "floor") {
                     roomRenderer.setStructure({
                         ...roomRenderer.structure,
@@ -110,6 +111,9 @@ export default function RoomRenderer({ hidden, structure, furniture }: RoomRende
             
             item.furnitureRenderer.figureConfiguration = furnitureItem.figureConfiguration;
             item.furnitureRenderer.externalImage = furnitureItem.externalImage;
+            item.furnitureRenderer.colorTags = furnitureItem.colorTags;
+
+            //console.log("color tags set to", furnitureItem.colorTags);
 
             if(!furnitureItem.position) {
                 if(item instanceof RoomFurnitureItem) {

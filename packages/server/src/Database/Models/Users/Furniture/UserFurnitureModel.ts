@@ -3,7 +3,7 @@ import { NonAttribute } from "@sequelize/core";
 import { FurnitureModel } from "../../Furniture/FurnitureModel.js";
 import { RoomModel } from "../../Rooms/RoomModel.js";
 import { UserModel } from "../UserModel.js";
-import { RoomPositionData, UserFurnitureAnimationTag, UserFurnitureCustomData } from "@pixel63/events";
+import { RoomPositionData, UserFurnitureAnimationTag, UserFurnitureColorTag, UserFurnitureCustomData } from "@pixel63/events";
 
 export class UserFurnitureModel extends Model {
     declare id: string;
@@ -15,6 +15,7 @@ export class UserFurnitureModel extends Model {
 
     declare animation: number;
     declare animationTags?: UserFurnitureAnimationTag[] | null;
+    declare colorTags?: UserFurnitureColorTag[] | null;
 
     declare color: number | null;
     declare data?: UserFurnitureCustomData;
@@ -85,6 +86,20 @@ export function initializeUserFurnitureModel(sequelize: Sequelize) {
                 },
                 set: function (value) {
                     this.setDataValue("animationTags", JSON.stringify(value));
+                },
+                allowNull: true,
+                defaultValue: null
+            },
+            
+            colorTags: {
+                type: DataTypes.TEXT,
+                get: function () {
+                    const dataValue = this.getDataValue("colorTags");
+
+                    return (dataValue)?(JSON.parse(dataValue)):(null);
+                },
+                set: function (value) {
+                    this.setDataValue("colorTags", JSON.stringify(value));
                 },
                 allowNull: true,
                 defaultValue: null

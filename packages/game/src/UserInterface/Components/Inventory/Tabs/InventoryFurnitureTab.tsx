@@ -286,7 +286,7 @@ export default function InventoryFurnitureTab({ trading, allowPlacingInRoom, but
                                 active={activeFurniture?.id === userFurniture.id}
                                 onClick={() => setActiveFurniture(userFurniture)}
                                 onMouseDown={() => room && room.hasRights && handleMouseDown(userFurniture)}>
-                                    <FurnitureIcon furnitureData={userFurniture.furniture}/>
+                                    <FurnitureIcon furnitureData={userFurniture.furniture} colorTags={userFurniture.userFurniture?.colorTags}/>
 
                                     {(userFurniture.quantity > 1) && (
                                         <div style={{
@@ -343,7 +343,8 @@ export default function InventoryFurnitureTab({ trading, allowPlacingInRoom, but
                                                 furniture: activeFurniture.furniture,
                                                 externalImage: activeFurniture.userFurniture?.data?.externalImage?.externalImage,
                                                 figureConfiguration: activeFurniture.userFurniture?.data?.mannequin?.figureConfiguration,
-                                                panToItem: true
+                                                panToItem: true,
+                                                colorTags: activeFurniture.userFurniture?.colorTags
                                             }
                                         ]):([])
                                     }

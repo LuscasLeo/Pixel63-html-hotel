@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+import "Groups/GroupData.proto";
+
+message UserGroupsData {
+    repeated GroupData groups = 1;
+}

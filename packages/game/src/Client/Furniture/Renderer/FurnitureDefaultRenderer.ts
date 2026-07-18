@@ -68,6 +68,12 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
             return true;
         }
 
+        //console.log("options", options.colorTags, this.options.colorTags);
+
+        if(this.options.colorTags?.length !== options.colorTags?.length) {
+            return true;
+        }
+
         return false;
     }
 
@@ -81,8 +87,9 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
 
         const grayscaled = (options.grayscaled)?([options.grayscaled?.background, options.grayscaled?.foreground, options.grayscaled?.ink].join('_')):(undefined);
         const tags = options.tags?.join('_');
+        const colorTags = options.colorTags?.map((colorTag) => `${colorTag.tag}-${colorTag.color}`).join('_');
 
-        return `${this.type}_${options.animation}_[${layerFrames}]_${options.direction}_${options.color}_[${grayscaled}]_${options.size}_[${tags}]`;
+        return `${this.type}_${options.animation}_[${layerFrames}]_${options.direction}_${options.color}_[${grayscaled}]_${options.size}_[${tags}]_[${colorTags}]`;
     }
 
     private getLayerFrames(options: FurnitureRenderOptions) {
@@ -315,7 +322,11 @@ export default class FurnitureDefaultRenderer implements FurnitureRenderer {
                 continue;
             }
 
-            const { image, imageData } = await this.getFurnitureSprite(data, this.type, spriteData, assetData.flipHorizontal ?? false, colorData?.layers?.find((colorLayer) => colorLayer.id === layer)?.color, (!layerData?.ink)?(options.grayscaled):(undefined), layerData?.tag, assetData.usesPalette);
+            const colorTag = options.colorTags?.find((colorTag) => colorTag.tag === layerData?.tag);
+
+            const color = colorData?.layers?.find((colorLayer) => colorLayer.id === layer)?.color ?? colorTag?.color;
+
+            const { image, imageData } = await this.getFurnitureSprite(data, this.type, spriteData, assetData.flipHorizontal ?? false, color, (!layerData?.ink)?(options.grayscaled):(undefined), layerData?.tag, assetData.usesPalette);
 
             const directionLayerData = directionData?.layers.find((layerData) => layerData.id === layer);
 

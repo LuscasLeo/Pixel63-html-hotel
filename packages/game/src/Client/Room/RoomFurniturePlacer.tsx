@@ -33,6 +33,7 @@ export default class RoomFurniturePlacer {
 
         roomFurnitureItem.furnitureRenderer.figureConfiguration = userFurnitureData?.data?.mannequin?.figureConfiguration;
         roomFurnitureItem.furnitureRenderer.externalImage = userFurnitureData?.data?.externalImage?.externalImage;
+        roomFurnitureItem.furnitureRenderer.colorTags = userFurnitureData?.colorTags;
 
         return new RoomFurniturePlacer(roomInstance, roomFurnitureItem, true);
     }

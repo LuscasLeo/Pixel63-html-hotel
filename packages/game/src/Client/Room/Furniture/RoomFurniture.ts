@@ -160,6 +160,7 @@ export default class RoomFurniture {
         }
 
         this.item.furnitureRenderer.animationTags = this.data.animationTags = payload.animationTags;
+        this.item.furnitureRenderer.colorTags = this.data.colorTags = payload.colorTags;
 
         if(payload.color !== undefined) {
             this.item.furnitureRenderer.color = this.data.color = payload.color ?? this.furnitureData.color ?? undefined;

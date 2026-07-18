@@ -5,7 +5,7 @@ import FurnitureRoomContentRenderer from "@Client/Furniture/Renderer/FurnitureRo
 import FurnitureDefaultRenderer from "@Client/Furniture/Renderer/FurnitureDefaultRenderer";
 import FurnitureRenderer, { FurnitureRenderOptions } from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
 import FurnitureXRayRenderer from "@Client/Furniture/Renderer/FurnitureXRayRenderer";
-import { FigureConfigurationData, RoomPositionData, UserFurnitureAnimationTag } from "@pixel63/events";
+import { FigureConfigurationData, RoomPositionData, UserFurnitureAnimationTag, UserFurnitureColorTag } from "@pixel63/events";
 import { AssetSpriteGrayscaledProperties } from "@Client/Assets/AssetFetcher";
 import FurnitureMannequinRenderer from "@Client/Furniture/Renderer/FurnitureMannequinRenderer";
 import FurnitureExternalImageRenderer from "@Client/Furniture/Renderer/FurnitureExternalImageRenderer";
@@ -77,6 +77,8 @@ export default class Furniture {
         this.frame = 0;
     }
 
+    public colorTags: UserFurnitureColorTag[] | undefined = undefined;
+
     public readonly type: string;
 
     public figureConfiguration?: FigureConfigurationData;
@@ -136,6 +138,7 @@ export default class Furniture {
             size: this.size, 
             animation: this.animation,
             animationTags: this.animationTags,
+            colorTags: this.colorTags,
             color: this.color ?? 0, 
             frame: this.frame,
             grayscaled: this.grayscaled,

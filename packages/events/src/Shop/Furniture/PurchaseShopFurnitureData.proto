@@ -11,4 +11,6 @@ message PurchaseShopFurnitureData {
     optional uint32 direction = 4;
 
     optional uint32 quantity = 5;
+
+    optional string group_id = 6;
 }
