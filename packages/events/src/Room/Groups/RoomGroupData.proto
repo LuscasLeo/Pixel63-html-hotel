@@ -1,9 +1,11 @@
 syntax = "proto3";
 
 import "Groups/GroupData.proto";
+import "User/Groups/UserGroupData.proto";
 
 message RoomGroupData {
     string room_id = 1;
 
     optional GroupData group = 2;
+    optional UserGroupData user = 3;
 }

@@ -1,7 +1,13 @@
 import { GroupBadgeData } from "@pixel63/events";
 import { DataTypes, Model, Sequelize } from "sequelize";
+import { UserModel } from "../Users/UserModel";
 
-export class RoomGroupModel extends Model {
+export enum GroupType {
+    PUBLIC = "public",
+    PRIVATE = "private"
+};
+
+export class GroupModel extends Model {
     declare id: string;
 
     declare name: string;
@@ -13,8 +19,8 @@ export class RoomGroupModel extends Model {
     declare badge: GroupBadgeData;
 }
 
-export function initializeRoomGroupModel(sequelize: Sequelize) {
-    RoomGroupModel.init(
+export function initializeGroupModel(sequelize: Sequelize) {
+    GroupModel.init(
         {
             id: {
                 type: DataTypes.STRING,
@@ -45,6 +51,11 @@ export function initializeRoomGroupModel(sequelize: Sequelize) {
                     this.setDataValue("badge", JSON.stringify(value));
                 },
                 allowNull: false
+            },
+            type: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                defaultValue: GroupType.PUBLIC
             }
         },
         {

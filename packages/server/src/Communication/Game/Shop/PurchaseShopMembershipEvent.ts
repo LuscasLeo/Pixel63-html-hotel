@@ -10,7 +10,9 @@ import { PurchaseShopFurnitureData, PurchaseShopMembershipData, ShopFurniturePur
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 import { ShopPageMembershipModel } from "../../../Database/Models/Shop/ShopPageMembershipModel.js";
 import { RoomModel } from "../../../Database/Models/Rooms/RoomModel.js";
-import { RoomGroupModel } from "../../../Database/Models/Rooms/Groups/RoomGroupModel.js";
+import { GroupModel } from "../../../Database/Models/Groups/RoomGroupModel.js";
+import { UserGroupModel } from "../../../Database/Models/Users/Groups/UserGroupModel.js";
+import { game } from "../../../index.js";
 
 export default class PurchaseShopMembershipEvent implements ProtobuffListener<PurchaseShopMembershipData> {
     minimumDurationBetweenEvents?: number = 100;
@@ -54,23 +56,23 @@ export default class PurchaseShopMembershipEvent implements ProtobuffListener<Pu
                     throw new Error("Missing group creation data from payload.");
                 }
 
-                const room = await RoomModel.findByPk(payload.group.identity?.homeroomId);
+                const roomModel = await RoomModel.findByPk(payload.group.identity?.homeroomId);
 
-                if(!room) {
+                if(!roomModel) {
                     throw new Error("Room does not exist.");
                 }
 
-                if(user.model.id !== room.ownerId) {
+                if(user.model.id !== roomModel.ownerId) {
                     throw new Error("User does not own the room.");
                 }
 
-                if(room.groupId) {
+                if(roomModel.groupId) {
                     throw new Error("Room is already a group homeroom.");
                 }
 
                 const groupId = randomUUID();
 
-                await RoomGroupModel.create({
+                await GroupModel.create({
                     id: groupId,
 
                     name: payload.group.identity?.name,
@@ -82,9 +84,23 @@ export default class PurchaseShopMembershipEvent implements ProtobuffListener<Pu
                     badge: payload.group.badge
                 });
 
-                await room.update({
+                await UserGroupModel.create({
+                    userId: user.model.id,
+                    groupId,
+
+                    owner: true,
+                    admin: true
+                });
+
+                await roomModel.update({
                     groupId
                 });
+
+                const room = game.roomManager.getRoomInstance(roomModel.id);
+
+                if(room) {
+                    await room.group.update();
+                }
 
                 break;
             }

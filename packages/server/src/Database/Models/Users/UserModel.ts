@@ -2,6 +2,7 @@ import { BelongsToManyAddAssociationMixin, BelongsToManyGetAssociationsMixin, Be
 import { PermissionRoleModel } from "../Permissions/PermissionRoleModel.js";
 import { FigureConfigurationData } from "@pixel63/events";
 import { UserBadgeModel } from "./Badges/UserBadgeModel.js";
+import { GroupModel } from "../Groups/RoomGroupModel.js";
 
 export class UserModel extends Model {
     declare id: string;
@@ -17,10 +18,12 @@ export class UserModel extends Model {
     declare homeRoomId: string | undefined;
     declare roomChatStyleId: string;
     declare online: boolean;
-    declare roles: NonAttribute<PermissionRoleModel[]>;
     declare habboClub: Date | null;
 
     declare createdAt: Date;
+    
+    declare roles: NonAttribute<PermissionRoleModel[]>;
+    declare groups: NonAttribute<GroupModel[]>;
 
     declare getRoles: BelongsToManyGetAssociationsMixin<PermissionRoleModel>;
     declare addRole: BelongsToManyAddAssociationMixin<PermissionRoleModel, string>;

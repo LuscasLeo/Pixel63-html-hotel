@@ -1,4 +1,5 @@
 import { FurnitureTraxSongMetaData } from "@pixel63/events";
+import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import GroupBadgeImage from "@UserInterface/Components/Groups/GroupBadgeImage";
 import useTraxPlayer from "@UserInterface/Components/Room/Widget/Hooks/useTraxPlayer";
@@ -71,6 +72,14 @@ export default function RoomGroupWidget() {
                     <b>{roomGroup.group.name}</b>
                 </FlexLayout>
             </FlexLayout>
+
+            {(roomGroup.group.type === "public" && !roomGroup.user) && (
+                <FlexLayout flex={1} direction="row" style={{
+                    padding: 8,
+                }}>
+                    <DialogButton style={{ flex: 1 }}>Join group</DialogButton>
+                </FlexLayout>
+            )}
         </div>
     );
 }

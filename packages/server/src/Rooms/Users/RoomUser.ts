@@ -12,6 +12,7 @@ import { RoomActorAction } from "../Actor/RoomActorAction.js";
 import Directions from "../../Helpers/Directions.js";
 import { RoomUserFrozenEffect } from "./Interfaces/RoomUserFrozenEffect.js";
 import RoomUserTrading from "./Trading/RoomUserTrading.js";
+import RoomUserGroup from "./Groups/RoomUserGroup.js";
 
 export default class RoomUser implements RoomActor {
     public preoccupiedByActionHandler: boolean = false;
@@ -26,6 +27,8 @@ export default class RoomUser implements RoomActor {
     public teleporting: boolean = false;
     public idling: boolean = false;
     public ready: boolean = false;
+
+    public group: RoomUserGroup;
 
     private _lastActivity: number = performance.now();
 
@@ -50,6 +53,7 @@ export default class RoomUser implements RoomActor {
         this.user.room = room;
 
         this.trading = new RoomUserTrading(this);
+        this.group = new RoomUserGroup(this);
 
         this.position = initialPosition ?? {
             $type: "RoomPositionData",
@@ -114,8 +118,6 @@ export default class RoomUser implements RoomActor {
             }
         }
         
-        user.sendProtobuff(RoomGroupData, this.room.group.getGroupData());
-
         this.user.friends.updateFriends();
     }
     

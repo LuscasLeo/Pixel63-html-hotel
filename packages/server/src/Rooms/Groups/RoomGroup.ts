@@ -1,12 +1,23 @@
 import { GroupData, RoomGroupData } from "@pixel63/events";
 import Room from "../Room";
+import RoomUser from "../Users/RoomUser";
 
 export default class RoomGroup {
     constructor(private readonly room: Room) {
 
     }
 
-    public getGroupData() {
+    public async update() {
+        await this.room.model.reload();
+
+        for(const roomUser of this.room.users) {
+            await roomUser.group.refreshUserGroup();
+            
+            roomUser.user.sendProtobuff(RoomGroupData, this.getGroupData(roomUser));
+        }
+    }
+
+    public getGroupData(roomUser: RoomUser) {
         if(!this.room.model.group) {
             return RoomGroupData.create({
                 roomId: this.room.model.id
@@ -16,17 +27,8 @@ export default class RoomGroup {
         return RoomGroupData.create({
             roomId: this.room.model.id,
 
-            group: GroupData.create({
-                id: this.room.model.group.id,
-                
-                name: this.room.model.group.name,
-                description: this.room.model.group.description,
-                
-                primaryColor: this.room.model.group.primaryColor,
-                secondaryColor: this.room.model.group.secondaryColor,
-
-                badge: this.room.model.group.badge,
-            })
+            group: GroupData.fromJSON(this.room.model.group),
+            user: roomUser.group.getUserGroupData()
         });
     }
 }

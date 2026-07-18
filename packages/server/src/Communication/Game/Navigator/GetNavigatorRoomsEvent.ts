@@ -6,7 +6,7 @@ import { Op } from "sequelize";
 import { GetNavigatorData, GroupData, NavigatorData, NavigatorRoomData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 import { UserModel } from "../../../Database/Models/Users/UserModel.js";
-import { RoomGroupModel } from "../../../Database/Models/Rooms/Groups/RoomGroupModel.js";
+import { GroupModel } from "../../../Database/Models/Groups/RoomGroupModel.js";
 
 export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavigatorData> {
     minimumDurationBetweenEvents?: number = 100;
@@ -29,7 +29,7 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
                             as: "owner"
                         },
                         {
-                            model: RoomGroupModel,
+                            model: GroupModel,
                             as: "group"
                         }
                     ]
@@ -49,7 +49,7 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
                             as: "owner"
                         },
                         {
-                            model: RoomGroupModel,
+                            model: GroupModel,
                             as: "group"
                         }
                     ],
@@ -86,7 +86,7 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
                             as: "owner"
                         },
                         {
-                            model: RoomGroupModel,
+                            model: GroupModel,
                             as: "group"
                         },
                         {
@@ -123,7 +123,7 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
                             as: "owner"
                         },
                         {
-                            model: RoomGroupModel,
+                            model: GroupModel,
                             as: "group"
                         }
                     ],
@@ -157,7 +157,7 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
                             as: "owner"
                         },
                         {
-                            model: RoomGroupModel,
+                            model: GroupModel,
                             as: "group"
                         }
                     ],

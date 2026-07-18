@@ -6,7 +6,7 @@ import { RoomCategoryModel } from "./Categories/RoomCategoryModel.js";
 import { UserBotModel } from "../Users/Bots/UserBotModel.js";
 import { RoomStructureData } from "@pixel63/events";
 import { UserPetModel } from "../Users/Pets/UserPetModel.js";
-import { RoomGroupModel } from "./Groups/RoomGroupModel.js";
+import { GroupModel } from "../Groups/RoomGroupModel.js";
 
 export class RoomModel extends Model {
     declare id: string;
@@ -35,7 +35,7 @@ export class RoomModel extends Model {
     declare roomBots: NonAttribute<UserBotModel[]>;
     declare roomPets: NonAttribute<UserPetModel[]>;
 
-    declare group: NonAttribute<RoomGroupModel>;
+    declare group: NonAttribute<GroupModel>;
     declare groupId: NonAttribute<string>;
 }
 
@@ -144,7 +144,7 @@ export function initializeRoomModel(sequelize: Sequelize) {
         constraints: false
     });
 
-    RoomModel.belongsTo(RoomGroupModel, {
+    RoomModel.belongsTo(GroupModel, {
         as: "group",
         foreignKey: "groupId",
         constraints: false
