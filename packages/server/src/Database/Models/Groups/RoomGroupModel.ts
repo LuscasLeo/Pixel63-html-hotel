@@ -24,7 +24,7 @@ export class GroupModel extends Model {
     declare secondaryColor: string;
 
     declare type: GroupType;
-    declare rights: GroupType;
+    declare rights: GroupRights;
 
     declare badge: GroupBadgeData;
 }

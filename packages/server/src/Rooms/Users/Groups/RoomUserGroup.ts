@@ -3,7 +3,7 @@ import { UserGroupModel } from "../../../Database/Models/Users/Groups/UserGroupM
 import RoomUser from "../RoomUser";
 
 export default class RoomUserGroup {
-    private userGroup: UserGroupModel | null = null;
+    public userGroup: UserGroupModel | null = null;
 
     constructor(private readonly roomUser: RoomUser) {
         this.refreshUserGroup().catch(console.error);

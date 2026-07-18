@@ -147,11 +147,13 @@ export default function UserProfileDialog({ data, hidden, onClose }: UserProfile
                         <div><b>Groups:</b> {profile.groups.length}</div>
 
                         <DialogScrollArea hideInactive>
-                            {profile.groups.map((group) => (
-                                <DialogItem width={50} key={group.id} active={currentGroup?.id === group.id}>
-                                    <GroupBadgeImage data={group.badge}/>
-                                </DialogItem>
-                            ))}
+                            <FlexLayout direction="column">
+                                {profile.groups.map((group) => (
+                                    <DialogItem width={50} key={group.id} active={currentGroup?.id === group.id} onClick={() => setCurrentGroup(group)}>
+                                        <GroupBadgeImage data={group.badge}/>
+                                    </DialogItem>
+                                ))}
+                            </FlexLayout>
                         </DialogScrollArea>
                     </FlexLayout>
 

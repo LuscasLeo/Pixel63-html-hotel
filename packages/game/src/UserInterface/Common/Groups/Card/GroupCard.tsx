@@ -7,15 +7,17 @@ import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import UserLink from "@UserInterface/Common/Users/UserLink";
 import GroupBadgeImage from "@UserInterface/Components/Groups/GroupBadgeImage";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
+import useUserGroup from "@UserInterface/Hooks/useUserGroup";
 import { useCallback } from "react";
 
 export type GroupCardProps = {
     data?: GroupData;
-    userData?: GroupMemberData;
 }
 
-export default function GroupCard({ data, userData }: GroupCardProps) {
+export default function GroupCard({ data }: GroupCardProps) {
     const dialogs = useDialogs();
+
+    const userGroup = useUserGroup(data?.id);
 
     const handleJoin = useCallback(() => {
         webSocketClient.sendProtobuff(JoinGroupData, JoinGroupData.create({
@@ -69,7 +71,9 @@ export default function GroupCard({ data, userData }: GroupCardProps) {
             
             <FlexLayout direction="row" flex={1}>
                 <FlexLayout flex={1} direction="column" align="center">
-                    <DialogLink onClick={() => dialogs.openUniqueDialog("group-members", data.id)}>Members: {data.membersCount}</DialogLink>
+                    {(data.membersCount > 0) && (
+                        <DialogLink onClick={() => dialogs.openUniqueDialog("group-members", data.id)}>Members: {data.membersCount}</DialogLink>
+                    )}
                 </FlexLayout>
                 
                 <FlexLayout flex={2} gap={2} direction="column">
@@ -79,15 +83,15 @@ export default function GroupCard({ data, userData }: GroupCardProps) {
             </FlexLayout>
 
             <div>
-                {(!userData)?(
+                {(!userGroup)?(
                     <DialogButton onClick={handleJoin}>Join Group</DialogButton>
                 ):(
-                    (!userData.owner) && (
+                    (!userGroup.owner) && (
                         <DialogButton onClick={handleLeaveGroup}>Leave Group</DialogButton>
                     )
                 )}
 
-                {(userData?.owner) && (
+                {(userGroup?.owner) && (
                     <DialogButton onClick={() => dialogs.openUniqueDialog("group-settings", data.id)}>Edit Group</DialogButton>
                 )}
             </div>

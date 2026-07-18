@@ -13,6 +13,7 @@ import Directions from "../../Helpers/Directions.js";
 import { RoomUserFrozenEffect } from "./Interfaces/RoomUserFrozenEffect.js";
 import RoomUserTrading from "./Trading/RoomUserTrading.js";
 import RoomUserGroup from "./Groups/RoomUserGroup.js";
+import { GroupRights, GroupType } from "../../Database/Models/Groups/RoomGroupModel.js";
 
 export default class RoomUser implements RoomActor {
     public preoccupiedByActionHandler: boolean = false;
@@ -376,6 +377,16 @@ export default class RoomUser implements RoomActor {
 
         if(this.room.model.rights.some((rights) => rights.user.id === this.user.model.id)) {
             return true;
+        }
+
+        if(this.room.model.group && this.group.userGroup && !this.group.userGroup.pending) {
+            if(this.room.model.group.rights === GroupRights.MEMBERS) {
+                return true;
+            }
+
+            if(this.room.model.group.rights === GroupRights.ADMINS && this.group.userGroup.admin) {
+                return true;
+            }
         }
 
         return false;

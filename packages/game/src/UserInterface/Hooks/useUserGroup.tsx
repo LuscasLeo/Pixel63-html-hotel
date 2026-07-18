@@ -6,6 +6,10 @@ export default function useUserGroup(groupId?: string) {
     const [userGroup, setUserGroup] = useState<GroupMemberData>();
 
     useEffect(() => {
+        if(!groupId) {
+            return;
+        }
+        
         const listener = webSocketClient.addProtobuffListener(UserGroupData, {
             async handle(payload: UserGroupData) {
                 if(payload.groupId === groupId) {
