@@ -73,7 +73,7 @@ export default function GroupMembersDialog({ data, hidden, onClose }: GroupMembe
                         gap: 5
                     }}>
                         {filteredMembers?.map((member) => (
-                            <FlexLayout key={member.userId} direction="row" style={{
+                            <FlexLayout key={member.userId} gap={15} direction="row" style={{
                                 borderWidth: 1,
                                 borderStyle: "solid",
                                 borderColor: "#5D5D5A",
@@ -83,7 +83,11 @@ export default function GroupMembersDialog({ data, hidden, onClose }: GroupMembe
 
                                 padding: 4,
                             }}>
-                                <FigureImage figureConfiguration={member.figureConfiguration} headOnly cropped direction={2}/>
+                                <div style={{
+                                    width: 30
+                                }}>
+                                    <FigureImage figureConfiguration={member.figureConfiguration} headOnly cropped direction={2}/>
+                                </div>
 
                                 <FlexLayout gap={0} justify="center" style={{
                                     fontSize: 12
@@ -92,7 +96,16 @@ export default function GroupMembersDialog({ data, hidden, onClose }: GroupMembe
                                         <UserLink id={member.userId} name={member.name} reversed/>
                                     </b>
 
-                                    <i style={{ fontSize: 11 }}>Joined <TimeSinceDate date={new Date(member.createdAt)}/></i>
+                                    <FlexLayout gap={5} direction="row">
+                                        {(member.owner)?(
+                                            <div className="sprite_groups_owner"/>
+                                        ):(
+                                            (member.admin) && (
+                                                <div className="sprite_groups_admin"/>
+                                            )
+                                        )}
+                                        <i style={{ fontSize: 10 }}>Joined <TimeSinceDate date={new Date(member.createdAt)}/></i>
+                                    </FlexLayout>
                                 </FlexLayout>
                             </FlexLayout>
                         ))}
