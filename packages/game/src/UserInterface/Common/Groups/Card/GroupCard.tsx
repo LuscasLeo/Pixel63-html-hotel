@@ -69,8 +69,8 @@ export default function GroupCard({ data, userData }: GroupCardProps) {
                     <DialogButton>Join Group</DialogButton>
                 )}
 
-                {(userData?.admin) && (
-                    <DialogButton>Edit Group</DialogButton>
+                {(userData?.owner) && (
+                    <DialogButton onClick={() => dialogs.openUniqueDialog("group-settings", data.id)}>Edit Group</DialogButton>
                 )}
             </div>
         </div>

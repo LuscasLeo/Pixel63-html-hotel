@@ -7,6 +7,12 @@ export enum GroupType {
     PRIVATE = "private"
 };
 
+export enum GroupRights {
+    OWNER = "owner",
+    ADMINS = "admins",
+    MEMBERS = "members"
+};
+
 export class GroupModel extends Model {
     declare id: string;
 
@@ -56,6 +62,11 @@ export function initializeGroupModel(sequelize: Sequelize) {
                 type: DataTypes.STRING,
                 allowNull: false,
                 defaultValue: GroupType.PUBLIC
+            },
+            rights: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                defaultValue: GroupRights.OWNER
             }
         },
         {

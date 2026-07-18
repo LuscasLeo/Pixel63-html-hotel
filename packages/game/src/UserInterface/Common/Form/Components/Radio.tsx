@@ -1,10 +1,12 @@
+import { ReactNode } from "react";
+
 export type RadioProps = {
-    value: string;
+    value?: string;
     onChange: (value: string) => void;
 
     items: {
         value: string;
-        label: string;
+        label: ReactNode;
     }[];
 };
 
@@ -30,6 +32,8 @@ export default function Radio({ items, value, onChange }: RadioProps) {
                         
                         width: 15,
                         height: 15,
+
+                        aspectRatio: 1,
 
                         borderRadius: "100%",
 

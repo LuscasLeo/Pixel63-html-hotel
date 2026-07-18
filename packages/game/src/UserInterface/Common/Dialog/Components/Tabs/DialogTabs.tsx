@@ -127,6 +127,10 @@ export default function DialogTabs({ index, initialActiveIndex = 0, withoutHeade
                             gap: 10,
                             alignItems: "center"
                         }}>
+                            {(currentHeader.icon) && (
+                                currentHeader.icon
+                            )}
+                            
                             {(currentHeader.iconImage) && (
                                 <img src={currentHeader.iconImage} width={36} height={36} style={{
                                     objectFit: "contain",

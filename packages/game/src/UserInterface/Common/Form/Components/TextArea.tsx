@@ -3,7 +3,7 @@ import { CSSProperties } from "react";
 export type TextAreaProps = {
     placeholder?: string;
     style?: CSSProperties;
-    value: string;
+    value?: string;
     onChange: (value: string) => void;
 }
 
