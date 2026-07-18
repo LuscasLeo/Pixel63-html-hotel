@@ -1,4 +1,7 @@
+import { webSocketClient } from "@Game/index";
+import { UpdateGroupRequestData } from "@pixel63/events";
 import TimeSinceDate from "@UserInterface/Common/Date/TimeSinceDate";
+import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 import DialogContent from "@UserInterface/Common/Dialog/Components/DialogContent";
 import Dialog from "@UserInterface/Common/Dialog/Dialog";
 import FigureImage from "@UserInterface/Common/Figure/FigureImage";
@@ -118,6 +121,50 @@ export default function GroupMembersDialog({ data, hidden, onClose }: GroupMembe
                                         )}
                                         <i style={{ fontSize: 10 }}>Joined <TimeSinceDate date={new Date(member.createdAt)}/></i>
                                     </FlexLayout>
+
+                                    {(member.pending && userGroup?.admin) && (
+                                        <div style={{
+                                            flex: 1,
+                    
+                                            display: "flex",
+                                            flexDirection: "row",
+                                            justifyContent: "space-between",
+                                            alignItems: "center"
+                                        }}>
+                                            <div style={{
+                                                flex: 1,
+                    
+                                                cursor: "pointer",
+                    
+                                                textDecoration: "underline"
+                                            }} onClick={() => {
+                                                webSocketClient.sendProtobuff(UpdateGroupRequestData, UpdateGroupRequestData.create({
+                                                    groupId: group.id,
+                                                    userId: member.userId,
+                                                    accept: false
+                                                }));
+                                            }}>
+                                                Decline
+                                            </div>
+                                            
+                                            <div style={{
+                                                flex: 1,
+                    
+                                                cursor: "pointer",
+                    
+                                                fontFamily: "Ubuntu Bold",
+                                                textDecoration: "underline"
+                                            }} onClick={() => {
+                                                webSocketClient.sendProtobuff(UpdateGroupRequestData, UpdateGroupRequestData.create({
+                                                    groupId: group.id,
+                                                    userId: member.userId,
+                                                    accept: true
+                                                }));
+                                            }}>
+                                                Accept
+                                            </div>
+                                        </div>
+                                    )}
                                 </FlexLayout>
                             </FlexLayout>
                         ))}
