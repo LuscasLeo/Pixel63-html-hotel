@@ -34,6 +34,7 @@
     "lint": "npx eslint ./src"
   },
   "dependencies": {
+    "@parcel/config-default": "^2.16.4",
     "@pixel63/events": "file:../events",
     "@pixel63/shared": "file:../shared",
     "@types/js-cookie": "^3.0.6",
@@ -76,5 +77,6 @@
   "staticFiles": {
     "staticPath": "src/Locales/",
     "staticOutPath": "locales"
-  }
+  },
+  "allowScripts": {}
 }

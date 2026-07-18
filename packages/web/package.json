@@ -1,8 +1,8 @@
 {
   "type": "module",
   "scripts": {
-    "start": "npm run build && tsx src/server/index.ts",
-    "server_dev": "tsx --watch src/server/index.ts",
+    "start": "npm run build && tsx src/Server/index.ts",
+    "server_dev": "tsx --watch src/Server/index.ts",
     "dev": "vite dev",
     "build": "vite build"
   },
@@ -31,5 +31,8 @@
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "vite": "^7.3.1"
+  },
+  "allowScripts": {
+    "bcrypt@6.0.0": true
   }
 }

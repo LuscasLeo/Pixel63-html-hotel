@@ -5,8 +5,9 @@
   "composite": true,
   "scripts": {
     "start": "npm run watch",
-    "build": "npx tsc",
-    "watch": "npx tsc -w"
+    "build": "tsc",
+    "watch": "tsc -w",
+    "clean": "rm -rf build"
   },
   "dependencies": {
     "@pixel63/events": "file:../events"
@@ -14,5 +15,6 @@
   "devDependencies": {
     "@types/node": "^25.3.0",
     "typescript": "^5.9.3"
-  }
+  },
+  "allowScripts": {}
 }
