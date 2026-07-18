@@ -31,3 +31,4 @@ config.json
 *.zip
 
 storybook-static
+.parcel-cache
