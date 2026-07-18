@@ -3,6 +3,7 @@ import { RefObject, useEffect, useRef } from "react";
 import DialogPanel from "@UserInterface/Common/Dialog/Components/Panels/DialogPanel";
 import UserLink from "@UserInterface/Common/Users/UserLink";
 import RoomThumbnail from "@UserInterface/Components/Room/Thumbnail/RoomThumbnail";
+import GroupLink from "@UserInterface/Common/Groups/GroupLink";
 
 export type NavigatorRoomProfileProps = {
     elementRef: RefObject<HTMLDivElement | null>;
@@ -86,6 +87,20 @@ export default function NavigatorRoomProfile({ elementRef, room }: NavigatorRoom
                     gap: 5
                 }}>
                     <b><u><UserLink id={room.ownerId} name={room.ownerName}/></u></b>
+                    
+                    <div/>
+
+                    <div><b>Max users:</b> {room.maxUsers}</div>
+                </div>
+                
+                <div style={{
+                    flex: 1,
+
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 5
+                }}>
+                    <b><u><GroupLink group={room.group}/></u></b>
                     
                     <div/>
 

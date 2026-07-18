@@ -36,6 +36,10 @@ export default function NavigatorRoomListItem({ room, onClick }: NavigatorRoomLi
 
             <NavigatorRoomLock room={room}/>
 
+            {(room.group) && (
+                <div className="sprite_groups_icon"/>
+            )}
+
             <div className="sprite_navigator_information" onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}/>
 
             {(hovered) && (

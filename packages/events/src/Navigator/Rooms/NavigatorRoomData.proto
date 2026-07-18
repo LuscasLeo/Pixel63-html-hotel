@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "Groups/GroupData.proto";
+
 message NavigatorRoomData {
     string id = 1;
 
@@ -15,4 +17,6 @@ message NavigatorRoomData {
     uint32 max_users = 5;
 
     optional string thumbnail = 4;
+
+    optional GroupData group = 10;
 }

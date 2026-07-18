@@ -3,9 +3,10 @@ import { RoomModel } from "../../../Database/Models/Rooms/RoomModel.js";
 import { game } from "../../../index.js";
 import { RoomCategoryModel } from "../../../Database/Models/Rooms/Categories/RoomCategoryModel.js";
 import { Op } from "sequelize";
-import { GetNavigatorData, NavigatorData, NavigatorRoomData } from "@pixel63/events";
+import { GetNavigatorData, GroupData, NavigatorData, NavigatorRoomData } from "@pixel63/events";
 import ProtobuffListener from "../../Interfaces/ProtobuffListener.js";
 import { UserModel } from "../../../Database/Models/Users/UserModel.js";
+import { RoomGroupModel } from "../../../Database/Models/Rooms/Groups/RoomGroupModel.js";
 
 export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavigatorData> {
     minimumDurationBetweenEvents?: number = 100;
@@ -26,6 +27,10 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
                         {
                             model: UserModel,
                             as: "owner"
+                        },
+                        {
+                            model: RoomGroupModel,
+                            as: "group"
                         }
                     ]
                 });
@@ -42,6 +47,10 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
                         {
                             model: UserModel,
                             as: "owner"
+                        },
+                        {
+                            model: RoomGroupModel,
+                            as: "group"
                         }
                     ],
                     limit: 20
@@ -76,7 +85,10 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
                             model: UserModel,
                             as: "owner"
                         },
-
+                        {
+                            model: RoomGroupModel,
+                            as: "group"
+                        },
                         {
                             model: RoomCategoryModel,
                             as: "category"
@@ -109,6 +121,10 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
                         {
                             model: UserModel,
                             as: "owner"
+                        },
+                        {
+                            model: RoomGroupModel,
+                            as: "group"
                         }
                     ],
                     limit: 20
@@ -139,6 +155,10 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
                         {
                             model: UserModel,
                             as: "owner"
+                        },
+                        {
+                            model: RoomGroupModel,
+                            as: "group"
                         }
                     ],
                     order: [
@@ -180,7 +200,9 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
             users: room?.users.length ?? 0,
             maxUsers: roomModel.maxUsers,
 
-            thumbnail: (roomModel.thumbnail)?(Buffer.from(roomModel.thumbnail).toString('utf8')):(undefined)
+            thumbnail: (roomModel.thumbnail)?(Buffer.from(roomModel.thumbnail).toString('utf8')):(undefined),
+
+            group: (roomModel.group)?(GroupData.fromJSON(roomModel.group)):(undefined)
         });
     }
 
