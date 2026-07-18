@@ -1,20 +1,17 @@
 {
-  "name": "@pixel63/events",
-  "version": "1.0.0",
-  "type": "commonjs",
-  "main": "build/index.ts",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "generate": "node scripts/generate.js"
-  },
-  "dependencies": {
-    "protobufjs": "^8.7.1",
-    "ts-proto": "^1.181.2"
-  },
-  "devDependencies": {
-    "ts-node": "^10.9.2"
-  },
-  "allowScripts": {
-    "protobufjs@7.5.4": true
-  }
+    "name": "@pixel63/events",
+    "version": "1.0.0",
+    "type": "commonjs",
+    "main": "build/index.ts",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "generate": "node scripts/generate.js"
+    },
+    "dependencies": {
+        "protobufjs": "^8.7.1",
+        "ts-proto": "^1.181.2"
+    },
+    "devDependencies": {
+        "ts-node": "^10.9.2"
+    }
 }

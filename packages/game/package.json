@@ -35,8 +35,8 @@
   },
   "dependencies": {
     "@parcel/config-default": "^2.16.4",
-    "@pixel63/events": "file:../events",
-    "@pixel63/shared": "file:../shared",
+    "@pixel63/events": "workspace:^",
+    "@pixel63/shared": "workspace:^",
     "@types/js-cookie": "^3.0.6",
     "i18next": "^26.0.8",
     "i18next-http-backend": "^4.0.0",
@@ -73,10 +73,6 @@
     "@Client/*": "./src/Client/$1",
     "@UserInterface/*": "./src/UserInterface/$1",
     "@Game/*": "./src/$1"
-  },
-  "staticFiles": {
-    "staticPath": "src/Locales/",
-    "staticOutPath": "locales"
-  },
-  "allowScripts": {}
+  }
 }
+

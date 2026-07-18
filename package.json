@@ -1,7 +1,9 @@
 {
     "name": "pixel63",
-
     "scripts": {
         "start": "cd utils/cli && npm i && npm run start"
+    },
+    "devDependencies": {
+        "typescript": "^7.0.2"
     }
 }

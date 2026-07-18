@@ -10,11 +10,10 @@
     "clean": "rm -rf build"
   },
   "dependencies": {
-    "@pixel63/events": "file:../events"
+    "@pixel63/events": "workspace:^"
   },
   "devDependencies": {
     "@types/node": "^25.3.0",
     "typescript": "^5.9.3"
-  },
-  "allowScripts": {}
+  }
 }
