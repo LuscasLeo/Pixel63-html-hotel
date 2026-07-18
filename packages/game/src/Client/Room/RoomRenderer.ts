@@ -284,7 +284,7 @@ export default class RoomRenderer extends EventTarget {
                     priority += (item.position.depth * 100);
                 }
                 else {
-                    priority += RoomRenderer.getPositionPriority(item.position, false);
+                    priority += RoomRenderer.getPositionPriority(item.position, !item.positionPathData);
                 }
             }
             else {
