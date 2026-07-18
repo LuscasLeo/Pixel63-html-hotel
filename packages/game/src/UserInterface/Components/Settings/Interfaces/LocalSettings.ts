@@ -1,6 +1,7 @@
 export type LocalSettings = {
     limitRoomFrames?: boolean;
     hideTooltips?: boolean;
+    disableAutoScaling?: boolean;
     
     debugRoomRendering?: boolean;
 

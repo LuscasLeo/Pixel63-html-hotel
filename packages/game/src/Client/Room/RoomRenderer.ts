@@ -95,6 +95,12 @@ export default class RoomRenderer extends EventTarget {
             }
         });
 
+        if(window.screen.width > 1920) {
+            if(!this.clientInstance?.settings.value.disableAutoScaling) {
+                this.scale.value = 2;
+            }
+        }
+
         this.application.ticker.add((time) => {
             const shouldProcessTick = this.frameCounter.shouldProcessTick();
 

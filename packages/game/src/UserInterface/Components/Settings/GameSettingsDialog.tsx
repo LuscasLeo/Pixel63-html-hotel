@@ -25,6 +25,11 @@ export default function GameSettingsDialog({ hidden, onClose }: GameSettingsDial
                         clientInstance.settings.value!.limitRoomFrames = !settings?.limitRoomFrames;
                         clientInstance.settings.update();
                     }} label="Limit frame rate to 60 fps"/>
+
+                    <Checkbox value={settings?.disableAutoScaling === true} onChange={() => {
+                        clientInstance.settings.value!.disableAutoScaling = !settings?.disableAutoScaling;
+                        clientInstance.settings.update();
+                    }} label="Disable automatically scaling rooms"/>
                     
                     <Checkbox value={settings?.hideTooltips === true} onChange={() => {
                         clientInstance.settings.value!.hideTooltips = !settings?.hideTooltips;
