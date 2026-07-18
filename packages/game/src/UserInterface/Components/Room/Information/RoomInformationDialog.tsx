@@ -8,6 +8,10 @@ import { useUser } from "../../../Hooks/useUser";
 import DialogButton from "../../../Common/Dialog/Components/Button/DialogButton";
 import { useDialogs } from "../../../Hooks/useDialogs";
 import { SetUserHomeRoomData } from "@pixel63/events";
+import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
+import GroupBadgeImage from "@UserInterface/Components/Groups/GroupBadgeImage";
+import { useRoomGroup } from "@UserInterface/Hooks/useRoomGroup";
+import DialogLink from "@UserInterface/Common/Dialog/Components/Link/DialogLink";
 
 export type RoomInformationDialogProps = {
     hidden?: boolean;
@@ -18,6 +22,7 @@ export default function RoomInformationDialog({ hidden, onClose }: RoomInformati
     const user = useUser();
     const room = useRoomInstance();
     const dialogs = useDialogs();
+    const roomGroup = useRoomGroup();
 
     const [homeRoomActive, setHomeRoomActive] = useState(room?.id === user?.homeRoomId);
 
@@ -79,6 +84,20 @@ export default function RoomInformationDialog({ hidden, onClose }: RoomInformati
                     }}>
                         <RoomThumbnail roomId={room.id} thumbnail={room.information?.thumbnail}/>
                     </div>
+
+                    {(roomGroup?.group) && (
+                        <FlexLayout direction="row" onClick={() => dialogs.addUniqueDialog("group", roomGroup.group?.id, roomGroup.group?.id)} style={{
+                            padding: "8px 0"
+                        }}>
+                            <FlexLayout flex={1} justify="center" align="center">
+                                <GroupBadgeImage data={roomGroup.group.badge}/>
+                            </FlexLayout>
+
+                            <DialogLink>
+                                This room is the homeroom for {roomGroup.group.name}
+                            </DialogLink>
+                        </FlexLayout>
+                    )}
 
                     {(room.hasRights) && (
                         <DialogButton onClick={() => dialogs.addUniqueDialog("room-settings")}>Room settings</DialogButton>
