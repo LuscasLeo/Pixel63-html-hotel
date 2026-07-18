@@ -67,5 +67,15 @@ export default class SetupProtoc {
                 .promise();
 
         fs.unlinkSync(downloadPath);
+
+        if (os.platform() !== "win32") {
+            this.setExecutablePermission();
+        }
+    }
+
+    private static setExecutablePermission() {
+        const protocBinary = path.join(this.binaryPath, "bin", "protoc");
+
+        fs.chmodSync(protocBinary, 0o755);
     }
 }
