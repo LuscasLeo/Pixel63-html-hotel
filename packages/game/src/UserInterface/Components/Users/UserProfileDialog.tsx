@@ -9,6 +9,12 @@ import BadgeImage from "@UserInterface/Common/Badges/BadgeImage";
 import DialogLink from "@UserInterface/Common/Dialog/Components/Link/DialogLink";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import UserProfileRelationships from "@UserInterface/Components/Users/UserProfileRelationships";
+import DialogScrollArea from "@UserInterface/Common/Dialog/Components/Scroll/DialogScrollArea";
+import DialogItem from "@UserInterface/Common/Dialog/Components/Item/DialogItem";
+import GroupBadgeImage from "@UserInterface/Components/Groups/GroupBadgeImage";
+import { useEffect, useState } from "react";
+import { GroupData } from "@pixel63/events";
+import GroupCard from "@UserInterface/Common/Groups/Card/GroupCard";
 
 export type UserProfileDialogProps = {
     data: string;
@@ -20,15 +26,23 @@ export default function UserProfileDialog({ data, hidden, onClose }: UserProfile
     const user = useUser();
     const dialogs = useDialogs();
     const profile = useUserProfile(data);
+    
+    const [currentGroup, setCurrentGroup] = useState<GroupData>();
+
+    useEffect(() => {
+        if(!currentGroup) {
+            setCurrentGroup(profile?.groups[0]);
+        }
+    }, [profile]);
 
     if(!profile) {
         return;
     }
 
     return (
-        <Dialog title={profile.name} hidden={hidden} initialPosition="center" onClose={onClose} width={520} height={535}>
+        <Dialog title={profile.name} hidden={hidden} initialPosition="center" onClose={onClose} width={520} height={480}>
             <DialogContent style={{
-                gap: 6
+                gap: 12
             }}>
                 <FlexLayout direction="row">
                     <FlexLayout flex={1} direction="column">
@@ -128,13 +142,25 @@ export default function UserProfileDialog({ data, hidden, onClose }: UserProfile
                     </div>
                 </FlexLayout>
 
-                <FlexLayout direction="row" gap={5}>
+                <FlexLayout flex={1} direction="row" gap={5}>
                     <FlexLayout flex={1} gap={5}>
-                        <div><b>Groups:</b> {profile.friendsCount}</div>
+                        <div><b>Groups:</b> {profile.groups.length}</div>
+
+                        <DialogScrollArea hideInactive>
+                            {profile.groups.map((group) => (
+                                <DialogItem width={50} key={group.id} active={currentGroup?.id === group.id}>
+                                    <GroupBadgeImage data={group.badge}/>
+                                </DialogItem>
+                            ))}
+                        </DialogScrollArea>
                     </FlexLayout>
 
-                    <FlexLayout flex={5}>
-
+                    <FlexLayout flex={5} style={{
+                        background: "#AEAEAE",
+                        borderRadius: 8,
+                        padding: "12px 30px"
+                    }}>
+                        <GroupCard data={currentGroup}/>
                     </FlexLayout>
                 </FlexLayout>
             </DialogContent>

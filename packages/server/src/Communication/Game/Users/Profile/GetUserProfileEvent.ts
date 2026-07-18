@@ -1,4 +1,4 @@
-import { BadgeData, GetUserProfileData, UserProfileData } from "@pixel63/events";
+import { BadgeData, GetUserProfileData, GroupData, UserProfileData } from "@pixel63/events";
 import ProtobuffListener from "../../../Interfaces/ProtobuffListener";
 import User from "../../../../Users/User";
 import { UserModel } from "../../../../Database/Models/Users/UserModel";
@@ -7,6 +7,8 @@ import { BadgeModel } from "../../../../Database/Models/Badges/BadgeModel";
 import { Op } from "sequelize";
 import { game } from "../../../..";
 import { UserFriendModel } from "../../../../Database/Models/Users/Friends/UserFriendModel";
+import { UserGroupModel } from "../../../../Database/Models/Users/Groups/UserGroupModel";
+import { GroupModel } from "../../../../Database/Models/Groups/RoomGroupModel";
 
 export default class GetUserProfileEvent implements ProtobuffListener<GetUserProfileData> {
     minimumDurationBetweenEvents?: number = 500;
@@ -44,6 +46,16 @@ export default class GetUserProfileEvent implements ProtobuffListener<GetUserPro
                     as: "friend"
                 }
             ]
+        });
+
+        const userGroups = await UserGroupModel.findAll({
+            where: {
+                userId: user.model.id
+            },
+            include: {
+                model: GroupModel,
+                as: "group"
+            }
         });
 
         user.sendProtobuff(UserProfileData, UserProfileData.create({
@@ -89,7 +101,9 @@ export default class GetUserProfileEvent implements ProtobuffListener<GetUserPro
                     name: friend.friend.name,
                     figureConfigurationData: friend.friend.figureConfiguration
                 }
-            })
+            }),
+
+            groups: userGroups.map((userGroup) => GroupData.fromJSON(userGroup.group))
         }));
     }
 }
