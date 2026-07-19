@@ -4,7 +4,7 @@
             "name": "Attach to Editor Browser",
             "request": "attach",
             "type": "editor-browser",
-            "webRoot": "${workspaceFolder}/packages/${input:packageName}",
+            "webRoot": "${workspaceFolder}/${input:packageName}",
             "sourceMaps": true
         },
         {
@@ -12,16 +12,8 @@
             "type": "chrome",
             "request": "attach",
             "port": 9222,
-            "webRoot": "${workspaceFolder}/packages/${input:packageName}",
-            "sourceMaps": true,
-            "sourceMapPathOverrides": {
-                "webpack:///./*": "${webRoot}/*",
-                "webpack:///src/*": "${webRoot}/src/*",
-                "webpack:///*": "*",
-                "webpack:///./~/*": "${webRoot}/node_modules/*",
-                "*/packages/packages/*": "${webRoot}/*",
-                "/packages/packages/*": "${webRoot}/*"
-            }
+            "webRoot": "${workspaceFolder}/${input:packageName}",
+            "sourceMaps": true
         },
         {
             "type": "node-terminal",
@@ -46,8 +38,8 @@
             "type": "pickString",
             "description": "Select the package to attach to",
             "options": [
-                "game",
-                "web"
+                "packages",
+                "packages/web"
             ]
         }
     ]
