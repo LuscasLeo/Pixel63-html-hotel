@@ -23,6 +23,7 @@
 
     /* Type Checking */
     "strict": true,
+    "sourceMap": true,
 
     /* Completeness */
     "skipLibCheck": true,
