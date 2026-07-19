@@ -24,8 +24,9 @@ export default function ToolbarFigureItem() {
     useEffect(() => {
         if(canvasRef.current && figureImage) {
             const context = canvasRef.current.getContext("2d");
-
             context?.resetTransform();
+            context?.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+            // context?.resetTransform();
 
             context?.translate(20, 22);
             context?.drawImage(figureImage, -128, -128 + 20);
