@@ -4,6 +4,7 @@ import Input from "../../../../Common/Form/Components/Input";
 import Radio from "@UserInterface/Common/Form/Components/Radio";
 import { webSocketClient } from "@Game/index";
 import { UpdateRoomInformationData } from "@pixel63/events";
+import Checkbox from "@UserInterface/Common/Form/Components/Checkbox";
 
 export default function RoomSettingsAccessTab() {
     const room = useRoomInstance();
@@ -21,6 +22,24 @@ export default function RoomSettingsAccessTab() {
             password
         }));
     }, [password]);
+    
+    const handleAllowPetsChange = useCallback((allowPets: boolean) => {
+        webSocketClient.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
+            allowPets
+        }));
+    }, []);
+    
+    const handleAllowPetsToEatFoodChange = useCallback((allowPetsToEatFood: boolean) => {
+        webSocketClient.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
+            allowPetsToEatFood
+        }));
+    }, []);
+    
+    const handleMuteAllPetsChange = useCallback((muteAllPets: boolean) => {
+        webSocketClient.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
+            muteAllPets
+        }));
+    }, []);
 
     if(!room) {
         return null;
@@ -89,6 +108,18 @@ export default function RoomSettingsAccessTab() {
                         <p style={{ fontSize: 11 }}><i>If you already have a password set, it will not be shown here.</i></p>
                     </div>
                 )}
+
+                <div style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 8
+                }}>
+                    <b>Pet settings</b>
+
+                    <Checkbox value={room.information?.allowPets} label="Allow pets" onChange={handleAllowPetsChange}/>
+                    <Checkbox value={room.information?.allowPetsToEatFood} label="Allow other pets to eat food" onChange={handleAllowPetsToEatFoodChange}/>
+                    <Checkbox value={room.information?.muteAllPets} label="Mute all pets" onChange={handleMuteAllPetsChange}/>
+                </div>
             </div>
         </div>
     );

@@ -21,4 +21,8 @@ message RoomInformationData {
     string trading = 10;
 
     bool allow_walking_through_users = 11;
+
+    bool allow_pets = 12;
+    bool allow_pets_to_eat_food = 13;
+    bool mute_all_pets = 14;
 }

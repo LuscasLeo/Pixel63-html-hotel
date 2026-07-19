@@ -11,8 +11,10 @@ export default class PlaceRoomPetEvent implements ProtobuffListener<PlaceRoomPet
             return;
         }
 
-        if(user.model.id !== user.room.model.owner.id) {
-            throw new Error("User does not own the room.");
+        const roomUser = user.room.getRoomUser(user);
+
+        if(!roomUser.hasRights() || !user.room.model.allowPets) {
+            throw new Error("User is not allowed to place pets.");
         }
 
         const inventory = user.getInventory();

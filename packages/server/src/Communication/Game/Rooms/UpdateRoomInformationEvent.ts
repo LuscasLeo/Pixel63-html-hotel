@@ -67,6 +67,18 @@ export default class UpdateRoomInformationEvent implements ProtobuffListener<Upd
             user.room.floorplan.regenerateStaticGrid();
         }
 
+        if(payload.allowPets !== undefined) {
+            user.room.model.allowPets = payload.allowPets;
+        }
+
+        if(payload.allowPetsToEatFood !== undefined) {
+            user.room.model.allowPetsToEatFood = payload.allowPetsToEatFood;
+        }
+
+        if(payload.muteAllPets !== undefined) {
+            user.room.model.muteAllPets = payload.muteAllPets;
+        }
+
         if(payload.password !== undefined) {
             user.room.model.password = await bcrypt.hash(payload.password, 10);
         }

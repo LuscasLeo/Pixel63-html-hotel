@@ -29,6 +29,10 @@ export class RoomModel extends Model {
     declare structure: Required<RoomStructureData>;
     declare allowWalkingThroughUsers: boolean;
 
+    declare allowPets: boolean;
+    declare allowPetsToEatFood: boolean;
+    declare muteAllPets: boolean;
+
     declare thumbnail: string | null;
     declare maxUsers: number;
     declare speed: number;
@@ -101,6 +105,21 @@ export function initializeRoomModel(sequelize: Sequelize) {
                 type: DataTypes.BOOLEAN,
                 allowNull: false,
                 defaultValue: true
+            },
+            allowPets: {
+                type: DataTypes.BOOLEAN,
+                allowNull: false,
+                defaultValue: true
+            },
+            allowPetsToEatFood: {
+                type: DataTypes.BOOLEAN,
+                allowNull: false,
+                defaultValue: false
+            },
+            muteAllPets: {
+                type: DataTypes.BOOLEAN,
+                allowNull: false,
+                defaultValue: false
             },
             speed: {
                 type: DataTypes.FLOAT,
