@@ -1586,6 +1586,11 @@ var migrationCommands: QueryInterfaceCommand[] = [
                     allowNull: true,
                     type: Sequelize.STRING,
                 },
+                speed: {
+                    type: Sequelize.FLOAT,
+                    defaultValue: 1,
+                    allowNull: false,
+                },
             },
             {},
         ],
