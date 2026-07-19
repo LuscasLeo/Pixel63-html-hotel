@@ -96,7 +96,7 @@ export default class RoomRenderer extends EventTarget {
         });
 
         if(window.screen.width > 1920) {
-            if(!this.clientInstance?.settings.value.disableAutoScaling) {
+            if(this.clientInstance?.settings.value.autoScaleRooms) {
                 this.scale.value = 2;
             }
         }

@@ -13,7 +13,7 @@ export default function GameSettingsDialog({ hidden, onClose }: GameSettingsDial
     const settings = useSettings();
 
     return (
-        <Dialog title="Game Settings" hidden={hidden} onClose={onClose} width={300} height={120} initialPosition="center">
+        <Dialog title="Game Settings" hidden={hidden} onClose={onClose} width={300} height={140} initialPosition="center">
             <DialogContent>
                 <div style={{
                     flex: 1,
@@ -26,10 +26,10 @@ export default function GameSettingsDialog({ hidden, onClose }: GameSettingsDial
                         clientInstance.settings.update();
                     }} label="Limit frame rate to 60 fps"/>
 
-                    <Checkbox value={settings?.disableAutoScaling === true} onChange={() => {
-                        clientInstance.settings.value!.disableAutoScaling = !settings?.disableAutoScaling;
+                    <Checkbox value={settings?.autoScaleRooms === true} onChange={() => {
+                        clientInstance.settings.value!.autoScaleRooms = !settings?.autoScaleRooms;
                         clientInstance.settings.update();
-                    }} label="Disable automatically scaling rooms"/>
+                    }} label="Automatically scale rooms"/>
                     
                     <Checkbox value={settings?.hideTooltips === true} onChange={() => {
                         clientInstance.settings.value!.hideTooltips = !settings?.hideTooltips;
