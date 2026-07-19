@@ -63,6 +63,7 @@ import RoomGroupCreationDialog from "@UserInterface/Components/Room/Groups/Creat
 import GroupDialog from "@UserInterface/Components/Groups/GroupDialog";
 import GroupMembersDialog from "@UserInterface/Components/Groups/GroupMembersDialog";
 import GroupSettingsDialog from "@UserInterface/Components/Groups/GroupSettingsDialog";
+import RoomLinkDialog from "@UserInterface/Components/Room/Link/RoomLinkDialog";
 
 export default function DialogInstances() {
     const { dialogs, closeDialog } = useDialogs();
@@ -117,6 +118,9 @@ export default function DialogInstances() {
 
                     case "room-information":
                         return (<RoomInformationDialog {...props} key={dialog.id}/>);
+
+                    case "room-link":
+                        return (<RoomLinkDialog {...props} key={dialog.id}/>);
 
                     case "room-settings":
                         return (<RoomSettingsDialog {...props} key={dialog.id}/>);

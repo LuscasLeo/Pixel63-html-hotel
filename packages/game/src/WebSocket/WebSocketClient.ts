@@ -6,7 +6,7 @@ import { EventsLogger } from "@pixel63/shared/Logger/Logger";
 export default class WebSocketClient extends EventTarget {
     private readonly socket: WebSocket;
 
-    constructor(secure: boolean, hostname: string, port: number, options: Record<"userId" | "accessToken", string>) {
+    constructor(secure: boolean, hostname: string, port: number, options: Record<string, string>) {
         super();
 
         this.socket = new WebSocket(`${(secure)?("wss"):("ws")}://${hostname}:${port}?${new URLSearchParams(options).toString()}`);

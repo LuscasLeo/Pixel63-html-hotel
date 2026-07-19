@@ -12,6 +12,7 @@ export default function ToolbarRoomInfo() {
     
     const room = useRoomInstance();
     const roomScale = useRoomScale();
+    const dialogs = useDialogs();
 
     const { addUniqueDialog } = useDialogs();
 
@@ -116,7 +117,7 @@ export default function ToolbarRoomInfo() {
                                 sprite: "sprite_toolbar_room_link",
                                 label: getTranslation("toolbar.link"),
                                 onClick: () => {
-                                    
+                                    dialogs.openUniqueDialog("room-link");
                                 }
                             }
                         ].map((button, index) => (!button.disabled) && (

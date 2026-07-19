@@ -129,7 +129,12 @@ export default class WebSocket {
                     })().catch(console.error);
                 });
 
-                if(user.model.homeRoomId) {
+                if(url.searchParams.has("roomId")) {
+                    const room = await game.roomManager.getOrLoadRoomInstance(url.searchParams.get("roomId")!);
+
+                    room?.addUserClient(user);
+                }
+                else if(user.model.homeRoomId) {
                     const room = await game.roomManager.getOrLoadRoomInstance(user.model.homeRoomId);
 
                     room?.addUserClient(user);
