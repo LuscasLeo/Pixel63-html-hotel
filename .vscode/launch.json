@@ -13,13 +13,29 @@
             "request": "attach",
             "port": 9222,
             "webRoot": "${workspaceFolder}/packages/${input:packageName}",
-            "sourceMaps": true
+            "sourceMaps": true,
+            "sourceMapPathOverrides": {
+                "webpack:///./*": "${webRoot}/*",
+                "webpack:///src/*": "${webRoot}/src/*",
+                "webpack:///*": "*",
+                "webpack:///./~/*": "${webRoot}/node_modules/*",
+                "*/packages/packages/*": "${webRoot}/*",
+                "/packages/packages/*": "${webRoot}/*"
+            }
         },
         {
             "type": "node-terminal",
             "name": "Run Script: start (server)",
             "request": "launch",
             "command": "pnpm run start",
+            "cwd": "${workspaceFolder}/packages/server",
+            "sourceMaps": true
+        }
+        {
+            "type": "node-terminal",
+            "name": "Run Script: dev (server)",
+            "request": "launch",
+            "command": "pnpm run dev",
             "cwd": "${workspaceFolder}/packages/server",
             "sourceMaps": true
         }

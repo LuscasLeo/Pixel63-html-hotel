@@ -24,6 +24,7 @@
     /* Type Checking */
     "strict": true,
     "sourceMap": true,
+    "inlineSources": true,
 
     /* Completeness */
     "skipLibCheck": true,

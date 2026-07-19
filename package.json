@@ -4,6 +4,7 @@
         "start": "cd utils/cli && npm i && npm run start"
     },
     "devDependencies": {
+        "buffer": "^5.7.1",
         "typescript": "catalog:"
     }
 }

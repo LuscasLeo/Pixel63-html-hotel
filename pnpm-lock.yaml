@@ -4,10 +4,19 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+catalogs:
+  default:
+    typescript:
+      specifier: ^7.0.2
+      version: 7.0.2
+
 importers:
 
   .:
     devDependencies:
+      buffer:
+        specifier: ^5.7.1
+        version: 5.7.1
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
