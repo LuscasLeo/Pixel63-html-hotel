@@ -5,7 +5,7 @@
         "start": "npx tsc && node build/src/index.js"
     },
     "devDependencies": {
-        "@types/node": "^25.5.2",
+        "@types/node": "^25.9.5",
         "@types/unzipper": "^0.10.11",
         "ts-node": "^10.9.2",
         "tslib": "^2.8.1",
