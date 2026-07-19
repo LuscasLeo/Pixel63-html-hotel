@@ -15,6 +15,7 @@ import GroupBadgeImage from "@UserInterface/Components/Groups/GroupBadgeImage";
 import { useEffect, useState } from "react";
 import { GroupData } from "@pixel63/events";
 import GroupCard from "@UserInterface/Common/Groups/Card/GroupCard";
+import { useTranslation } from "react-i18next";
 
 export type UserProfileDialogProps = {
     data: string;
@@ -26,6 +27,7 @@ export default function UserProfileDialog({ data, hidden, onClose }: UserProfile
     const user = useUser();
     const dialogs = useDialogs();
     const profile = useUserProfile(data);
+    const [getUserTranslation] = useTranslation("user");
     
     const [currentGroup, setCurrentGroup] = useState<GroupData>();
 
@@ -63,8 +65,8 @@ export default function UserProfileDialog({ data, hidden, onClose }: UserProfile
 
                                 <div style={{ flex: 1 }}/>
 
-                                <div><b>Created:</b> <TimeSinceDate date={new Date(profile.createdAt)}/></div>
-                                <div><b>Last login:</b> {(profile.lastOnlineAt)?(<TimeSinceDate date={new Date(profile.lastOnlineAt)}/>):("Never")}</div>
+                                <div><b>{getUserTranslation("profile.created")}:</b> <TimeSinceDate date={new Date(profile.createdAt)}/></div>
+                                <div><b>{getUserTranslation("profile.last_login")}:</b> {(profile.lastOnlineAt)?(<TimeSinceDate date={new Date(profile.lastOnlineAt)}/>):("Never")}</div>
 
                                 <FlexLayout direction="row" align="center">
                                     {(profile.online) && (
@@ -75,7 +77,7 @@ export default function UserProfileDialog({ data, hidden, onClose }: UserProfile
                                         <FlexLayout direction="row" align="center" gap={3}>
                                             <div className="sprite_users_profile_check"/>
 
-                                            <b>That's me!</b>
+                                            <b>{getUserTranslation("profile.thats_me")}</b>
                                         </FlexLayout>
                                     )}
                                 </FlexLayout>
@@ -84,9 +86,9 @@ export default function UserProfileDialog({ data, hidden, onClose }: UserProfile
 
                         {(profile.id === user.id) && (
                             <FlexLayout direction="row" justify="space-between">
-                                <DialogLink onClick={() => dialogs.addUniqueDialog("wardrobe")}>Change Looks</DialogLink>
+                                <DialogLink onClick={() => dialogs.addUniqueDialog("wardrobe")}>{getUserTranslation("profile.change_looks")}</DialogLink>
 
-                                <DialogLink onClick={() => dialogs.addUniqueDialog("inventory", { tab: "badges" })}>Change Badges</DialogLink>
+                                <DialogLink onClick={() => dialogs.addUniqueDialog("inventory", { tab: "badges" })}>{getUserTranslation("profile.change_badges")}</DialogLink>
                             </FlexLayout>
                         )}
 
@@ -109,10 +111,10 @@ export default function UserProfileDialog({ data, hidden, onClose }: UserProfile
                     
                     <div style={{ flex: 1 }}>
                         <FlexLayout gap={5}>
-                            <div><b>Friends:</b> {profile.friendsCount}</div>
+                            <div><b>{getUserTranslation("profile.friends")}:</b> {profile.friendsCount}</div>
 
                             <FlexLayout justify="space-between">
-                                <div><b>Relationships:</b></div>
+                                <div><b>{getUserTranslation("profile.relationships")}:</b></div>
 
                                 <FlexLayout direction="row" gap={0}>
                                     <div style={{ padding: 5 }}>
@@ -144,7 +146,7 @@ export default function UserProfileDialog({ data, hidden, onClose }: UserProfile
 
                 <FlexLayout flex={1} direction="row" gap={5}>
                     <FlexLayout flex={1} gap={5}>
-                        <div><b>Groups:</b> {profile.groups.length}</div>
+                        <div><b>{getUserTranslation("profile.groups")}:</b> {profile.groups.length}</div>
 
                         <DialogScrollArea hideInactive>
                             <FlexLayout direction="column">

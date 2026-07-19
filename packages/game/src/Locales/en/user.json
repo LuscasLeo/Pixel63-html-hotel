@@ -1,0 +1,12 @@
+{
+    "profile": {
+        "created": "Created",
+        "last_login": "Last login",
+        "thats_me": "That's me!",
+        "change_looks": "Change looks",
+        "change_badges": "Change badges",
+        "friends": "Friends",
+        "relationships": "Relationships",
+        "groups": "Groups"
+    }
+}

@@ -2,6 +2,7 @@ import { UserProfileData_UserProfileFriendRelationshipsData } from "@pixel63/eve
 import FigureImage from "@UserInterface/Common/Figure/FigureImage";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
+import { useTranslation } from "react-i18next";
 
 export type UserProfileRelationshipsProps = {
     relationships: UserProfileData_UserProfileFriendRelationshipsData[];
@@ -9,6 +10,7 @@ export type UserProfileRelationshipsProps = {
 
 export default function UserProfileRelationships({ relationships }: UserProfileRelationshipsProps) {
     const dialogs = useDialogs();
+    const [getFriendTranslation] = useTranslation("friends");
     
     return (
         <FlexLayout flex={1} gap={2} style={{
@@ -54,7 +56,7 @@ export default function UserProfileRelationships({ relationships }: UserProfileR
                     color: "#888887",
                     fontFamily: "Ubuntu Italic"
                 }}>
-                    No friends in this category
+                    {getFriendTranslation("no_friends")}
                 </div>
             )}
         </FlexLayout>
