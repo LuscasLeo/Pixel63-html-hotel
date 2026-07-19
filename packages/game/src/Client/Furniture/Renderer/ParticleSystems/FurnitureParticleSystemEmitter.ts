@@ -2,7 +2,6 @@ import Furniture, { FurnitureRendererSprite } from "@Client/Furniture/Furniture"
 import { FurnitureRenderOptions } from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
 import FurnitureParticleSystemParticle from "@Client/Furniture/Renderer/ParticleSystems/FurnitureParticleSystemParticle";
 import { FurnitureParticleSystemData } from "@Client/Interfaces/Furniture/FurnitureLogic";
-import { FurnitureParticleSystemLogger } from "@pixel63/shared/Logger/Logger";
 
 export default class FurnitureParticleSystemEmitter {
     public readonly id: number;

@@ -3,7 +3,6 @@ import RoomSprite from "../RoomSprite";
 import RoomFurnitureItem from "./RoomFurnitureItem";
 import FurnitureAssets from "@Client/Assets/FurnitureAssets";
 import { RoomPositionWithDirectionData } from "@pixel63/events";
-import { RoomLogger } from "@pixel63/shared/Logger/Logger";
 
 export default class RoomFurniturePlaceholderSprite extends RoomSprite {
     constructor(public readonly item: RoomFurnitureItem) {

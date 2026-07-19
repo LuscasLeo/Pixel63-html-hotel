@@ -1,7 +1,6 @@
 import { webSocketClient } from "@Game/index";
 import { UpdateGroupRequestData } from "@pixel63/events";
 import TimeSinceDate from "@UserInterface/Common/Date/TimeSinceDate";
-import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 import DialogContent from "@UserInterface/Common/Dialog/Components/DialogContent";
 import Dialog from "@UserInterface/Common/Dialog/Dialog";
 import FigureImage from "@UserInterface/Common/Figure/FigureImage";

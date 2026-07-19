@@ -9,7 +9,7 @@ export default class FurnitureParticleSystem {
     constructor(private readonly furniture: Furniture, private readonly data: FurnitureParticleSystemData) {
     }
 
-    public shouldRender(options: FurnitureRenderOptions) {
+    public shouldRender(_options: FurnitureRenderOptions) {
         return true;
     }
 

@@ -107,9 +107,6 @@ export default function ShopDialog({ hidden, data, onClose }: ShopDialogProps) {
             return;
         }
 
-        if(search) {
-        }
-
         webSocketClient.sendProtobuff(GetShopPagesData, GetShopPagesData.create({
             category,
             search

@@ -1,23 +1,10 @@
 import { ShopPageProps } from "./ShopPage";
 import { useDialogs } from "../../../Hooks/useDialogs";
-import { useUser } from "../../../Hooks/useUser";
 import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
-import DialogScrollArea from "@UserInterface/Common/Dialog/Components/Scroll/DialogScrollArea";
-import DialogPanel from "@UserInterface/Common/Dialog/Components/Panels/DialogPanel";
-import MembershipIcon from "@UserInterface/Common/Memberships/MembershipIcon";
-import DateHelper from "@UserInterface/Utils/DateHelper";
-import CurrencyPanel from "@UserInterface/Common/Currencies/CurrencyPanel";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
-import useShopPageMemberships from "@UserInterface/Components/Shop/Pages/Hooks/useShopPageMemberships";
-import { webSocketClient } from "@Game/index";
-import { PurchaseShopMembershipData } from "@pixel63/events";
-import MembershipLabel from "@UserInterface/Common/Memberships/MembershipLabel";
 
-export default function ShopHabboGroupsPage({ editMode, page }: ShopPageProps) {
+export default function ShopHabboGroupsPage({ page }: ShopPageProps) {
     const dialogs = useDialogs();
-    const user = useUser();
-
-    const memberships = useShopPageMemberships(page.id);
 
     return (
         <div style={{

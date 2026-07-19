@@ -3,7 +3,6 @@ import RoomChatRenderer from "@Client/Room/Chat/RoomChatRenderer";
 import { useRoomInstance } from "../../../Hooks/useRoomInstance";
 import { webSocketClient } from "../../../..";
 import OffscreenCanvasRender from "../../../Common/OffscreenCanvas/OffscreenCanvasRender";
-import { useUser } from "../../../Hooks/useUser";
 import { RoomActorChatData } from "@pixel63/events";
 import RoomFigureItem from "@Client/Room/Items/Figure/RoomFigureItem";
 

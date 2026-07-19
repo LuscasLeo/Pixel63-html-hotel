@@ -1,5 +1,5 @@
 import { webSocketClient } from "@Game/index";
-import { GroupData, GroupMemberData, JoinGroupData, LeaveGroupData, UserGroupData } from "@pixel63/events";
+import { GroupData, JoinGroupData, LeaveGroupData } from "@pixel63/events";
 import TimeSinceDate from "@UserInterface/Common/Date/TimeSinceDate";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 import DialogLink from "@UserInterface/Common/Dialog/Components/Link/DialogLink";

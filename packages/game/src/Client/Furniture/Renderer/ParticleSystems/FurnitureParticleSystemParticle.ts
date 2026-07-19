@@ -3,7 +3,6 @@ import { FurnitureRendererSprite } from "@Client/Furniture/Furniture";
 import { FurnitureRenderOptions } from "@Client/Furniture/Renderer/Interfaces/FurnitureRenderer";
 import FurnitureParticleSystemEmitter from "@Client/Furniture/Renderer/ParticleSystems/FurnitureParticleSystemEmitter";
 import { FurnitureParticleSystemData } from "@Client/Interfaces/Furniture/FurnitureLogic";
-import { FurnitureParticleSystemLogger } from "@pixel63/shared/Logger/Logger";
 
 export default class FurnitureParticleSystemParticle {
     private readonly particle: FurnitureParticleSystemData["emitters"][0]["particles"][0];
@@ -38,7 +37,7 @@ export default class FurnitureParticleSystemParticle {
         this.velocityY = Math.sin(this.direction) * speed;
     }
 
-    public async render(result: FurnitureRendererSprite[], options: FurnitureRenderOptions, rocketSprite: FurnitureRendererSprite) {
+    public async render(result: FurnitureRendererSprite[], _options: FurnitureRenderOptions, _rocketSprite: FurnitureRendererSprite) {
         this.age++;
 
         if(this.age >= this.lifetime + 5) {

@@ -7,7 +7,6 @@ import ShopPagesList from "./ShopPagesList";
 import { ShopPageData } from "@pixel63/events";
 import DialogScrollArea from "../../Common/Dialog/Components/Scroll/DialogScrollArea";
 import Input from "@UserInterface/Common/Form/Components/Input";
-import ShopDefaultPage from "@UserInterface/Components/Shop/Pages/ShopDefaultPage";
 
 export type ShopDialogCategoryProps = {
     category: string;

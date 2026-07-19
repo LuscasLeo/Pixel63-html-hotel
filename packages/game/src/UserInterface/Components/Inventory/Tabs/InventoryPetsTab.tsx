@@ -9,10 +9,8 @@ import DialogItem from "../../../Common/Dialog/Components/Item/DialogItem";
 import { GetUserInventoryPetsData, PlaceRoomPetData, UserInventoryPetsData, UserPetData } from "@pixel63/events";
 import DialogScrollArea from "../../../Common/Dialog/Components/Scroll/DialogScrollArea";
 import PetImage from "../../Pets/PetImage";
-import { useUser } from "../../../Hooks/useUser";
 
 export default function InventoryPetsTab() {
-    const user = useUser();
     const { setDialogHidden } = useDialogs();
     const room = useRoomInstance();
 

@@ -101,7 +101,7 @@ export default class RoomRenderer extends EventTarget {
             }
         }
 
-        this.application.ticker.add((time) => {
+        this.application.ticker.add(() => {
             const shouldProcessTick = this.frameCounter.shouldProcessTick();
 
             if(shouldProcessTick) {

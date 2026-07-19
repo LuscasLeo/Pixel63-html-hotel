@@ -1,11 +1,10 @@
 import { webSocketClient } from "@Game/index";
-import { GroupBadgeData, GroupColorsData, GroupIdentityData, UpdateGroupData } from "@pixel63/events";
+import { GroupBadgeData, GroupColorsData, UpdateGroupData } from "@pixel63/events";
 import DialogButton from "@UserInterface/Common/Dialog/Components/Button/DialogButton";
 import DialogLink from "@UserInterface/Common/Dialog/Components/Link/DialogLink";
 import DialogPanel from "@UserInterface/Common/Dialog/Components/Panels/DialogPanel";
 import DialogTabs from "@UserInterface/Common/Dialog/Components/Tabs/DialogTabs";
 import Dialog from "@UserInterface/Common/Dialog/Dialog";
-import Checkbox from "@UserInterface/Common/Form/Components/Checkbox";
 import Input from "@UserInterface/Common/Form/Components/Input";
 import Radio from "@UserInterface/Common/Form/Components/Radio";
 import TextArea from "@UserInterface/Common/Form/Components/TextArea";

@@ -7,7 +7,6 @@ import FlexLayout from "@UserInterface/Common/Layouts/FlexLayout";
 import { useDialogs } from "@UserInterface/Hooks/useDialogs";
 import { useUser } from "@UserInterface/Hooks/useUser";
 import { useUserRooms } from "@UserInterface/Hooks/useUserRooms";
-import { useEffect } from "react";
 
 export type RoomGroupCreationIdentityStepProps = {
     data?: GroupIdentityData;
