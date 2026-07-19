@@ -28,13 +28,18 @@
 		"noUncheckedSideEffectImports": true,
 		"moduleDetection": "force",
 		"skipLibCheck": true,
+        /* clear build folder before building */
+        "incremental": true,
+        "composite": true,
 		"paths": {
 			"@shared/*": ["../shared/*"],
 		},
+        "allowJs": true
 	},
 	"references": [
 		{
 			"path": "../shared/"
 		}
-	]
+	],
+    "include": ["src/**/*"],
 }
