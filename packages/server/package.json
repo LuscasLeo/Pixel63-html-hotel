@@ -39,7 +39,6 @@
     "jsonwebtoken": "^9.0.3",
     "node-stream-zip": "^1.15.0",
     "sequelize": "^6.37.7",
-    "sequelize-typescript-migration": "^0.0.1-beta.3",
     "sharp": "^0.34.5",
     "sqlite3": "^5.1.7",
     "umzug": "^3.8.3",

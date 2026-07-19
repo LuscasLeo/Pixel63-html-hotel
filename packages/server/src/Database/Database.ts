@@ -1,5 +1,4 @@
 import { Sequelize } from "sequelize";
-
 export const recreateShop = process.argv.some((value) => value === "shop");
 export const resetDatabase = process.argv.some((value) => value === "memory" || value === "reset");
 export const debugTimestamps = process.argv.some((value) => value === "debug");
@@ -38,7 +37,7 @@ import { initializeUserFriendRequestModel } from "./Models/Users/Friends/UserFri
 import { initializeShopPageBundleModel } from "./Models/Shop/ShopPageBundleModel.js";
 import { initializeFurnitureCrackableModel } from "./Models/Furniture/Crackable/FurnitureCrackableModel.js";
 import { initializeFurnitureCrackableRewardModel } from "./Models/Furniture/Crackable/FurnitureCrackableRewardModel.js";
-import { initializeAchievementModel, seedAchievements } from "./Models/Achievements/AchievementModel.js";
+import { initializeAchievementModel } from "./Models/Achievements/AchievementModel.js";
 import { initializeUserAchievementModel } from "./Models/Users/Achievements/UserAchievementModel.js";
 import { initializeAchievementCategoryModel } from "./Models/Achievements/AchievementCategoryModel.js";
 import { initializeUserClothingModel } from "./Models/Users/Clothes/UserClothingModel.js";
@@ -47,7 +46,7 @@ import { initializeUserFigureModel } from "./Models/Users/Figures/UserFigureMode
 import { initializeUserEffectModel } from "./Models/Users/Effects/UserEffectModel.js";
 import { initializeUserNotificationModel } from "./Models/Users/Notifications/UserNotificationModel.js";
 import { initializeShopPageMembershipModel } from "./Models/Shop/ShopPageMembershipModel.js";
-import { initializeHotelSettingModel, seedHotelSettings } from "./Models/Hotel/HotelSettingModel.js";
+import { initializeHotelSettingModel } from "./Models/Hotel/HotelSettingModel.js";
 import { initializeGroupModel } from "./Models/Groups/RoomGroupModel.js";
 import { initializeUserGroupModel } from "./Models/Users/Groups/UserGroupModel.js";
 
@@ -115,9 +114,18 @@ export async function initializeModels() {
     initializeUserEffectModel(sequelize);
     initializeUserFigureModel(sequelize);
     initializeUserNotificationModel(sequelize);
+}
 
-    await sequelize.sync();
-
-    await seedAchievements();
-    await seedHotelSettings();
+if (require.main === module) {
+    console.log("Initializing database models...", __dirname);
+    (async () => {
+        await initializeModels();
+        await sequelize.close();
+    })()
+        .then(() => {
+            console.log("Database initialized successfully.");
+        })
+        .catch((error) => {
+            console.error("Error initializing database:", error);
+        });
 }
