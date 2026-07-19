@@ -30,6 +30,12 @@ export class RoomModel extends Model {
     declare maxUsers: number;
     declare speed: number;
 
+    declare eventName?: string;
+    declare eventDescription?: string;
+    declare eventCategory: NonAttribute<RoomCategoryModel>;
+    declare eventCategoryId: NonAttribute<string>;
+    declare eventExpiresAt?: string;
+
     declare rights: NonAttribute<RoomRightsModel[]>;
     declare roomFurnitures: NonAttribute<UserFurnitureModel[]>;
     declare roomBots: NonAttribute<UserBotModel[]>;
@@ -97,7 +103,23 @@ export function initializeRoomModel(sequelize: Sequelize) {
                 type: DataTypes.STRING,
                 allowNull: true,
                 defaultValue: null
-            }
+            },
+
+            eventName: {
+                type: new DataTypes.STRING(32),
+                allowNull: true,
+                defaultValue: null,
+            },
+            eventDescription: {
+                type: DataTypes.TEXT,
+                allowNull: true,
+                defaultValue: null
+            },
+            eventExpiresAt: {
+                type: DataTypes.STRING,
+                allowNull: true,
+                defaultValue: null
+            },
         },
         {
             tableName: 'rooms',
@@ -141,6 +163,12 @@ export function initializeRoomModel(sequelize: Sequelize) {
     RoomModel.belongsTo(RoomCategoryModel, {
         as: "category",
         foreignKey: "categoryId",
+        constraints: false
+    });
+
+    RoomModel.belongsTo(RoomCategoryModel, {
+        as: "eventCategory",
+        foreignKey: "eventCategoryId",
         constraints: false
     });
 

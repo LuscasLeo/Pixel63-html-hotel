@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+message RoomEventData {
+    string room_id = 1;
+    
+    string name = 2;
+    
+    string description = 3;
+    string category_id = 4;
+
+    string expires_at = 5;
+}

@@ -1,9 +1,11 @@
 syntax = "proto3";
 
 import "Groups/GroupCreationData.proto";
+import "Room/Events/RoomEventCreationData.proto";
 
 message PurchaseShopMembershipData {
     string id = 1;
 
     optional GroupCreationData group = 2;
+    optional RoomEventCreationData event = 3;
 }

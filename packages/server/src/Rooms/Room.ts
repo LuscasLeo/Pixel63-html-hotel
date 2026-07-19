@@ -22,6 +22,7 @@ import WiredTriggerGameStartsLogic from "./Furniture/Logic/Wired/Trigger/WiredTr
 import WiredTriggerScoreAchievedLogic from "./Furniture/Logic/Wired/Trigger/WiredTriggerScoreAchievedLogic.js";
 import RoomWired from "./Wired/RoomWired.js";
 import RoomGroup from "./Groups/RoomGroup.js";
+import RoomEvent from "./Events/RoomEvent.js";
 
 export default class Room {
     public readonly users: RoomUser[] = [];
@@ -37,6 +38,7 @@ export default class Room {
     public games: RoomGames = new RoomGames(this);
     public wired: RoomWired = new RoomWired(this);
     public group: RoomGroup = new RoomGroup(this);
+    public event: RoomEvent = new RoomEvent(this);
 
     public readonly floorplan: RoomFloorplan;
 

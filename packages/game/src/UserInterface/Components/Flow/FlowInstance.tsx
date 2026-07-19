@@ -7,6 +7,7 @@ import RoomClickConfigurationWidget from "@UserInterface/Components/Room/Widget/
 import { useState } from "react";
 import WidgetSettings from "@UserInterface/Components/Widget/WidgetSettings";
 import RoomGroupWidget from "@UserInterface/Components/Room/Widget/RoomGroupWidget";
+import RoomEventWidget from "@UserInterface/Components/Room/Widget/RoomEventWidget";
 
 export default function FlowInstance() {
     const widgetNotifications = useWidgetNotifications();
@@ -31,6 +32,7 @@ export default function FlowInstance() {
             <WidgetSettings settingsExpanded={settingsExpanded} onSettingsExpanded={setSettingsExpanded}/>
 
             <RoomGroupWidget/>
+            <RoomEventWidget/>
 
             <RoomTraxMachineWidget/>
 

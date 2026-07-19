@@ -13,6 +13,7 @@ import { RoomModel } from "../../../Database/Models/Rooms/RoomModel.js";
 import { GroupModel } from "../../../Database/Models/Groups/RoomGroupModel.js";
 import { UserGroupModel } from "../../../Database/Models/Users/Groups/UserGroupModel.js";
 import { game } from "../../../index.js";
+import { RoomCategoryModel } from "../../../Database/Models/Rooms/Categories/RoomCategoryModel.js";
 
 export default class PurchaseShopMembershipEvent implements ProtobuffListener<PurchaseShopMembershipData> {
     minimumDurationBetweenEvents?: number = 100;
@@ -100,6 +101,47 @@ export default class PurchaseShopMembershipEvent implements ProtobuffListener<Pu
 
                 if(room) {
                     await room.group.update();
+                }
+
+                break;
+            }
+
+            case "roomevent": {
+                if(!payload.event) {
+                    throw new Error("Missing event creation data from payload.");
+                }
+
+                const roomModel = await RoomModel.findByPk(payload.event.roomId);
+
+                if(!roomModel) {
+                    throw new Error("Room does not exist.");
+                }
+
+                if(user.model.id !== roomModel.ownerId) {
+                    throw new Error("User does not own the room.");
+                }
+
+                const roomCategory = await RoomCategoryModel.findByPk(payload.event.categoryId);
+
+                if(!roomCategory) {
+                    throw new Error("Category does not exist.");
+                }
+
+                const expiresAt = new Date();
+                expiresAt.setHours(expiresAt.getHours() + 2);
+
+                await roomModel.update({
+                    eventName: payload.event.name,
+                    eventDescription: payload.event.description,
+
+                    eventCategoryId: roomCategory.id,
+                    eventExpiresAt: expiresAt.toISOString()
+                });
+
+                const room = game.roomManager.getRoomInstance(roomModel.id);
+
+                if(room) {
+                    await room.event.update();
                 }
 
                 break;

@@ -90,7 +90,32 @@ export default function NavigatorDialog({ hidden, onClose }: NavigatorDialogProp
                 },
                 {
                     icon: "Events",
-                    element: (<div style={{ flex: 1 }}/>),
+                    element: (
+                        <div style={{
+                            flex: 1,
+
+                            display: "flex",
+                            flexDirection: "column",
+
+                            gap: 5
+                        }}>
+                            <Input placeholder="Search for a room name..." value={search} onChange={setSearch}>
+                                <div className="sprite_room_user_motto_pen"/>
+                            </Input>
+
+                            <DialogScrollArea>
+                                {navigator?.map((navigator) => (
+                                    <NavigatorRoomList key={navigator.title} title={navigator.title} rooms={navigator.rooms} onClick={(room) => {
+                                        webSocketClient.sendProtobuff(EnterRoomData, EnterRoomData.create({
+                                            id: room.id
+                                        }));
+
+                                        closeDialog("navigator");
+                                    }}/>
+                                ))}
+                            </DialogScrollArea>
+                        </div>
+                    ),
                 },
                 {
                     icon: "My Rooms",

@@ -145,6 +145,49 @@ export default class GetNavigatorRoomsEvent implements ProtobuffListener<GetNavi
 
                 break;
             }
+
+            case "events": {
+                const roomModels = await RoomModel.scope({ method: [ 'withVisibility', user.model.id ] }).findAll({
+                    where: {
+                        eventExpiresAt: {
+                            [Op.gt]: new Date().toISOString()
+                        }
+                    },
+                    order: [
+                        [ "createdAt", "DESC" ]
+                    ],
+                    include: [
+                        {
+                            model: UserModel,
+                            as: "owner"
+                        },
+                        {
+                            model: GroupModel,
+                            as: "group"
+                        },
+                        {
+                            model: RoomCategoryModel,
+                            as: "category"
+                        }
+                    ],
+                    limit: 20
+                });
+
+                const uniqueCategories = [...new Set(roomModels.map((room) => room.category.id))];
+
+                user.sendProtobuff(NavigatorData, NavigatorData.create({
+                    categories: uniqueCategories.map((categoryId) => {
+                        const rooms = roomModels.filter((room) => room.category.id === categoryId);
+
+                        return {
+                            title: rooms[0]?.category.title ?? "",
+                            rooms: rooms.map(this.getRoomNavigatorData.bind(this)).toSorted((a, b) => b.users - a.users)
+                        }
+                    })
+                }));
+
+                break;
+            }
                 
             case "mine": {
                 const roomModels = await RoomModel.findAll({
