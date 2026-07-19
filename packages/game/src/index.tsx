@@ -64,17 +64,16 @@ async function start(text?: string) {
         }
     );
 
-    await i18n.init();
-
     clientInstance = new ClientInstance(clientElement);
     userInterface = new UserInterfaceInstance(interfaceElement);
-
+    
     webSocketClient.addEventListener("open", async () => {
         userInterface.render();
-
+        
         loaderInstance.hide();
     });
-
+    
+    await i18n.init();
     webSocketClient.addEventListener("close", () => {
         userInterface.destroy();
         clientInstance.destroy();
