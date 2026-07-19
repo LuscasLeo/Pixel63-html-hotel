@@ -115,7 +115,11 @@ export default class RoomActorPath {
             const blockedByAnotherBot = (blockingActor instanceof RoomBot && (!(this.actor instanceof RoomBot) || blockingActor.model.id !== this.actor.model.id));
             const blockedByAnotherPet = (blockingActor instanceof RoomPet && (!(this.actor instanceof RoomPet) || blockingActor.model.id !== this.actor.model.id));
 
-            if(blockedByAnotherBot || blockedByAnotherUser || blockedByAnotherPet) {
+            if(blockedByAnotherUser && !this.actor.room.model.allowWalkingThroughUsers) {
+                return false;
+            }
+
+            if(blockedByAnotherBot || blockedByAnotherPet) {
                 return false;
             }
         }

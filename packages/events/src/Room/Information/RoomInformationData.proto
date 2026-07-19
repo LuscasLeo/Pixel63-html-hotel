@@ -19,4 +19,6 @@ message RoomInformationData {
     string lock = 8;
 
     string trading = 10;
+
+    bool allow_walking_through_users = 11;
 }

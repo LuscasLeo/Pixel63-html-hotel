@@ -460,6 +460,7 @@ export default class Room {
             category: this.model.category.id,
             thumbnail: (this.model.thumbnail)?(Buffer.from(this.model.thumbnail).toString('utf8')):(undefined),
             trading: this.model.trading,
+            allowWalkingThroughUsers: this.model.allowWalkingThroughUsers,
             
             owner: {
                 $type: "RoomInformationOwnerData",

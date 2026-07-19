@@ -27,6 +27,7 @@ export class RoomModel extends Model {
     declare ownerId: NonAttribute<string>;
 
     declare structure: Required<RoomStructureData>;
+    declare allowWalkingThroughUsers: boolean;
 
     declare thumbnail: string | null;
     declare maxUsers: number;
@@ -95,6 +96,11 @@ export function initializeRoomModel(sequelize: Sequelize) {
                     }));
                 },
                 allowNull: false
+            },
+            allowWalkingThroughUsers: {
+                type: DataTypes.BOOLEAN,
+                allowNull: false,
+                defaultValue: true
             },
             speed: {
                 type: DataTypes.FLOAT,

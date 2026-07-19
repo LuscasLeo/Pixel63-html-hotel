@@ -10,4 +10,5 @@ message UpdateRoomInformationData {
     optional string lock = 7;
     optional string password = 8;
     optional string trading = 9;
+    optional bool allow_walking_through_users = 10;
 }

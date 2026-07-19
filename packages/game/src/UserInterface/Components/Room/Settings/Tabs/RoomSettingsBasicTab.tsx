@@ -6,6 +6,7 @@ import Selection from "../../../../Common/Form/Components/Selection";
 import { useRoomCategories } from "../../../../Hooks/useRoomCategories";
 import { usePermissionAction } from "../../../../Hooks/usePermissionAction";
 import { UpdateRoomInformationData } from "@pixel63/events";
+import Checkbox from "@UserInterface/Common/Form/Components/Checkbox";
 
 export default function RoomSettingsBasicTab() {
     const room = useRoomInstance();
@@ -61,6 +62,12 @@ export default function RoomSettingsBasicTab() {
     const handleTradingChange = useCallback((trading: string) => {
         webSocketClient.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
             trading
+        }));
+    }, []);
+
+    const handleAllowWalkingThroughUsersChange = useCallback((allowWalkingThroughUsers: boolean) => {
+        webSocketClient.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
+            allowWalkingThroughUsers
         }));
     }, []);
 
@@ -144,6 +151,10 @@ export default function RoomSettingsBasicTab() {
                         label: "No one is allowed to trade"
                     }
                 ]} onChange={(value) => handleTradingChange(value as string)}/>
+
+                <div/>
+
+                <Checkbox value={room.information?.allowWalkingThroughUsers} label="Allow walking through users" onChange={handleAllowWalkingThroughUsersChange}/>
             </div>
         </div>
     );

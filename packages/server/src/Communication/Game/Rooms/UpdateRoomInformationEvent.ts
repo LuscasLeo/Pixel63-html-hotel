@@ -61,6 +61,12 @@ export default class UpdateRoomInformationEvent implements ProtobuffListener<Upd
             user.room.model.trading = payload.trading;
         }
 
+        if(payload.allowWalkingThroughUsers !== undefined) {
+            user.room.model.allowWalkingThroughUsers = payload.allowWalkingThroughUsers;
+
+            user.room.floorplan.regenerateStaticGrid();
+        }
+
         if(payload.password !== undefined) {
             user.room.model.password = await bcrypt.hash(payload.password, 10);
         }
