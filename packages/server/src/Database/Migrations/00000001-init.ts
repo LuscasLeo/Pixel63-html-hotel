@@ -2341,28 +2341,14 @@ var migrationCommands: QueryInterfaceCommand[] = [
 var rollbackCommands: QueryInterfaceCommand[] = [
     {
         fn: "dropTable",
-        params: ["furniture_crackables"],
-    },
-    {
-        fn: "dropTable",
         params: ["furniture_crackable_rewards"],
     },
-    {
-        fn: "dropTable",
-        params: ["pets"],
-    },
-    {
-        fn: "dropTable",
-        params: ["shop_page_features"],
-    },
+
     {
         fn: "dropTable",
         params: ["shop_page_furnitures"],
     },
-    {
-        fn: "dropTable",
-        params: ["shop_page_bundles"],
-    },
+
     {
         fn: "dropTable",
         params: ["shop_page_bots"],
@@ -2387,18 +2373,12 @@ var rollbackCommands: QueryInterfaceCommand[] = [
         fn: "dropTable",
         params: ["user_friend_requests"],
     },
-    {
-        fn: "dropTable",
-        params: ["rooms"],
-    },
+
     {
         fn: "dropTable",
         params: ["room_rights"],
     },
-    {
-        fn: "dropTable",
-        params: ["shop_pages"],
-    },
+
     {
         fn: "dropTable",
         params: ["user_pets"],
@@ -2423,10 +2403,7 @@ var rollbackCommands: QueryInterfaceCommand[] = [
         fn: "dropTable",
         params: ["role_permissions"],
     },
-    {
-        fn: "dropTable",
-        params: ["achievements"],
-    },
+
     {
         fn: "dropTable",
         params: ["user_achievements"],
@@ -2447,18 +2424,7 @@ var rollbackCommands: QueryInterfaceCommand[] = [
         fn: "dropTable",
         params: ["user_notifications"],
     },
-    {
-        fn: "dropTable",
-        params: ["badges"],
-    },
-    {
-        fn: "dropTable",
-        params: ["furnitures"],
-    },
-    {
-        fn: "dropTable",
-        params: ["pet_breeds"],
-    },
+
     {
         fn: "dropTable",
         params: ["room_models"],
@@ -2471,10 +2437,7 @@ var rollbackCommands: QueryInterfaceCommand[] = [
         fn: "dropTable",
         params: ["room_groups"],
     },
-    {
-        fn: "dropTable",
-        params: ["users"],
-    },
+
     {
         fn: "dropTable",
         params: ["user_tokens"],
@@ -2515,13 +2478,80 @@ var rollbackCommands: QueryInterfaceCommand[] = [
         fn: "dropTable",
         params: ["permission_roles"],
     },
+
+    {
+        fn: "dropTable",
+        params: ["clothes"],
+    },
+
+    /// changed
+    {
+        fn: "dropTable",
+        params: ["furniture_crackables"],
+    },
+
+    {
+        fn: "dropTable",
+        params: ["pets"],
+    },
+
+    {
+        fn: "removeConstraint",
+        params: ["shop_page_bundles", "shop_pages_roomId_fkey"],
+    },
+
+    {
+        fn: "dropTable",
+        params: ["rooms"],
+    },
+
+    {
+        fn: "removeConstraint",
+        params: ["shop_page_features", "shop_page_features_featuredPageId_fkey"],
+    },
+
+    {
+        fn: "removeConstraint",
+        params: ["shop_page_bundles", "shop_page_bundles_ibfk_1"],
+    },
+
+    {
+        fn: "dropTable",
+        params: ["shop_pages"],
+    },
+
+    {
+        fn: "dropTable",
+        params: ["achievements"],
+    },
+    {
+        fn: "dropTable",
+        params: ["badges"],
+    },
+
+    {
+        fn: "dropTable",
+        params: ["furnitures"],
+    },
+    {
+        fn: "dropTable",
+        params: ["pet_breeds"],
+    },
+    {
+        fn: "dropTable",
+        params: ["users"],
+    },
     {
         fn: "dropTable",
         params: ["achievement_categories"],
     },
     {
         fn: "dropTable",
-        params: ["clothes"],
+        params: ["shop_page_features"],
+    },
+    {
+        fn: "dropTable",
+        params: ["shop_page_bundles"],
     },
 ];
 
@@ -2567,7 +2597,7 @@ module.exports = {
             for (var index = 0; index < rollbackCommands.length; index++) {
                 let command = rollbackCommands[index];
                 if (!command) return;
-                console.log("[#" + index + "] execute: " + command.fn);
+                console.log("[#" + index + "] execute: " + command.fn + " on " + command.params[0]);
 
                 await queryInterface[command.fn].apply(queryInterface, [
                     ...command.params,
