@@ -29,8 +29,8 @@ export default function RoomGroupWidget() {
 
             pointerEvents: "auto",
 
-            border: "2px solid rgba(61, 61, 61, .95)",
-            background: "rgba(0, 0, 0, 0.64)",
+            border: "2px solid rgba(109, 109, 109, 0.9)",
+            background: "rgba(39, 39, 39, 0.8)",
 
             width: 220,
             boxSizing: "border-box",
@@ -45,7 +45,7 @@ export default function RoomGroupWidget() {
         }}>
             <div style={{
                 padding: "5px 8px 8px",
-                background: "rgba(61, 61, 61, .95)",
+                background: "rgba(109, 109, 109, 0.9)",
                 fontSize: 13,
 
                 textAlign: "center",

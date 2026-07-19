@@ -8,7 +8,7 @@ export default function WidgetItem({ children, onClick }: WidgetItemProps) {
     return (
         <div style={{
             flex: 1,
-            background: "rgba(64, 64, 64, .2)",
+            background: "rgba(55, 53, 48, 0.92) ",
             borderRadius: 10,
             padding: "0 6px",
             color: "#03B9BC",

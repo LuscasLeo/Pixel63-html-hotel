@@ -18,7 +18,7 @@ export default function FlowInstance() {
         <div style={{
             position: "absolute",
             top: 0,
-            right: 14,
+            right: 8,
 
             pointerEvents: "auto",
 

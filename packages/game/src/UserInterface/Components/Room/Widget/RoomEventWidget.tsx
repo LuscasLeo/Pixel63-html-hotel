@@ -20,8 +20,8 @@ export default function RoomEventWidget() {
 
             pointerEvents: "auto",
 
-            border: "2px solid rgba(61, 61, 61, .95)",
-            background: "rgba(0, 0, 0, 0.64)",
+            border: "2px solid rgba(109, 109, 109, 0.9)",
+            background: "rgba(39, 39, 39, 0.8)",
 
             width: 220,
             boxSizing: "border-box",
@@ -36,7 +36,7 @@ export default function RoomEventWidget() {
         }}>
             <div style={{
                 padding: "5px 8px 8px",
-                background: "rgba(115, 115, 115, .95)",
+                background: "rgba(109, 109, 109, 0.9)",
                 borderRadius: (!roomEvent)?(8):(3),
                 fontSize: 13,
 

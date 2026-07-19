@@ -31,7 +31,7 @@ export default function Widget({ onSettingsClick }: WidgetProps) {
             <div style={{
                 border: "2px solid rgba(102, 100, 94, 0.64)",
                 borderTop: "none",
-                background: "rgba(0, 0, 0, 0.64)",
+                background: "rgba(44, 42, 41, 0.64)",
 
                 borderBottomLeftRadius: 8,
                 borderBottomRightRadius: 8,
