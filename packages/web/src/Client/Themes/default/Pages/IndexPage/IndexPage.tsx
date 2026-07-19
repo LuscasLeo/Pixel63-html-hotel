@@ -5,31 +5,35 @@ import LoginSection from "../../Components/Index/LoginSection";
 import RegistrationSection from "../../Components/Index/RegistrationSection";
 import { ThemeContext } from "../../ThemeProvider";
 import { useLocation, useNavigate } from "react-router";
+import { API_URL } from "../../../../Lib/config";
 
 const IndexPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from?.pathname || "/me";
-    const { state: { currentUser }, dispatch } = useContext(ThemeContext);
+    const {
+        state: { currentUser },
+        dispatch,
+    } = useContext(ThemeContext);
     const [cookies, setCookie, removeCookie] = useCookies(["accessToken"]);
 
     const [showRegistration, setShowRegistration] = useState(false);
 
     useEffect(() => {
         if (cookies.accessToken) {
-            fetch("/api/loginAuth", {
+            fetch(API_URL + "/api/loginAuth", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
                     name,
-                })
+                }),
             })
                 .then((response) => response.json())
                 .then((result) => {
                     if (result.error) {
-                        dispatch({ currentUser: null })
+                        dispatch({ currentUser: null });
                         removeCookie("accessToken");
 
                         return;
@@ -37,28 +41,36 @@ const IndexPage = () => {
 
                     dispatch({ currentUser: result });
                     navigate(from, { replace: true });
+                })
+                .catch((e) => {
+                    console.log("(Error) Impossible to fetch user data:", e);
                 });
         }
     }, [cookies.accessToken, removeCookie, navigate, dispatch, currentUser]);
 
     return (
-        <div className="index" style={{
-            color: "#e0eff5",
-            backgroundColor: "#007498",
-            backgroundImage: `url(${new URL('../../Images/index/background.png', import.meta.url).toString()}), radial-gradient(circle farthest-side at 190px 190px, #0297c8 0, #007498 480px)`,
+        <div
+            className="index"
+            style={{
+                color: "#e0eff5",
+                backgroundColor: "#007498",
+                backgroundImage: `url(${new URL("../../Images/index/background.png", import.meta.url).toString()}), radial-gradient(circle farthest-side at 190px 190px, #0297c8 0, #007498 480px)`,
 
-            overflow: "hidden"
-        }}>
-            <div style={{
-                transform: (showRegistration) ? ("translateY(-100vh)") : ("translateY(0vh)"),
-                transition: "transform 1.5s"
-            }}>
+                overflow: "hidden",
+            }}
+        >
+            <div
+                style={{
+                    transform: showRegistration ? "translateY(-100vh)" : "translateY(0vh)",
+                    transition: "transform 1.5s",
+                }}
+            >
                 <LoginSection showRegistration={() => setShowRegistration(true)} />
 
                 <RegistrationSection />
             </div>
         </div>
     );
-}
+};
 
 export default IndexPage;

@@ -5,6 +5,7 @@ import Container from "../Container";
 import Input from "../Input";
 import { useCallback, useContext, useState } from "react";
 import { useCookies } from "react-cookie";
+import { API_URL } from "../../../../Lib/config";
 
 export type LoginSectionProps = {
     showRegistration: () => void;
@@ -20,7 +21,7 @@ export default function LoginSection({ showRegistration }: LoginSectionProps) {
     const [error, setError] = useState("");
     
     const handleSubmit = useCallback(() => {
-        fetch("/api/login", {
+        fetch(API_URL + "/api/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

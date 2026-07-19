@@ -9,6 +9,7 @@ export default defineConfig({
   },
   build: {
     outDir: path.resolve(__dirname, "../../build/web"),
-    emptyOutDir: true
+    emptyOutDir: true,
+    sourcemap: true
   }
 });
