@@ -31,17 +31,21 @@ export default class RoomFurnitureItem extends RoomItem {
             if(this.position) {
                 const upmostFurniture = clientInstance.roomInstance.value?.getFurnitureAtUpmostPosition(this.position, undefined, this.id);
 
-                if(upmostFurniture?.item.position && upmostFurniture.furnitureData.flags?.walkable) {
-                    const sprite = this.sprites.find<RoomFurnitureSprite>((sprite): sprite is RoomFurnitureSprite => sprite instanceof RoomFurnitureSprite && sprite.furnitureSprite.zIndex === 101);
+                const sprite = this.sprites.find<RoomFurnitureSprite>((sprite): sprite is RoomFurnitureSprite => sprite instanceof RoomFurnitureSprite && sprite.furnitureSprite.zIndex === 101);
 
-                    if(sprite) {
+                if(sprite) {
+                    if(upmostFurniture?.item.position && upmostFurniture.furnitureData.flags?.walkable) {
                         sprite.offset.top = sprite.defaultOffset.top;
                         sprite.offset.top += -((upmostFurniture.item.position.depth + upmostFurniture.getDimensionDepth()) * 32);
                         sprite.offset.top += this.position.depth * 32;
+                    
+                        sprite.alpha = 1;
                     }
-                }
-                else {
-                    return;
+                    else {
+                        sprite.alpha = 0;
+                    }
+
+                    sprite.update();
                 }
             }
         }

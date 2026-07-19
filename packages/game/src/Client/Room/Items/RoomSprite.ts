@@ -10,6 +10,8 @@ export default class RoomSprite implements RoomItemSpriteInterface {
     tag?: string;
 
     public sprite: Sprite;
+
+    public disabled: boolean = false;
     
     constructor(
         public item: RoomItem,
@@ -42,7 +44,7 @@ export default class RoomSprite implements RoomItemSpriteInterface {
         this.sprite.blendMode = this.blendMode;
         this.sprite.alpha = this.alpha ?? this.item.alpha;
 
-        this.sprite.visible = !this.item.disabled;
+        this.sprite.visible = !this.item.disabled || !this.disabled;
     }
 
     destroy(): void {
