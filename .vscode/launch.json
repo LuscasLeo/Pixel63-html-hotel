@@ -1,0 +1,12 @@
+{
+    "configurations": [
+        {
+            "type": "node-terminal",
+            "name": "Run Script: start (server)",
+            "request": "launch",
+            "command": "pnpm run start",
+            "cwd": "${workspaceFolder}/packages/server",
+            "sourceMaps": true
+        }
+    ]
+}
