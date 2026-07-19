@@ -20,7 +20,7 @@ export default function RoomEventWidget() {
 
             pointerEvents: "auto",
 
-            border: "2px solid rgba(109, 109, 109, 0.9)",
+            border: (!roomEvent)?("none"):("2px solid rgba(109, 109, 109, 0.9)"),
             background: "rgba(39, 39, 39, 0.8)",
 
             width: 220,
@@ -57,11 +57,13 @@ export default function RoomEventWidget() {
                 </FlexLayout>
             </div>
             
-            <FlexLayout direction="row" style={{
-                padding: "8px 16px 8px 8px"
-            }}>
-                <div>{roomEvent?.description}</div>
-            </FlexLayout>
+            {(roomEvent) && (
+                <FlexLayout direction="row" style={{
+                    padding: "8px 16px 8px 8px"
+                }}>
+                    <div>{roomEvent?.description}</div>
+                </FlexLayout>
+            )}
         </div>
     );
 }
