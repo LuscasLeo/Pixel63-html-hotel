@@ -18,6 +18,8 @@ export class RoomModel extends Model {
     declare name: string;
     declare description: string;
 
+    declare trading: string;
+
     declare category: NonAttribute<RoomCategoryModel>;
     declare categoryId: NonAttribute<string>;
 
@@ -55,6 +57,11 @@ export function initializeRoomModel(sequelize: Sequelize) {
             type: {
                 type: DataTypes.STRING,
                 defaultValue: "private",
+                allowNull: false
+            },
+            trading: {
+                type: DataTypes.STRING,
+                defaultValue: "everyone",
                 allowNull: false
             },
             name: {

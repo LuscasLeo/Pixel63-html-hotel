@@ -96,6 +96,23 @@ export default class RoomInstance {
         });
     }
 
+    public isTradingAllowed() {
+        switch(this.information?.trading) {
+            case "disabled": {
+                return false;
+            }
+
+            case "rights": {
+                return this.hasRights;
+            }
+
+            default:
+            case "everyone": {
+                return true;
+            }
+        }
+    }
+
     public async setStructure(structure: RoomStructureData) {
         await this.roomRenderer.setStructure(structure);
 

@@ -97,15 +97,17 @@ export default function RoomUserContextMenu({ item }: RoomUserContextMenuProps) 
                                 )
                             )}
 
-                            <UserContextMenuButton text={getTranslation("item.context_menu.ask_to_trade")} style={{ fontSize: 11 }} onClick={() => {
-                                webSocketClient.sendProtobuff(RequestRoomUserTradingData, RequestRoomUserTradingData.create({
-                                    targetUserId: targetUser.data.id
-                                }));
+                            {(room?.isTradingAllowed()) && (
+                                <UserContextMenuButton text={getTranslation("item.context_menu.ask_to_trade")} style={{ fontSize: 11 }} onClick={() => {
+                                    webSocketClient.sendProtobuff(RequestRoomUserTradingData, RequestRoomUserTradingData.create({
+                                        targetUserId: targetUser.data.id
+                                    }));
 
-                                if(room) {
-                                    room.roomRenderer.focusedItem.value = null;
-                                }
-                            }}/>
+                                    if(room) {
+                                        room.roomRenderer.focusedItem.value = null;
+                                    }
+                                }}/>
+                            )}
 
                             {(room?.information?.owner?.id === user?.id) && (
                                 <UserContextMenuButton text={(targetUser.data.hasRights)?(getTranslation("item.context_menu.revoke_rights")):(getTranslation("item.context_menu.give_rights"))} onClick={() => {

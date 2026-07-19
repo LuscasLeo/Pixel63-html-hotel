@@ -57,6 +57,10 @@ export default class UpdateRoomInformationEvent implements ProtobuffListener<Upd
             user.room.model.lock = payload.lock;
         }
 
+        if(payload.trading !== undefined && ["everyone", "rights", "disabled"].includes(payload.trading)) {
+            user.room.model.trading = payload.trading;
+        }
+
         if(payload.password !== undefined) {
             user.room.model.password = await bcrypt.hash(payload.password, 10);
         }

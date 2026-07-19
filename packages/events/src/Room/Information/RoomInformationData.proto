@@ -17,4 +17,6 @@ message RoomInformationData {
     uint32 max_users = 7;
 
     string lock = 8;
+
+    string trading = 10;
 }

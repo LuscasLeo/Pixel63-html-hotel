@@ -58,6 +58,12 @@ export default function RoomSettingsBasicTab() {
         }));
     }, []);
 
+    const handleTradingChange = useCallback((trading: string) => {
+        webSocketClient.sendProtobuff(UpdateRoomInformationData, UpdateRoomInformationData.create({
+            trading
+        }));
+    }, []);
+
     if(!room) {
         return null;
     }
@@ -121,6 +127,23 @@ export default function RoomSettingsBasicTab() {
                         label: maxUsers.toString()
                     };
                 }) ?? []} onChange={(value) => handleMaxUsersChange(value as number)}/>
+
+                <b>Trade settings</b>
+
+                <Selection value={room.information?.trading} items={[
+                    {
+                        value: "everyone",
+                        label: "Everyone is allowed to trade"
+                    },
+                    {
+                        value: "rights",
+                        label: "Users with rights are allowed to trade"
+                    },
+                    {
+                        value: "disabled",
+                        label: "No one is allowed to trade"
+                    }
+                ]} onChange={(value) => handleTradingChange(value as string)}/>
             </div>
         </div>
     );

@@ -9,4 +9,5 @@ message UpdateRoomInformationData {
     optional string thumbnail = 6;
     optional string lock = 7;
     optional string password = 8;
+    optional string trading = 9;
 }

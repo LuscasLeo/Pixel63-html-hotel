@@ -33,6 +33,24 @@ export default class RequestRoomUserTradingEvent implements ProtobuffListener<Re
 
             return;
         }
+        
+        switch(roomUser.room.model.trading) {
+            case "disabled": {
+                throw new Error("Trading is disabled in room.");
+            }
+
+            case "rights": {
+                if(!roomUser.hasRights()) {
+                    throw new Error("Trading is restricted to users with rights.");
+                }
+
+                break;
+            }
+
+            case "everyone": {
+                break;
+            }
+        }
 
         roomUser.trading.requestedTradingWithUser = targetRoomUser;
 
