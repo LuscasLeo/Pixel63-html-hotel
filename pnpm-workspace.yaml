@@ -14,4 +14,4 @@ allowBuilds:
   sqlite3: true
 catalog:
     typescript: "^7.0.2"
-catalogMode: "strict"
+catalogMode: manual
