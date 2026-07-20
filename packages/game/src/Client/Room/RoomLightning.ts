@@ -21,9 +21,6 @@ export default class RoomLighting {
     public init() {
         this.backgroundSprite.texture = Texture.WHITE;
 
-        this.backgroundSprite.width = this.roomRenderer.application.screen.width;
-        this.backgroundSprite.height = this.roomRenderer.application.screen.height;
-
         this.backgroundSprite.tint = 0x00;
 
         this.backgroundSprite.interactive = true;
@@ -32,18 +29,31 @@ export default class RoomLighting {
             this.roomRenderer.focusedItem.value = null;
         });
 
+        this.backgroundSprite.width = this.roomRenderer.application.screen.width;
+        this.backgroundSprite.height = this.roomRenderer.application.screen.height;
+
+        this.roomRenderer.application.renderer.on("resize", () => {
+            this.backgroundSprite.width = this.roomRenderer.application.screen.width;
+            this.backgroundSprite.height = this.roomRenderer.application.screen.height;
+        });
+
         this.roomRenderer.application.stage.addChild(this.backgroundSprite);
 
         this.darknessSprite.visible = false;
 
         this.darknessSprite.texture = Texture.WHITE;
 
-        this.darknessSprite.width = this.roomRenderer.application.screen.width;
-        this.darknessSprite.height = this.roomRenderer.application.screen.height;
-
         this.darknessSprite.tint = 0x00;
 
         this.darknessSprite.zIndex = 1_000_000_000;
+
+        this.darknessSprite.width = this.roomRenderer.application.screen.width;
+        this.darknessSprite.height = this.roomRenderer.application.screen.height;
+        
+        this.roomRenderer.application.renderer.on("resize", () => {
+            this.darknessSprite.width = this.roomRenderer.application.screen.width;
+            this.darknessSprite.height = this.roomRenderer.application.screen.height;
+        });
 
         this.roomRenderer.application.stage.addChild(this.darknessSprite);
         
@@ -52,12 +62,17 @@ export default class RoomLighting {
 
         this.lightSprite.texture = Texture.WHITE;
 
-        this.lightSprite.width = this.roomRenderer.application.screen.width;
-        this.lightSprite.height = this.roomRenderer.application.screen.height;
-
         this.lightSprite.tint = 0x00;
 
         this.lightSprite.zIndex = 1_000_000_001;
+
+        this.lightSprite.width = this.roomRenderer.application.screen.width;
+        this.lightSprite.height = this.roomRenderer.application.screen.height;
+        
+        this.roomRenderer.application.renderer.on("resize", () => {
+            this.lightSprite.width = this.roomRenderer.application.screen.width;
+            this.lightSprite.height = this.roomRenderer.application.screen.height;
+        });
 
         this.roomRenderer.application.stage.addChild(this.lightSprite);
     }
