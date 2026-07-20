@@ -1,8 +1,8 @@
 {
-    "name": "pixel63",
+    "name": "@pixel63/cli",
     "type": "module",
     "scripts": {
-        "start": "npx tsc && node build/src/index.js"
+        "start": "tsc && node build/src/index.js"
     },
     "devDependencies": {
         "@types/node": "^25.9.5",

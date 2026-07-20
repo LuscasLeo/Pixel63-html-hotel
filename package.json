@@ -1,7 +1,7 @@
 {
     "name": "pixel63",
     "scripts": {
-        "start": "cd utils/cli && pnpm run start"
+        "start": "pnpm --filter @pixel63/cli start"
     },
     "devDependencies": {
         "buffer": "^5.7.1",
