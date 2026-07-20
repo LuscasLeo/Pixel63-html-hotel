@@ -129,7 +129,7 @@ export default function RoomItemProfile({ room }: RoomItemProfileProps) {
         <div style={{
             position: "absolute",
 
-            padding: 10,
+            padding: 8,
 
             right: 0,
             bottom: 50,

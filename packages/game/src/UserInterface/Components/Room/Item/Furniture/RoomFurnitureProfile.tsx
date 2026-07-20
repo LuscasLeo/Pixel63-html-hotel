@@ -37,7 +37,7 @@ export default function RoomFurnitureProfile({ furniture }: RoomFurnitureProfile
             display: "flex",
             flexDirection: "column",
             alignItems: "flex-end",
-            gap: 10
+            gap: 5
         }}>
             <div style={{
                 background: "rgba(61, 61, 61, .95)",
@@ -107,7 +107,7 @@ export default function RoomFurnitureProfile({ furniture }: RoomFurnitureProfile
             <div style={{
                 display: "flex",
                 flexDirection: "row",
-                gap: 10
+                gap: 5
             }}>
                 {(room?.hasRights) && (
                     <div className="room-furniture-profile-button" onClick={() => {
