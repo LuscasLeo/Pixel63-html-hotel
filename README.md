@@ -1,59 +1,85 @@
 # Contributing
+
 ## Setting up your environment
 
-### Configurations
-Copy and rename the config.example.json files to config.json in the web and server package.
+### Requirements
 
-To set up your environment without the web server, change `useAccessTokens` to false in the configuration for the server.
+[Node.js](https://nodejs.org/en/) 26 or higher is required to run the server and web packages.
+[PNPM](https://pnpm.io/) is required to install dependencies and run scripts.
+[Docker](https://www.docker.com/) is required to run the database server.
 
-#### For MySQL:
-1. Start your MySQL server and create an empty database.
-2. Set up your credentials in each config.json file for the web and server package.
+### Setup
 
-#### For SQLite or other local storage dialects:
-1. Change the database configuration to the following:
+1. Install dependencies:
+
+```sh
+pnpm install --frozen-lockfile
+```
+
+2. Build the shared package:
+
+```sh
+pnpm --filter=@pixel63/shared build
+```
+
+3. Build the events package:
+
+```sh
+pnpm --filter=@pixel63/events generate
+```
+
+4. Build the server package:
+
+```sh
+pnpm --filter=@pixel63/server build
+```
+
+5. Build the game package:
+
+```sh
+pnpm --filter=@pixel63/game build
+```
+
+6. Build the web package:
+
+```sh
+pnpm --filter=@pixel63/web build
+```
+
+7. Start the database server:
+
+```sh
+docker compose up -d
+```
+
+8. Setup the configurations for the `server` and `web` packages:
+
 ```json
-"database": {
-    "dialect": "sqlite",
-    "storage": "path/to/database.sqlite"
-}
+{
+  "database": {
+    "dialect": "mysql",
+    "host": "localhost",
+    "port": 3306,
+    "username": "root",
+    "password": "password",
+    "database": "pixel63"
+  }
+
 ```
 
-Initializing server
+9. Run the migraitions for the server package:
+
 ```sh
-cd packages/server
-npm run init
+pnpm --filter=@pixel63/server migrate
+```
+10. Start the server package:
+
+```sh
+pnpm --filter=@pixel63/server start
 ```
 
-Close the server and then run `npm run migrate`.
-
-### Starting
-#### Shared
-```sh
-cd packages/shared
-npm run build
-```
-
-#### Server
-The shared package must be built before the server can be built.
-```sh
-cd packages/server
-npm run start
-```
-
-#### Web
-The static files must be built before you can start the web server.
+11. Start the web package:
 
 ```sh
-cd packages/web
-npm run build
-npm run start
-```
-
-#### Game
-The shared package must be built before the game can be built.
-
-```sh
-cd packages/game
-npm run watch
+pnpm --filter=@pixel63/web start
 ```
