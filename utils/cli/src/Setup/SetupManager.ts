@@ -37,7 +37,7 @@ export default class SetupManager {
         execSync("pnpm --filter @pixel63/events generate", { stdio: "inherit" });
 
         console.log("Building Shared package...");
-        execSync("cd ../../packages/shared && pnpm i && pnpm run build", { stdio: "inherit" });
+        execSync("cd ../../packages/shared && pnpm i --frozen-lockfile && pnpm run build", { stdio: "inherit" });
 
         if (
             process.argv.some((arg) => arg.toLowerCase() === "--setup") ||
@@ -85,15 +85,15 @@ export default class SetupManager {
 
         console.log("4c. Building game package...");
 
-        execSync("cd ../../packages/game && pnpm i && pnpm run build && pnpm run build:lib");
+        execSync("cd ../../packages/game && pnpm i --frozen-lockfile && pnpm run build && pnpm run build:lib");
 
         console.log("4d. Building web package...");
 
-        execSync("cd ../../packages/web && pnpm i && pnpm run build");
+        execSync("cd ../../packages/web && pnpm i --frozen-lockfile && pnpm run build");
 
         console.log("4e. Building server package...");
 
-        execSync("cd ../../packages/server && pnpm i && pnpm run build");
+        execSync("cd ../../packages/server && pnpm i --frozen-lockfile && pnpm run build");
 
         console.log("");
 
