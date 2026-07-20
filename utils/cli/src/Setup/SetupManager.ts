@@ -35,7 +35,7 @@ export default class SetupManager {
 
         console.log("Generating TypeScript definitions for Protocol Buffers...");
         execSync("pnpm --filter @pixel63/events generate", { stdio: "inherit" });
-        
+
         console.log("Building Shared package...");
         execSync("cd ../../packages/shared && pnpm i && pnpm run build", { stdio: "inherit" });
 
@@ -94,10 +94,6 @@ export default class SetupManager {
         console.log("4e. Building server package...");
 
         execSync("cd ../../packages/server && pnpm i && pnpm run build");
-
-        console.log("4f. Executing migration scripts...");
-
-        execSync("cd ../../packages/server && pnpm run migrate");
 
         console.log("");
 
