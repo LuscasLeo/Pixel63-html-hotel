@@ -35,6 +35,9 @@ export default class SetupManager {
 
         console.log("Generating TypeScript definitions for Protocol Buffers...");
         execSync("pnpm --filter @pixel63/events generate", { stdio: "inherit" });
+        
+        console.log("Building Shared package...");
+        execSync("cd ../../packages/shared && pnpm i && pnpm run build", { stdio: "inherit" });
 
         if (
             process.argv.some((arg) => arg.toLowerCase() === "--setup") ||
@@ -79,8 +82,6 @@ export default class SetupManager {
         console.log("4. Building packages...");
 
         console.log("4b. Building shared package...");
-
-        execSync("cd ../../packages/shared && pnpm i && pnpm run build");
 
         console.log("4c. Building game package...");
 
