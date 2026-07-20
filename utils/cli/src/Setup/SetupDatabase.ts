@@ -1,4 +1,5 @@
 import { confirm, input, number } from "@inquirer/prompts";
+import { exec, execSync } from "child_process";
 import { copyFileSync, existsSync, readdirSync, readFile, readFileSync, writeFileSync } from "fs";
 import mysql from "mysql2/promise";
 import path from "path";
@@ -18,13 +19,21 @@ export default class SetupDatabase {
     public static async hasDatabaseConnection() {
         const configPath = path.join("..", "..", "packages", "server", "config.json");
 
-        if(!existsSync(configPath)) {
+        if (!existsSync(configPath)) {
             return false;
         }
 
         const config = JSON.parse(readFileSync(configPath, { encoding: "utf-8" }));
 
-        if(await this.getDatabaseSchema(config.database.host, config.database.port, config.database.username, config.database.password, config.database.database)) {
+        if (
+            await this.getDatabaseSchema(
+                config.database.host,
+                config.database.port,
+                config.database.username,
+                config.database.password,
+                config.database.database,
+            )
+        ) {
             return true;
         }
 
@@ -37,11 +46,11 @@ export default class SetupDatabase {
             default: "localhost",
             required: true,
         });
-        
+
         const port = await number({
             message: "MySQL Database Port:",
             required: true,
-            default: 3306
+            default: 3306,
         });
 
         const username = await input({
@@ -59,7 +68,7 @@ export default class SetupDatabase {
         console.log("");
         console.log("Testing database connection...");
 
-        if(!(await this.getDatabaseConnection(hostname, port, username, password))) {
+        if (!(await this.getDatabaseConnection(hostname, port, username, password))) {
             console.error("Connection to the database failed! Please try again.");
 
             return this.setupDatabaseConnection();
@@ -80,12 +89,12 @@ export default class SetupDatabase {
 
         console.log("");
 
-        if((await this.getDatabaseSchema(hostname, port, username, password, database))) {
+        if (await this.getDatabaseSchema(hostname, port, username, password, database)) {
             const overwrite = await confirm({
-                message: `A database schema with the name '${database}' already exists. Do you want to overwrite it?`
+                message: `A database schema with the name '${database}' already exists. Do you want to overwrite it?`,
             });
 
-            if(!overwrite) {
+            if (!overwrite) {
                 return this.setupDatabaseConnection();
             }
         }
@@ -97,43 +106,52 @@ export default class SetupDatabase {
             username,
             password,
 
-            database
+            database,
         };
     }
 
-    public static async getDatabaseConnection(host: string, port: number, user: string, password: string) {
-        try {
-            const connection = await mysql.createConnection({
-                host,
-                port,
-                user,
-                password
-            });
-
-            await connection.end();
-
-            return true;
-        }
-        catch {
-            return false;
-        }
-    }
-
-    public static async getDatabaseSchema(host: string, port: number, user: string, password: string, database: string) {
+    public static async getDatabaseConnection(
+        host: string,
+        port: number,
+        user: string,
+        password: string,
+    ) {
         try {
             const connection = await mysql.createConnection({
                 host,
                 port,
                 user,
                 password,
-                database
             });
 
             await connection.end();
 
             return true;
+        } catch {
+            return false;
         }
-        catch {
+    }
+
+    public static async getDatabaseSchema(
+        host: string,
+        port: number,
+        user: string,
+        password: string,
+        database: string,
+    ) {
+        try {
+            const connection = await mysql.createConnection({
+                host,
+                port,
+                user,
+                password,
+                database,
+            });
+
+            await connection.end();
+
+            return true;
+        } catch {
             return false;
         }
     }
@@ -143,7 +161,7 @@ export default class SetupDatabase {
             host: credentials.hostname,
             port: credentials.port,
             user: credentials.username,
-            password: credentials.password
+            password: credentials.password,
         });
 
         await connection.execute(`DROP DATABASE IF EXISTS ${credentials.database};`);
@@ -153,48 +171,75 @@ export default class SetupDatabase {
     }
 
     public static async setupDatabaseSchema() {
-        if(!this.credentials) {
+        if (!this.credentials) {
             throw new Error("Credentials are not set.");
         }
 
         await this.createDatabase(this.credentials);
-        
+
         const connection = await mysql.createConnection({
             host: this.credentials.hostname,
             port: this.credentials.port,
             user: this.credentials.username,
             password: this.credentials.password,
             database: this.credentials.database,
-            
-            multipleStatements: true
+
+            multipleStatements: true,
         });
 
-        const schemaPath = path.join("..", "..", "packages", "server", "schema");
+        const serverConfigPath = path.join("..", "..", "packages", "server", "config.json");
+        const webConfigPath = path.join("..", "..", "packages", "web", "config.json");
 
-        const files = readdirSync(schemaPath);
+        this.patchConfigFile(
+            serverConfigPath,
+            path.join("..", "..", "packages", "server", "config.example.json"),
+            this.credentials,
+        );
 
-        for(const file of files) {
-            const filePath = path.join(schemaPath, file);
+        this.patchConfigFile(
+            webConfigPath,
+            path.join("..", "..", "packages", "web", "config.example.json"),
+            this.credentials,
+        );
 
-            const content = readFileSync(filePath, { encoding: "utf-8" });
-
-            await connection.query(content);
-        }
+        execSync(`cd ../../packages/server && pnpm build && pnpm migrate`, { stdio: "inherit" });
 
         await connection.end();
     }
 
+    static patchConfigFile(
+        serverConfigPath: string,
+        exampleConfigPath: string,
+        credentials: DatabaseCredentials,
+    ) {
+        if (!existsSync(serverConfigPath)) {
+            copyFileSync(exampleConfigPath, serverConfigPath);
+        }
+
+        const serverConfig = JSON.parse(readFileSync(serverConfigPath, { encoding: "utf-8" }));
+
+        serverConfig.database = serverConfig.database || {};
+        serverConfig.database.database = credentials.database;
+        serverConfig.database.port = credentials.port;
+        serverConfig.database.username = credentials.username;
+        serverConfig.database.password = credentials.password;
+        serverConfig.database.hostname = credentials.hostname;
+
+        writeFileSync(serverConfigPath, JSON.stringify(serverConfig, undefined, 4));
+    }
     public static saveCredentials() {
-        if(!this.credentials) {
+        if (!this.credentials) {
             throw new Error("Credentials are not set.");
         }
 
-        const packagePaths = ["server", "web"].map((name) => path.join("..", "..", "packages", name));
+        const packagePaths = ["server", "web"].map((name) =>
+            path.join("..", "..", "packages", name),
+        );
 
-        for(const packagePath of packagePaths) {
+        for (const packagePath of packagePaths) {
             const configPath = path.join(packagePath, "config.json");
 
-            if(!existsSync(configPath)) {
+            if (!existsSync(configPath)) {
                 copyFileSync(path.join(packagePath, "config.example.json"), configPath);
             }
 

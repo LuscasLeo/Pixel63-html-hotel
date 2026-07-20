@@ -22,11 +22,18 @@ pnpm install --frozen-lockfile
 pnpm --filter=@pixel63/shared build
 ```
 
-3. Build the events package:
+2. Build the events package:
 
 ```sh
 pnpm --filter=@pixel63/events generate
 ```
+
+3. Build the shared package:
+
+```sh
+pnpm --filter=@pixel63/shared build
+```
+
 
 4. Build the server package:
 
