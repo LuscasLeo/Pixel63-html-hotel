@@ -27,20 +27,21 @@ export default class WebSocketClient extends EventTarget {
         this.socket.addEventListener("message", (event) => {
             try {
                 const data = new Uint8Array(event.data);
-                const decoded = new TextDecoder().decode(data);
+                
+                if (!this.isReady){
+                    const decoded = new TextDecoder().decode(data);
+                    if (decoded === this.ReadySign) {
+                        this.isReady = true;
 
-                if (decoded === this.ReadySign) {
-                    this.isReady = true;
+                        for (const outgoingMessage of this.readyOutgoingMessages) {
+                            this.sendProtobuff(outgoingMessage.message, outgoingMessage.payload);
+                        }
 
-                    for (const outgoingMessage of this.readyOutgoingMessages) {
-                        this.sendProtobuff(outgoingMessage.message, outgoingMessage.payload);
+                        this.readyOutgoingMessages = [];
+
+                        return;
                     }
-
-                    this.readyOutgoingMessages = [];
-
-                    return;
                 }
-
                 const sep = data.indexOf("|".charCodeAt(0));
                 const type = new TextDecoder().decode(data.slice(0, sep));
                 const payload = data.slice(sep + 1);
